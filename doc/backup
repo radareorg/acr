@@ -1,0 +1,64 @@
+backups in ACR
+==============
+
+Imagine this scenario:
+
+You already typed ./configure and you have some files filtered by SUBST_FILES
+command into the configure.acr.
+
+Then you modify one of the filtered files, instead of the .orig.
+
+As you can see. Your final code will be overwritten by your Makefile and
+configure will remove your original code by the .orig one.
+
+This kind of problems can make you loss parts of code.
+
+ACR 0.3 integrates a new feature in SUBST code that makes a diff between
+foo and foo.backup. If they differ ./configure will fail showing an error
+message.
+
+To solve this just "diff -u foo.backup foo" and patch foo.orig using the
+diff output by hand. This kind of stuff can't be fixed automatically, because
+it's a programmer's problem.
+
+Make sure to modify your Makefiles to use this new feature removing/checking
+the .backup existence.
+
+This feature could change in the future. But needs more feedback against
+end users. Please, mail me about this feature explaining your ideas, fixes,
+changes or proposals.
+
+You can use this GNU-make function to check and cleanup properly your .orig
+and .backup files. instead of using -rm ${FILE} you must use:
+
+$(call unsubst,${FILE})
+
+and the following funciton:
+
+--------------------->8-----------------------
+define unsubst
+   @if [ -f "${1}.backup" ]; then\
+      if [ -f "${1}" ]; then\
+         if [ -n "`diff -u ${1} ${1}.backup`" ]; then\
+            echo "It looks like '${1}' has changed. Check .backup peer."; \
+            exit 1; \
+         else\
+            rm -f ${1}.backup;\
+            mv ${1}.orig ${1};\
+         fi\
+      fi\
+   fi
+endef
+-----------------------8<---------------------
+
+A sample Makefile will look like:
+
+---------------Makefile----------------
+define unsubst
+	(...)
+endef
+
+clean:
+	$(call unsubst,CONFIG)
+	$(call unsubst,src/config.h)
+---------------------------------------

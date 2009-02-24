@@ -1,0 +1,8 @@
+Unitary tests for ACR
+=====================
+
+There's a make target called 'test' that tries to parse and execute all examples/*
+files and returns a number of failed results.
+
+Would be good to write more unitary tests in examples, to try to avoid portability
+problems and track syntax changes on different versions.

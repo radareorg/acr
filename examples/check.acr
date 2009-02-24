@@ -1,0 +1,7 @@
+CHECK JAVA5 <<EOF
+echo "import java.util.*;">temp.java \
+echo "class temp{public static void main(){Vector<String> v=null;}}" >>temp.java \
+${JAVAC} -source 1.5 temp.java >/dev/null 2>&1 \
+JAVA5=$? \
+rm -f temp.java
+<<EOF

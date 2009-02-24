@@ -1,0 +1,125 @@
+0.5 series:
+===========
+- SUBCONF IS BROKEN CONCEPT ?!?!!
+- IF XX FOO += BAR ; is also broken!! works with IF XX { ... } ; next change!!
+- CPP is never used/checked
+- optimize cat foo|awk -> awk < foo
+- make something generic to create HAVE_BLABL variables
+- LANG_CXX in USE_LIBTOOL (must be tested)
+- add yacc/lex/bison/flex support USE_LEX_AND_YACC
+- cdeps in AMR is nosense ? amr must be redefined from the ground!
+
+
+0.6:
+====
+- add LICENSE keyword. Store a pool of licenses.
+- finish the "optimized by a single functin call" (not only for CHKINC and CHKLIB)
+- allow to run commands without {} keys in conditionals: IF FOO BAR DIENOW bla ;
+- manage user creation, etc. (portable tool to create/remove user/groups..)
+- install command replacement to autogenerate PLISTs
+- chkup2date: check if there's new versions of the program
+- add bitmasks -> change 'ifs' by using:
+	case "foo" in *fo) echo pop ;; esac
+- config.log
+- configure.log >> outputs build stuff ACR_LOGS | GEN_LOGS (use $LINENO)
+
+
+Automake:
+=========
+- add keyword REBUILD, to mark the variables that has changed,
+  to force a make clean
+- lot of testing and dubidu
+
+
+Planned languages to be supported:
+==================================
+- icon
+- mono/dotgnu/msc (semi-done as a module)
+- elisp/clisp/guile/chicken
+
+
+TOTHINK:
+========
+- absolute VPATH? (GNU doesn't)
+- use AUTHOR keyword to define a different person than CONTACT
+- add INSTALL_DATA_DIR INSTALL_MAN_DIR INSTALL_SCRIPT_DIR ... LIB ..
+- ensure acr is using acr-sh from the correct path. it could be autofixable
+- set -x for debugging (-dd ?) // too many debug!!
+- check defines on includes...useful for the HURD MAX_PATH_LEN & related
+- Implement the "HIDE" keyword ?!? is stupid
+- regexp to parse by sed...just use // instead of \, :?
+- report on file, only requested variables:
+  OUTPUT_H PREFIX+HAVE_LIB_NCURSES config.h; ## only prefix and ncurses ##
+- if -L is used, also -Wl,-R must be
+- add -pc- when it's a i.86 IMHO NO!
+- check if the crosscompiler matches (gcc -dumpmachine)
+  EXEC GCCTARGET gcc -dumpmachine ;
+  IFNOTEQ GCCTARGET TARGET
+	{
+	DIE Crosscompiler missmatch
+	}
+ -- must be integrated with 
+ -- drop -unknown- keyword in hosts
+- separate acr-sh into different script files. (maybe this will never be achieved)
+- SUBDIRS => MAKEPATHS, MAKEFILEPATH, ...
+--x-includes \___ add these flags into USE_X11 (talk to sepharad)
+--x-libraries /
+- ==================================== -> this makes sandbox unuseful. (to think!)
+- sandbox VS make install PREFIX=/usr/local/foo
+- support for multiline flag comments. (sed \n -> \t\t\t\t\n)?
+- add -q (quite ?)
+- check for RPATH -Wl,-R (only for darwin?) -- not proper imho
+- SEARCHPATH only for TCL :?
+- add CHECK_BUILD -> build & execute? what kind of file ?...etc..long wish
+  >>	example usage:
+  CHECK_BUILD VAR EOF ; JAVAC CLASSPATH ;
+  import java.io.*;
+  public static void main()
+	{
+	System.out.println("this is mooed");
+	}
+  EOF
+-------- IMHO this is unuseful, we have CHECK command that does the same.
+- IFZERO ? instead of IFNOT ??
+- if SUBST_FILES is a directory just handle the entire contents of the directory.
+
+
+
+AutoInstall
+===========
+create install-acr: ?
+	- Same install functionality
+	- Allow multiple files
+	- auto PLIST generation
+- install-acr :?? (to generate a PLIST)
+- add -i flag that reads the acr.conf or something similar and runs (install)
+  ./configure with the desired flags. runs make/gmake and installs (install)
+  (like DotGNU's madcow does :) - may use the native pkg system to install
+  the required dependencies, etc :) ...aka TWD
+
+
+Modules
+=======
+- add INSMOD -> insert module
+ - this will include the requested acrm file
+	for example:
+	- file: qt.acrm
+	- <contents>
+		add_flag....
+		ENVWORDS="${ENVWORDS} FOO BAR"
+	- </contents>
+	- acr will check if the requested file exists, (local dir, share dir)
+	- documentation required.
+
+
+TIPS:
+=====
+- pkg-config --exists "gtk2-java >= 2.7"
+- code a lighter pkgconfig alternative?? :)
+## just for history? ##
+- conditionals in Makefile SUBST -> this will make 'make' happy and portable
+ >>false
+ > cat file | awk 'BEGIN{a=0;}{ if (/##MARK##/) { if(a==0){a=1} else {a=0}; } else {if (a==0) print; }}'
+ >>true
+ > cat file | awk 'BEGIN{a=0;}{ if (/##MARK##/) { if(a==0){a=1} else {a=0}; } else { print; }}'
+## /history ##

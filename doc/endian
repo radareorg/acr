@@ -1,0 +1,104 @@
+ENDIAN CHECKS
+=============
+There'r some checks that are interesting to do before the build stage, to
+prevent runtime programs for this checks, change build paths or other tips.
+
+One of these checks is the "ENDIAN".
+
+Some CPUs are little endian (intel,vax), another ones big endian (68k,sparc),
+other ones are bytesexual or bi-endian like (ppc, arm, alpha, mips, pa-risc
+or ia64). And finally another ones are middle-endian (some VAXes for fp ops)
+also called PDP endian.
+
+The endiannes of an architecture defines how it stores and loads data from
+registers and memory:
+
++-------+------------+---------------+---------------+
+| human | big endian | little endian | middle endian |
++-------+------------+---------------+---------------+
+|  1234 |    1234    |      4321     |    3412       |
++-------+------------+---------------+---------------+
+
+ACR only checks for big and little endian, middle ones are not in plans to
+be supported. About the bytesexual architectures they may only work in one
+of them, not both in the same running system. It requires an entire system
+build for the proper work.
+
+ACR provides a keyword to include the check for endianness in the final
+configure script. It's called "CHECK_ENDIAN" or "ENDIAN".
+
+This keyword exports three new variables to the acr environment:
+
+--[ on little endian machine (x86) ]--
+BYTEORDER  = 4321
+LIL_ENDIAN = 1
+BIG_ENDIAN = 0
+
+--[ on big endian machine (sparc) ]--
+BYTEORDER = 1234
+LIL_ENDIAN = 0
+BIG_ENDIAN = 1
+
+
+To check endianness in the build stage you may also use what your system
+provides: "endian.h"
+
+--[ simple us of endian.h ]--
+#include <endian.h>
+
+#if __BYTE_ORDER == __LITTLE_ENDIAN
+    /*  little endian stuff  */
+#else
+    /*  big endian stuff  */
+#endif
+--[ simple us of endian.h ]--
+
+Reference: http://en.wikipedia.org/wiki/Endian
+
+
+32-64-128 BITS CHECK
+====================
+
+Another interesting check may be to know the size of registers in the target
+architecture. In ACR this check is inherit into the SIZEOF keyword, that
+allows the programmer to know the size of the desired variable type.
+
+The difference between different size of register architectures is done by
+getting the size of a pointer or integer. But's recommended to check the
+size of a pointer.
+
+SIZEOF void* ;
+
+A simple example may be:
+
+----[ shell ]
+$ cat configure.acr 
+LANG_C
+
+SIZEOF void* ;
+
+REPORT SIZEOF_VOID_PTR ;
+
+$ ./configure 
+checking build system type... i686-unknown-linux
+checking host system type... i686-unknown-linux
+checking target system type... i686-unknown-linux
+checking for working directories... current
+using prefix /usr/local
+checking for c compiler... gcc
+checking size of void*... 4
+cleaning temporally files... done
+
+Final report:
+ - SIZEOF_VOID_PTR = 4
+
+----[ shell ]
+
+Multiplying the SIZEOF_VOID_PTR value for 8 gives the user the size of
+the register size of the processor.
+
+4*8 = 32 bit (x86, ppc...)
+8*8 = 64 bit (ia64, g5...)
+...
+
+Reference: http://en.wikipedia.org/wiki/64-bit

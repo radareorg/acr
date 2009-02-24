@@ -1,0 +1,48 @@
+ACR sandbox
+===========
+
+ACR implements --sandbox-prefix flag to allow users to install programs in a
+sandbox-way.
+
+
+For example:
+
+Suppose you have a chroot/jailed environment for some users on your box in
+/home/jailed/ directory. In this directory you have another system installed
+(/usr,/home,/etc...).
+
+If you use --prefix=/home/jailed/ you'll probably have problems when running
+the target application into the jailed environment. Because program will find
+their files in /home/jailed/usr/share/data/... And this directory only exists
+out of the box.
+
+Another scene could be: I want to install a program in /usr directory, like
+all the rest of the system. But I want to know the /PLIST/, the list of all
+files installed, generate a MD5 checksum and reinstall the application to the
+properly path (or just cp -Ra).
+
+To solve this kind of problems, ACR implements a new flag called
+--sandbox-prefix, that allows you to specify the directory where all files
+will be installed.
+
+SPREFIX (sandbox-prefix) points by default to PREFIX. Logically your Makefiles
+will require some new stuff, this is an example:
+
+----------------------------8<-----------------------
+# pfx stf
+PREFIX=@PREFIX@
+SPREFIX=@SPREFIX@
+SPREFIX?=${PREFIX}
+
+# oth stf
+VPATH=@VPATH@
+INSTALL=@INSTALL@
+INSTALL_DIR=@INSTALL_DIR@
+INSTALL_SCRIPT=@INSTALL_SCRIPT@
+
+(...)
+
+install:
+	${INSTALL_DIR} ${SPREFIX}/bin
+	${INSTALL_SCRIPT} bin/hello ${SPREFIX}/bin
+------------------>8---------------------------------

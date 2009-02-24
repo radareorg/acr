@@ -1,0 +1,11 @@
+(( this is a simple example of ACR sizing C variables ))
+
+LANG_C
+
+SIZEOF char ;
+SIZEOF int ;
+SIZEOF float ;
+SIZEOF long long ;
+SIZEOF nonexistent ;
+
+REPORT SIZEOF_INT SIZEOF_FLOAT SIZEOF_LONG_LONG SIZEOF_NONEXISTENT ;

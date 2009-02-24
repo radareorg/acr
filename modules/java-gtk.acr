@@ -1,0 +1,15 @@
+((
+
+Java-GTK module for ACR
+
+))
+
+LANG_JAVA!
+
+EXEC JG_CLASSPATH pkg-config gtk2-java --variable=classpath ;
+EXEC GL_CLASSPATH pkg-config glib-java --variable=classpath ;
+EXEC JG_LIBDIR pkg-config gtk2-java --variable=libdir ;
+
+CLASSPATH = $JG_CLASSPATH:$GL_CLASSPATH:$CLASSPATH ;
+
+CHK_CP! org.gnu.gtk

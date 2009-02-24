@@ -1,0 +1,148 @@
+hello_world example for the ACR
+===============================
+
+
+Introduction:
+-------------
+As you knows after read the ../README file. ACR is a autotool replacement.
+This tool allows developers to create portable and lightweight 'configure'
+scripts in a lightweight way.
+
+Configure script allows end-users and developers to check what libs are
+installed on the system, allowing the user to choose between different
+options and prepare all scripts and Makefiles to build the target package
+with the choosed options.
+
+
+The Hello World:
+----------------
+The most faster way to understand how acr works is creating a simple program
+like this hello.c:
+
+----8<------
+#include <stdio.h>
+
+int main(int argc, char *argv[])
+{
+	printf("Hello World!\n");
+
+	return 0;
+}
+---->8------
+
+Ok, now we have our powerful hello world program created.
+
+The first thing you must think about is what kind of requeriments will your
+program need...
+
+- C compiler
+- stdio.h
+- printf function
+
+In a second term we can add new flags to the configure script to allow
+end-users to modify some functionality of our program like:
+
+- disable message output
+- build it statically
+- etc..
+
+
+Creating the configuration file
+-------------------------------
+It's recommended to read the doc/syntax and doc/keywords files to understand
+all ACR commands, possibilities and syntax.
+
+Now we create this file called 'configure.acr':
+
+-----8<------------
+PKGNAME helloworld
+VERSION 1.0
+
+LANG_C!     // we need a C compiler \\
+
+// check for includes and libraries \\
+CHKINC! stdio.h
+CHKLIB! c printf
+
+// Makefiles \\
+CHECK_PROG INSTALL install
+SUBDIRS . ;
+----->8------------
+
+Ok, Now that looks fine.
+
+
+
+Generating the ./configure script
+---------------------------------
+That's the most easy tip of the tutorial =)
+
+Just type "acr" and ./configure script will be generated.
+
+$ acr 
+acr: ./configure script created succesfully.
+$ ls
+configure  configure.acr hello.c
+$
+
+
+
+Creating the Makefile
+---------------------
+All above work must be joined into the Makefiles that will build and install
+our program.
+
+Now we have to create a Makefile prototype. A file used by 'configure' to
+create the final Makefile.
+
+ACR can filter Makefiles and simple plain text files, by now, we only need
+to filter a Makefile. Then we will use "SUBDIRS" command to tell ACR what
+directories must find for Makefile.acr files.
+
+For this reason out 'configure.acr' file has the 'SUBDIRS . ;' line.
+
+Out Makefile will use the @VAR@ syntax like, autotool does.
+
+Let's see how Makefile.acr looks like:
+
+---------8<---------------
+all:
+	@CC@ hello.c -o hello
+
+install:
+	mkdir -p @PREFIX@/bin
+	@INSTALL@ hello @PREFIX@/bin/hello
+
+clean:
+	rm -f hello Makefile
+-------->8----------------
+
+
+Testing
+-------
+Everything is done now. We can test that.
+
+$ ls
+Makefile.acr  configure  configure.acr  hello.c
+
+$ ./configure --prefix=/tmp/hello/
+checking build system type... i686-unknown-linux
+checking host system type... i686-unknown-linux
+checking target system type... i686-unknown-linux
+checking for c compiler... gcc
+checking for cpp... cpp
+checking library c : printf()... yes
+checking for stdio.h... yes
+checking for install... /usr/bin/install
+configure: (tags) filtering ./Makefile.acr
+cleaning temporally files... done
+
+$ make
+gcc hello.c -o hello
+
+$ make install
+mkdir -p /tmp/hello/bin
+/usr/bin/install hello /tmp/hello/bin/hello
+
+
+That's all... easy no? :)

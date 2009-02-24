@@ -1,0 +1,18 @@
+ACR: Auto Conf Replacement
+==========================
+
+ACR tries to replace autoconf functionality generating a full-compatible
+'configure' script (runtime flags). But using shell-script instead of m4.
+This means that ACR is faster, smaller and easy to use.
+
+ACR is released under the GPLv2 license. (please read the file called 'COPYING')
+
+If you're fetching ACR from CVS, please, make clean before cvs up.
+
+If you have new ideas, features, comments, tips, etc, please, feel free
+to inform them to me at:
+
+	pancake@youterm.com
+
+  url: http://news.nopcode.org/pancake/acr.html
+  ftp: ftp://ftp.nopcode.org/prj/acr/

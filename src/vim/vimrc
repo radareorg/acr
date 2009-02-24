@@ -1,0 +1,8 @@
+" acr syntax plugin for vim
+"
+" @author: pancake <pancake@phreaker.net>
+
+sy on
+filetype plugin on
+filetype plugin indent off
+au BufRead,BufNewFile *.acr setfiletype acr

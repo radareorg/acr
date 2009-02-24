@@ -1,0 +1,100 @@
+AMR tutorial
+============
+
+This document describes how to use AMR to automagically create a basic
+ACR project configuration.
+
+Stay in root of your project:
+
+--
+$ pwd
+~/src/hello
+$ ls -FR
+.:
+README src/
+
+./src:
+main.c
+--
+
+So, let's see what's in main.c:
+
+--
+$ cat src/main.c 
+#include <stdio.h>
+#include "main.h"
+
+int main()
+{
+        printf("Hello World\n");
+
+        return 0;
+}
+--
+
+
+That's ok, so now run amr -a:
+
+--
+$ amr -a | tee configure.amr
+## sample configure.amr ##
+CDIR ./src/
+
+CSOURCES  main.c ;
+CINCLUDES  stdio.h ;
+--
+
+Now we have the AMR configuration file. This is a template file that AMR
+uses to create configure.acr or Makefile.acr. This command can be used
+recursively for each directory of your source project. So you'll be able
+to autogenerate all required checks for your project.
+
+Let's generate a configure.acr template:
+
+--
+$ amr -c | tee configure.acr
+## sample configure.acr ##
+PKGNAME hello
+VERSION 0.1
+CONTACT your name ; your@email
+
+LANG_C!
+
+CHKINC! stdio.h
+
+SUBDIRS . ./src/ ;
+--
+
+Now we must create the Makefiles:
+
+--
+$ amr -m > Makefile.acr
+$ cd src
+$ amr -m > Makefile.acr
+$ cd -
+--
+
+That's fine. Everything is done. We can test't now:
+
+--
+$ acr
+
+$ ./configure
+checking build system type... i686-unknown-linux-gnu
+checking host system type... i686-unknown-linux-gnu
+checking target system type... i686-unknown-linux-gnu
+checking for working directories... current
+using prefix '/usr/local'
+checking for c compiler... gcc
+checking for stdio.h... yes
+creating ./Makefile
+creating ./src//Makefile
+cleaning temporally files... done
+
+$ make
+gcc    -c -o src//main.o src//main.c
+gcc  ./src//main.o -o hello
+
+$ ./hello
+Hello World!
+--

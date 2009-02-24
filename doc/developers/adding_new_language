@@ -1,0 +1,31 @@
+How to add a new language into ACR
+==================================
+
+Just follow these steps:
+
+*) edit src/acr-sh
+
+*) init lang environ (in ##INIT## section)
+	LANG_XXX=""
+	LANG_XXX_REQUIRED=""
+	LANG_XXX_ENV=""
+
+*) add keyword in ##LANGS## section
+		  "LANG_XXX") env_xxx; ;;
+		  "LANG_XXX") env_xxx; LANG_XXX_REQUIRED=1 ; ;;
+
+*) add env_xxx in ##ENV_LANG## section
+
+		  env_xxx() {
+			if [ "${LANG_XXX_ENV}" = "1" ]; then return ; fi
+			  LANG_XXX_ENV="XXX"
+			ENVHELP=`cat <<EOF
+				XXX    this variable is used to manage the XXX language
+		  EOF
+		  `
+			add_lang_envwords "XXX"
+		  }
+
+*) add lang_xxx
+
+

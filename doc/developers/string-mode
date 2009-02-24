@@ -1,0 +1,28 @@
+string-mode
+===========
+
+ACR 0.5 adds an internal infrastructure to parse strings to make code cleaner
+to read and maintain. BTW it allows to keep a centralized form to debug and
+handle strings inside the ACR engine (acr-sh).
+
+String mode implements 3 functions:
+
+ - enter_string_mode
+ - wait_string_mode
+ - leave_string_mode
+
+The way to use them is:
+
+(...)
+case "${MODE}" in
+"mode-name")
+	enter_string_mode "${STR}"
+	wait_string_mode
+
+	# do whatever i want with the string
+	echo "My string is: ${STRING}" >/dev/stderr
+
+	leave_string_mode
+;;
+(...)
+esac

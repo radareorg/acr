@@ -1,0 +1,108 @@
+Crosscompiling with ACR
+=======================
+
+*WARNING* ACR integrates crosscompile in v0.3
+*WARNING* GNU compatible crosscompile since v0.4
+
+Running ./configure you'll see these three flags:
+
+--target = arch/os that our program will generate code for.
+--build  = where the program is built (autodetected)
+--host   = where the program will run.
+
+The 'canadian cross' term is related to a build that target, build and host
+are differents between them.
+
+--target flag is only used for compilers that will generate code for the
+target os/architecture. This must be used internally in your program.
+
+--build flag is autodetected and unmodificable. And refers to the local
+architecture.
+
+--host flag is used to point to the os/arch where your program will run, for
+example: if you want to build a Solaris/sparc binary from your NetBSD/x86 box
+you must use --host=solaris-unknown-sparc or whathever the GCC toolchain prefix
+tells.
+
+A canadian cross example may be to build a solaris compiler that generates
+code for linux-x86 from your NetBSD/mips box.
+
+Well, using them you'll be able to crosscompile your projects in a simple way.
+
+Imagine that you need to build a win32 application. But you don't want to use
+any propietary software, and you prefer to stay on your UNIX box.
+
+Then you'll need to crosscompile. Crosscompile allows you to build binaries for
+other architectures or OS.
+
+Before anything you'll need to install the desired toolchain (mingw32, cygwin,
+or gcc-mips, etc...).
+
+The next step is just simple:
+
+$ ./configure --target=i586-pc-mingw32
+checking build system type... i686-unknown-linux
+checking host system type... i586-pc-mingw32
+checking target system type... i686-unknown-linux
+checking for working directories... current
+checking for c compiler... i586-pc-mingw32-gcc
+checking for cpp... i586-pc-mingw32-cpp
+cleaning temporally files... done
+
+Final report:
+ - CC = i586-pc-mingw32-gcc
+
+As you can see, CC is reassigned to use the desired target compiler.
+By now, just type 'make'. And everything must go fine.
+
+---
+
+Problems and tips
+=================
+As you'll understand, target binaries for w32 will be called 'foo.exe',
+and you'll need to ifdef all your Makefiles to modify CFLAGS and files to
+be removed, etc. A sample Makefile.acr would be:
+
+Note that this is only for the GNU Make
+
+--------------8<-----------------
+HOST_OS=@HOST_OS@
+VPATH=@VPATH@
+CC=@CC@
+CFLAGS=@CFLAGS@
+LDFLAGS=@LDFLAGS@
+OBJS=foo.o bar.o
+
+ifeq ($(HOST_OS),mingw32)
+	BIN=foo.exe
+	FLAGS+=-mwindows
+	LIBS=-lwsock32 -lSDL_mixer -lSDL_image -lSDL -lopengl32 -lglu32 -lm
+else
+	BIN=foo
+endif
+
+all: ${OBJS}
+	${CC} ${FLAGS} ${LIBS} ${OBJS} -o ${BIN}
+
+clean:
+	-rm -f ${BIN}
+---------->8---------------------
+
+GCC specific checks
+===================
+You (and probably acr in the future) can check for `gcc -dumpmachine`
+to check the target of the compiler.
+
+OS/ARCH checks in .acr
+======================
+
+Sometimes your programs will be restricted to certain OSs or architectures.
+For example:
+
+  Your program is linux-based and nonportable to other OSs:
+
+	= OS_OK 0 ;
+	IFEQ HOST_OS linux ; OS_OK = 1 ;
+	DIENOT OS_OK You need a GNU/Linux system to run this program.
+
+  These rules are easy to modify, to make checks for architecture, etc.

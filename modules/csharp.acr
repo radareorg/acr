@@ -1,0 +1,29 @@
+((
+
+CSHARP module for ACR
+
+))
+
+ARG_WITH MONO mono use the MONO .net environment ;
+ARG_WITH DOTGNU dotgnu use the DotGNU .net environment ;
+
+CHKPRG MCS mcs
+CHKPRG CSCC cscc
+
+_MCS = 0 ;
+_CSCC = 0 ;
+IFNOTEQ MCS mcs ;    _MCS = 1 ;
+IFNOTEQ CSCC cscc ;  _CSCC = 1 ;
+
+NOTEQ = 0 ;
+IFNOTEQVAL _MCS _CSCC NOTEQ = 1 ;
+
+CS_MODE = 0 ;
+IFAND NOTEQ _MCS     CS_MODE = mono ;
+IFAND NOTEQ _CSCC    CS_MODE = dotgnu ;
+IFAND MONO _MCS      CS_MODE = mono ;
+IFAND DOTGNU _CSCC   CS_MODE = dotgnu ;
+
+DIENOT CS_MODE No .NET compiler found on your system ;
+
+REPORT CS_MODE ;

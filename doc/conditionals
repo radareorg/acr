@@ -1,0 +1,124 @@
+Conditionals
+============
+
+ACR conditionals are handled after checks and assignations.
+
+Version 0.3 uses a new conditional syntax that allows you to write more complex
+ones. But...isn't backward compatible. By the way is good to read this
+document to understand how they work.
+
+Conditionals are grouped by keywords:
+
+ - IF      /  IFNOT
+ - IFNULL  /  IFNOTNULL
+ - IFAND   /  IFNOTAND
+ - IFOR    /  IFNOTOR
+ - IFEQ    /  IFNOTEQ
+ - IFEQVAL /  IFEQVAL
+
+IF         A     /* if ( A = 1 ) */
+IFNOT      A     /* if ( A = 0 ) */
+IFNULL     A     /* if ( A = '' ) */
+IFNOTNULL  A     /* if ( A != '' ) */
+IFAND      A B   /* if ( A = 1 && B = 1 ) */
+IFNOTAND   A B   /* if ( A = 0 && B = 0 ) */
+IFOR       A B   /* if ( A = 1 || B = 1 ) */
+IFNOTOR    A B   /* if ( A = 0 || B = 0 ) */
+IFEQ       A B   /* if ( A = B ) */
+IFEQVAL    A B   /* if ( A = '$B' ) */
+IFNOTEQVAL A B   /* if ( A != '$B' ) */
+
+f.ex:
+  IFEQ HOST_OS TARGET_OS  FOO = BAR ;
+
+There'r some operations to do when conditionals matches:
+ - =   : assignation.
+ - ?=  : assignation when not defined.
+ - +=  : concatenation.
+
+
+
+Nesting conditionals:
+=====================
+
+You can nest conditionals by using the '{' '}' keys. f.e.:
+
+IF HOST_OS linux {
+	DIENOW I don't want to be built on top of a penguin! ;
+}
+
+When create a new frame for a conditional, you can add any
+code you want inside. Is not restricted to variable assignations.
+
+This will probably be expanded in the future. But keeping backward
+compatibility or auto translation for the new syntax.
+
+
+
+A bit of documentation:
+=======================
+
+[ IF | IFNOT ]==========================================================
+ SYNTAX:
+  IF<NOT> [varname] [setvarname] [operation] [value] ;
+
+ EXAMPLE:
+  IF HAVE_LIB_C HaveLibC = 1 ;
+
+ EXPLANATION:
+  Checks if the content of [varname] is equal to 1 (IF) or 0 (IFNOT).
+
+
+[ IFNULL | IFNOTNULL ]==================================================
+ SYNTAX:
+  IF<NOT>NULL [varname] [setvarname] [operation] [value] ;
+
+ EXAMPLE:
+  IFNULL JAPANESE JSUPPORT = 1 ;
+
+ EXPLANATION:
+  Checks if the content of [varname] is empty (IFNULL) or not (IFNOTNULL)
+
+
+[ IFAND | IFNOTAND ]====================================================
+ SYNTAX:
+  IF<NOT>AND [varname] [varname] [setvarname] [operation] [value] ;
+
+ EXAMPLE:
+  IFAND FOO BAR FooBar += FOO and BAR are equal to 1 ;
+
+ EXPLANATION:
+  Checks if the content of both varnames are equal to 1 (IFAND) or 0 (IFNOTAND)
+
+
+[ IFOR | IFNOTOR ]====================================================
+ SYNTAX:
+  IF<NOT>OR [varname] [varname] [setvarname] [operation] [value] ;
+
+ EXAMPLE:
+  IFOR FOO BAR FooBar += FOO or BAR is 1 ;
+
+ EXPLANATION:
+  Checks if the content of any of these variables contains 1 (IFOR) or 0 (IFNOTOR)
+
+
+[ IFEQ | IFNOTEQ ]======================================================
+ SYNTAX:
+  IF<NOT>EQ [varname] [value] ; [setvarname] [operation] [value] ;
+
+ EXAMPLE:
+  IFEQ HOST_OS netbsd ; NiceOS = 1 ;
+
+ EXPLANATION:
+  Checks if the content of [varname] is equal to [value].
+
+
+[ IFEQVAL | IFNOTEQVAL ]================================================
+ SYNTAX:
+  IF<NOT>EQVAL [varname] [varname] [setvarname] [operation] [value] ;
+
+ EXAMPLE.
+  IFEQVAL FOO BAR FooEqualToBar = 1 ;
+
+ EXPLANATION:
+  Checks if values of both [varnames] are equal.

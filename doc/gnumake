@@ -1,0 +1,19 @@
+GNU make
+========
+
+GNU make extends the syntax for the original Makefiles allowing you
+to use some interesting expressions.
+
+If you're using gnu makefiles in your project you must specify't
+in your configure.acr configuration file by adding this line:
+
+USE_GMAKE
+
+This flag makes configure script fail if no gnu make program is found
+on your system. So, you must re-define the MAKE variable on each
+Makefile by adding this line at top of each Makefile.acr:
+
+MAKE=@MAKE@
+
+This will make run happy on BSD systems (for example) where 'make'
+command is not the GNU one, wrapping the concurrent calls to 'gmake'.

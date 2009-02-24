@@ -1,0 +1,40 @@
+Makefiles suggestions
+=====================
+
+Allways get the environment variables from ACR:
+
+CC=@CC@
+PREFIX=@PREFIX@
+VPATH=@VPATH@
+INSTALL_PROGRAM=@INSTALL_PROGRAM@
+
+Start writting the makefile from the template created with 'acr -m' may be
+a good idea.
+
+
+
+Conditionals:
+=============
+
+For GNU make:
+
+ifeq ($(HAVE_SDL_MIXER),1)
+LDFLAGS+=-lSDL_mixer
+endif
+
+For BSD make
+
+.if ${HAVE_SDL_MIXER} == "1"
+LDFLAGS+=-lSDL_mixer
+.endif
+
+
+This is so tricky and system dependant...you can use ACR to fix this:
+
+IF HAVE_SDL_MIXER LDFLAGS += -lSDL_mixer ;
+
+But remember, this LDFLAGS will be world-wide, and may be interesting to
+use different LDFLAGS for each program or directory src:
+
+= GAME_LDFLAGS ;
+IF HAVE_SDL_MIXER GAME_LDFLAGS += -lSDL_mixer ;

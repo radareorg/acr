@@ -1,0 +1,167 @@
+#!/bin/sh
+#
+# acr is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# acr is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with acr; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+#
+#===========================================================================
+#
+# ACR: AutoConf Replacement
+#
+# @license:  GPLv2
+# @author:   pancake <pancake@phreaker.net>
+# @homepage: http://www.nopcode.org/?t=acr
+# @version:  @VERSION@
+#
+# acr-recovery:
+#   Recovery utility that allows the user to recover the original configure.acr
+#   file from a generated acr-configure script.
+#
+
+S="\$"
+CONFIGURE=""
+
+get_value_of() {
+	VAR=$1	
+	echo `./${CONFIGURE} --report | grep "${VAR}:" | awk -F : '{print $2}'`
+}
+
+get_library_name() {
+	VAR=$1
+	echo ${VAR} | awk '{print (substr($1,4)); }'
+}
+
+if [ -z "$1" ]; then
+	echo "usage $0 [configure-script]"
+	exit 1
+fi
+
+if [ ! -f "$1" ]; then
+	echo "error: target file '$1' does not exist." > /dev/stderr
+	exit 1
+fi
+
+if [ ! -x "$1" ]; then
+	echo "error: target file '$1' is not executable." > /dev/stderr
+	exit 1
+fi
+
+VERSION="`./${1} --version 2>/dev/null`"
+if [ -z "`echo ${VERSION} | grep ACR`" ]; then
+	echo "error: this is not an acr generated configure script." > /dev/stderr
+	exit 1
+fi
+
+CONFIGURE="$1"
+## TODO: if configure does not starts with / or ., add  ./ at begining
+
+EMBED="`cat ${CONFIGURE} | grep '#ACR#'`"
+if [ -n "${EMBED}" ]; then
+	cat ${CONFIGURE} | grep '#ACR#' | cut -c 7-
+	exit 0
+fi
+
+REPORT=`./${CONFIGURE} --report | awk -F : '{print $1}' 2>/dev/null`
+if [ ! "$?" = "0" ]; then
+	echo "error: configure script returns invalid value $?."
+	exit 1
+fi
+
+for A in ${REPORT}; do
+	case ${A} in
+	"PKGNAME")
+		echo PKGNAME `get_value_of PKGNAME`
+		;;
+	"VERSION")
+		echo VERSION `get_value_of VERSION`
+		;;
+	"LANGS")
+		LANGS=`get_value_of LANGS`
+		for B in ${LANGS}; do
+			case ${B} in
+			"c")
+				echo LANG_C
+				;;
+			"c++")
+				echo LANG_CXX
+				;;
+			"java")
+				echo LANG_JAVA
+			esac
+		done
+		;;
+	"REQUIRED")
+		REQ=`get_value_of REQUIRED`
+		for B in ${REQ}; do
+			case ${B} in
+			lib*)
+				echo CHKLIB! `get_library_name "${B}"`
+				;;
+			esac
+		done
+		;;
+	"OPTIONAL")
+		REQ=`get_value_of OPTIONAL`
+		for B in ${REQ}; do
+			case ${B} in
+			lib*)
+				echo CHKLIB `get_library_name "${B}"`
+				;;
+			esac
+		done
+		;;
+	
+	esac
+done
+
+CONTACT="`./${CONFIGURE} --help | grep 'Report bugs to:'|cut -c 16-`"
+if [ -n "${CONTACT}" ]; then
+	NAME="`echo ${CONTACT} | awk '{print $1}'`"
+	MAIL="`echo ${CONTACT} | awk '{print substr($2,2,length($2)-2);}'`"
+	echo "CONTACT ${NAME} ; ${MAIL}"
+fi
+
+ENDIAN=`cat ${CONFIGURE} | grep BYTEORDER=1234`
+if [ -n "${ENDIAN}" ]; then
+	echo "CHECK_ENDIAN"
+fi
+
+SD=""
+SUBDIRS=`cat ${CONFIGURE}| grep 'do # SUBDIRS'|cut -c 9-`
+if [ -n "${SUBDIRS}" ]; then
+	for A in $SUBDIRS ; do
+		if [ "${A}" = ";" ]; then break; fi
+		SD="${SD} ${A}"
+	done
+	echo "SUBDIRS $SD ;"
+fi
+
+SD=""
+SUBDIRS=`cat ${CONFIGURE}| grep 'do # SUBST_FILES'|cut -c 9-`
+if [ -n "${SUBDIRS}" ]; then
+	for A in $SUBDIRS ; do
+		if [ "${A}" = ";" ]; then break; fi
+		SD="${SD} ${A}"
+	done
+	echo "SUBST_FILES $SD ;"
+fi
+
+SD=""
+SUBDIRS=`cat ${CONFIGURE}| grep 'do # REPORT'|cut -c 9-`
+if [ -n "${SUBDIRS}" ]; then
+	for A in $SUBDIRS ; do
+		if [ "${A}" = ";" ]; then break; fi
+		SD="${SD} ${A}"
+	done
+	echo "REPORT $SD ;"
+fi

@@ -1,0 +1,61 @@
+.Dd Jul 1, 2006
+.Dt ACR 1
+.Os
+.Sh NAME
+.Nm acr
+.Nd autoconf replacement
+.Sh SYNOPSYS
+.Nm acr
+.Op Fl dDehmnprvwx
+.Op Ar -o file
+.Op Ar file | args
+.Sh DESCRIPTION
+.Pp
+ACR tries to replace the autoconf functionality generating a full
+compatible "configure" script. The main difference is that ACR uses
+shell script instead of m4, and final generated script looks smaller,
+faster, easy to read and maintain.
+.Pp
+There's a new concept that consists on adding simple rules. And trying to
+skip all programming and non-portable stuff. That breaks standarization
+of software packages.
+.Bl -tag -width indent
+.It Fl d -debug
+Runs ACR in debug mode. This will show a branch tree for all command calls,
+allowing the developer to see if the target script is parsed properly.
+.It Fl D -dist
+Scans current project directory, resets to the initial state and creates
+a distname tarball 'pkgname-version.tar.gz'.
+.It Fl e -embed
+Embeds configure.acr into the final configure script.
+.It Fl h -help
+Show the usage message to the console.
+.It Fl m -makefile
+Creates a sample "Makefile.acr" using configure.acr file.
+.It Fl n -do-nothing
+Do not create the final configure script.
+.It Fl o -output Ar [file]
+Generate the configure script into a different filename.
+.It Fl p -progress-bar
+Show progress bar.
+.It Fl r
+Recovery mode. read acr-recover(1) for more information.
+.It Fl s
+Strip default code generation, this is flag parsing and system checks.
+.It Fl v --version
+Show version information.
+.It Fl w --word [number]
+Cats the 'configure.acr' file and colorizes the desired word number.  
+.It Fl x -exec
+Generates and executes the configure.acr directly without creating the
+"configure" file. You can also pass the cmdline flags like --prefix, etc.
+.El
+.Sh SEE ALSO
+.Xr amr 1
+.Xr acr-recover 1
+.Xr configure.acr 5
+.Xr configure.amr 5
+.Sh AUTHOR
+Written by pancake <pancake@phreaker.net>
+.Pp
+http://news.nopcode.org/pancake/acr.html

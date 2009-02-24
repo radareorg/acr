@@ -1,0 +1,223 @@
+#!/bin/sh
+#
+# Copyright (C) 2005, 2006
+#       pancake <pancake@phreaker.net>
+#
+# acr is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# acr is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with acr; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+#
+#===========================================================================
+#
+# ACR: AutoConf Replacement
+#
+# @license:  GPLv2
+# @author:   pancake <pancake@phreaker.net>
+# @homepage: http://news.nopcode.org/pancake/acr.html
+# @version:  @VERSION@
+#
+# acr:
+#   Main script that wraps the rest of acr scripts (mainly acr-sh)
+#
+
+DEBUG=0
+EMBED=0
+EXEC=0
+NOPE=0
+PBAR=0
+STRIP=0
+MAKEFILE=0
+MAKEDIST=0
+RECOVER=0
+CONFIGURE="./configure"
+ACRFILE="configure.acr"
+TMP_FILE=""
+
+control_c()
+{
+	echo
+	echo "^C : interrupted execution."
+	if [ -n "${TMP_FILE}" ]; then
+		rm -f ${TMP_FILE}
+	fi
+	exit 1
+}
+
+trap control_c 2
+
+show_version()
+{
+	echo "acr: version @VERSION@"
+	exit 0
+}
+
+show_usage()
+{
+	echo "acr: Usage '$0' [-flags] [file] [args]"
+	echo "  -d         runs in debug mode."
+	echo "  -D         creates the distribution tarball."
+	echo "  -e         embed configure.acr into final script as comment."
+	echo "  -h         show this help."
+	echo "  -m         generate main Makefile.acr file."
+	echo "  -n         do not generate the final configure script. (parse only)"
+	echo "  -o [file]  output file (default: configure)."
+	echo "  -p         show progress bar."
+	echo "  -r         recovery mode. (runs acr-recover)"
+	echo "  -s         strip default code generation."
+	echo "  -v         show version information."
+	echo "  -w [num]   cats the configure.acr highlighting the [num] word."
+	echo "  -x         execute the script directly."
+	exit $1
+}
+
+ARGS=`getopt sdDehmno:prvw:x $*`
+if [ $? -ne 0 ]; then
+	show_usage 1
+fi
+set -- $ARGS
+while [ $# -gt 0 ]; do
+	case $1 in
+	"-w"|"--word")
+		WORD="$2"
+		shift
+		;;
+	"-x"|"--exec")
+		EXEC=1
+		break;
+		;;
+	"-D"|"--dist")
+		echo "[1/4] Parsing configure.acr." >/dev/stderr
+		PBAR=1
+		MAKEDIST=1
+		NOPE=1
+		;;
+	"-e"|"--embed")
+		EMBED=1
+		;;
+	"-s"|"--strip")
+		STRIP=1
+		;;
+	"-v"|"-V"|"--version")
+		show_version
+		;;
+	"-d"|"--debug")
+		DEBUG=1
+		;;
+	"-m"|"--makefile")
+		MAKEFILE=1
+		;;
+	"-h"|"--help")
+		show_usage 0
+		;;
+	"-r"|"--recover"|"--recovery")
+		ACRFILE=${CONFIGURE}
+		RECOVER=1
+		;;
+	"-p"|"--progress-bar")
+		PBAR=1
+		;;
+	"-n"|"--do-nothing")
+		NOPE=1
+		;;
+	"-o"|"--output")
+		CONFIGURE=$2
+		shift
+		;;
+	"--")
+		;;
+	*)
+		ACRFILE="$1"
+		;;
+	esac
+
+	shift
+done
+
+#if [ "`echo ${ACRFILE}|cut -c 1`" = "-" ]; then
+#	echo "error: unknown flag '${ACRFILE}'." > /dev/stderr
+#	exit 1
+#fi
+
+if [ "${RECOVER}" = 1 ]; then
+	exec acr-recover ${ACRFILE}
+	# TODO manage output
+	exit 1
+fi
+
+if [ ! -f "${ACRFILE}" ]; then
+	echo "error: file ${ACRFILE} not found" > /dev/stderr
+	exit 1
+fi
+
+if [ "${WORD}" ]; then
+	N=0
+	WORDS=`cat ${ACRFILE}`
+	NW=`echo $WORDS | wc -w `
+
+	test $WORD -gt $NW &&\
+		echo "Word number out of range (limit $NW)." &&\
+		exit 1
+
+	for A in ${WORDS} ; do
+		N=`expr $N + 1`
+		if [ $N = $WORD ]; then
+			printf -- "\e[35m$A\e[0m "
+		else
+			printf -- "$A "
+		fi
+	done
+	echo
+	exit 1
+fi
+
+if [ "${EXEC}" = 1 ]; then
+	shift
+	TMP_FILE=`mktemp -t acr.XXXXXX`
+	chmod 700 ${TMP_FILE}
+	acr-sh "${ACRFILE}" "${CONFIGURE}" > ${TMP_FILE} 
+	sh ${TMP_FILE} $@
+	rm ${TMP_FILE}
+else
+	if [ "${MAKEFILE}" = 1 ]; then
+		env MAKEDIST=${MAKEDIST} STRIP=${STRIP} MAKEFILE=1 PBAR=${PBAR} NOPE=${NOPE} \
+		acr-sh "${ACRFILE}" "${CONFIGURE}" > /dev/null
+		RET=$?
+	else
+		if [ "${NOPE}" = 1 ]; then
+			env MAKEDIST=${MAKEDIST} STRIP=${STRIP} NOPE=1 PBAR=${PBAR} DEBUG=${DEBUG} \
+			acr-sh "${ACRFILE}" "${CONFIGURE}" > /dev/null
+			RET=$?
+		else
+		TMP_FILE=`mktemp -t acr.XXXXXX`
+		env NOPE=0 DEBUG=${DEBUG} STRIP=${STRIP} PBAR=${PBAR} \
+		acr-sh "${ACRFILE}" "${CONFIGURE}" > ${TMP_FILE}
+		if [ ! "$?" = 0 ]; then
+			rm -f ${TMP_FILE}
+		else
+			mv ${TMP_FILE} "${CONFIGURE}"
+			chmod +x "${CONFIGURE}"
+			if [ "${EMBED}" = 1 ]; then
+				cat ${ACRFILE} | awk '{print "#ACR# " $0}' >> "${CONFIGURE}"
+			fi
+		fi
+	fi
+	fi
+
+	if [ "${RET}" = 1 ]; then
+		echo "acr: error handled by acr."
+		exit 1
+	else
+		[ "${NOPE}" = 0 ] && echo "acr: all done."
+		exit 0
+	fi
+fi

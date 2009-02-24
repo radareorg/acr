@@ -1,0 +1,405 @@
+0.5.1 -
+	- fix a big bug in the check_library function, inminent release!
+	- make sure LIL_ENDIAN is 0 or 1
+	- fix a bug on endianness check '\n' char
+	- fix a bug on string concatenation
+
+0.5 - ?
+	#- overview -#
+	- final script is now serialized. No stages now.
+	- lot of portability fixups and code cleanup.
+	- hide code blocks by ##MARKS## in files handled by SUBDIRS.
+	- add libtool support.
+	- strip support for acr: smaller scripts for nested purposes.
+	- amr is now in semi-usable stage.
+	- better flags parse (getopt)
+	- better ruby support.
+	- add perl threads support.
+	- guess_os now uses config.guess if it exists.
+	- cleaner debug output
+	- add support to include modules.
+	- new commands: DIENOW, IFOR, IFNOTOR, INCLUDE, CHKUSR, CHKGRP
+	- deprecated commands: USE_BACKUP, LOCAL, GLOBAL
+
+	#- detailed -#
+	- less 'cat' usage.
+	- add acr -g (print out autogen.sh)
+	- Fixes on acr -m and amr -m
+	- AMR complete support for really basic C projects.
+	- Documentation fixups
+	- VPATH subst now creates the directories correctly
+	- functionalize the CHKLIB and CHKINC
+	- Deprecate the '<-' assignation. similar to IFEQVAL
+	- Deprecate the IFEQVAL keyword in pro to IFEQ
+	- Initial import of functionalized checks for includes
+	- acr-vim plugin installation script now comes with -force
+	- One word comments has been deprecated.
+	- New comment style that looks closer to C ( /* .. */ )
+	- Standarize SIZEOF varnames to GNU like ones
+	- SIZEOF now supports emphasys with '!'
+	- SIZEOF ; now exports HAVE_SIZEOF_* to 0 or 1
+	- Some fixups for the acr -m
+	- Some fixups on Makefile generation by AMR
+	- initial import of amr-tutorial
+	- minor typo fix on src/acr help message
+	- sync vim syntax plugin for the new commands
+	- fix LANG_JAVA for the new ARG_* rules
+	- simplify conditionals
+	- major cleanup of variable usage
+	- HAVE_CLASSPATH_foo is now exported by CHK_CP
+	- ARG_* allows to work with flag or by environ
+	- refix perl-threads support
+	- chkprg now checks if varname is a valid executable before PATH search
+	- sync ARG_* usage for the manpage
+	- add some examples in configure.acr(5)
+	- PKGCFG exports a HAVE_PKGCFG_blabla variable
+	- fix tr portability
+	- simplify the _REQUIRED variable abuse
+	- add enter_mode function to simplify the blobs
+	- documentation the new stuff of chkver
+	- deprecate USE_BACKUP command and sync documentation.
+	- enhace test.sh script and documentation for unitary tests
+	- export HAVE_(pkg-config-name)_VERSION_(version-number) in chkver
+	- implement ! in CHKVER command
+	- export RUBY and RUBY_VERSION with LANG_RUBY
+	- Fix ruby and python module checks when no ruby/python found.
+	- Check ACR_RMFILES in do_remove before rm anything
+	- Move examples/csharp.acr to modules/
+	- Refresh examples to pass unit tests (make test)
+	- Whoops missing mode-callback defined for CHK_PY
+	- Make use of config.guess when exists
+	- Stop parsing when invalid operation on assignment
+	- Cleaner debug output
+	- Implement the string mode. Faster string concat and better debug output.
+	- Reread all the code to reduce some expressions and drop unused code
+	- Add HAVE_PROGNAME foreach CHKPRG (repercutes on USE_LIBTOOL)
+	- fix DIENOW command
+	- deprecate LOCAL and GLOBAL commands
+	- add LIBTOOL_STATIC export for USE_LIBTOOL command
+	- fix acr homepage everywhere
+	- call do_remove everytime a compilation failes
+	- add configure.amr(5) manpage
+	- Implement more stuff on AMR, basic usage and documentation.
+	- Some minor size optimization (about 130 bytes)
+	- Add new way to DIE: DIENOW
+	- Rename DIE to DIEIF and DIENOT to DIEIFNOT (usability)
+	- New conditional keywords IFOR and IFNOTOR
+	- Fix check command to match the new infrastructure
+	- Add support for multiple includes (foo.h+bar.h)
+	- Fix a problem with the BSD awk and shell (fixes CHKPRG)
+	- unknown flags are handled as warnings instead of fatal errors.
+	- fix percentatge '%' usage in SCRIPT (fixes SIZEOF bug)
+	- also export [HOST|BUILD|TARGET]_[CPU|OS]
+	- Beutify the progress bar when including modules.
+	- Warn on un-supported flags passed to the ./configure
+	- Documentate and securize INCLUDE keyword.
+	- Add INCLUDE keyword.
+	- flags now uses the standard value when no argument is passed.
+	- add CHKUSR and CHKGRP commands.
+	- add 'doc/flag-arguments' file.
+	- show default arg_* value in FLAGREPORT and --help
+	- Redefine a new standard for ARG_* commands.
+	- Check foreach variable definition.
+	- Fix '!' token for LANG_*
+	- Use 'cut' instead of 'awk in some places.
+	- Fix distribution file creation code inside the acr-sh
+	- use ${PERL} instead of perl.
+	- Fix perl support again (serialization must be done in the SCRIPT).
+	- fix NKEYS insanity.
+	- drop LOCAL/GLOBAL keywords. Now handled by a serialization.
+	- add GPL license in the proper way.
+	- Cleanup of unused variables
+	- check includes and libraries supported by C and C++
+	- change URL to the current one
+	- fix all licensing stuff.
+	- rename LICENSE -> COPYING
+	- use vim foldering
+	- Move all keywords to a single case statement
+	- Serialize script generation (!!)
+	- call command -v from other shell () or sh -c.
+	- install 'amr'
+	- add -s in 'acr' to strip default code.
+	- fixups for amr (best cdeps prediction, fix cdeps in report)
+	- reuse for USE_BACKUP
+	- use MODE instead of huge IF (4% faster) (needs testing)
+	- fixups for CHECK_PROG (error string and argument handler)
+	- add libtool support (USE_LIBTOOL and USE_LIBTOOL!)
+	- initial import of amr (the auto make replacement)
+	- use getopt to fetch arguments from command line
+	- add hidden blocks by using ##MARKS## in SUBDIRS
+	- Add support for ObjectiveC
+	- drop /-n/ in conditionals
+	- incremented performance by using the arithmetic extension $((aOPb))
+	- reduced configure size by using : {FOO:=BAR}
+
+0.4 - 20050921
+	#- overview -#
+	- added 'else'
+	- support for contexts
+	- added a reverse engineering tool to recover .acr files from the final
+	  script generated by acr.
+	- progressbar added 
+	- lot of fixes
+	- better documentation
+	- more debugging information
+	- possibility to get the value of the target variable
+	- enhaced java support
+	- add ruby language support
+	- adopt GNU like crosscompile
+	- add CHECK_ENDIAN
+	- support for multiple library checks
+	- now SUBDIRS supports files.acr as targets
+	- syntax highlighting for VIM
+	- acr -D creates the dist tarball of the project
+	- new command: install-acr
+	- support for standard variable definitions (VAR = VALUE)
+
+	#- detailed -#
+	- ppc -> powerpc
+	- install script for vim syntax highlighting scripts
+	- autodetect GNU systems in $GNU variable (-gnu)
+	- add -w flag
+	- support for "" and '' values (null string value)
+	- force strict new standard variable definitions
+	- add checks before creating files (clean crash)
+	- support for standard variable definitions (VAR = VALUE)
+	- add install-acr manpage
+	- type some install-acr stuff.
+	- doc+man CHECK command
+	- initial import of install-acr
+	- order help flags in manpage
+	- add '-D' flag --dist . creates a tar.gz from a configure.acr project
+	- fix '-n' flag.
+	- create src/vim to store the VIM syntax highlighting plugin
+	- add REPORT in manpage!!
+	- fix manpage PKG_CONFIG -> PKGCONFIG
+	- doc SUBDIRS+files, dislike SUBST_FILES :P
+	- alphabetically ordened --help flags.
+	- add .PHONY in /acr -m/ mode and Makefile
+	- fix 'command not found' in EXEC when command is not found.
+	- DIE works for "1" and non "0" strings, DIENOT for "0" and ""
+	- also allow --r flag as --report alias
+	- add sunos, syllable on USE_DL
+	- fi'smiley-ascii art %)
+	- check for dupped USE_DL
+	- SUBDIRS support for target files
+	- do not overwrite on failed attempts (src/acr)
+	- add INSTALL_LIB and INSTALL_MAN envwords
+	- <- operator fixed
+	- add INCLUDEDIR into the ENVWORDS
+	- allows multiple libs checks CHKLIB c+m
+	- support for multiple libs checks
+	- LD_LIBS -> DL_LIBS
+	- conditional bugs fix
+	- update autogen.sh to do things well
+	- change --version message
+	- add doc for endiannes checks with ACR. (doc/endian)
+	- fixes the use of '*' in SIZEOF kw
+	- crosspath+vpath+subst_files bug fixed. (read doc/crosspath-build FMI)
+	- add ENDIAN | CHECK_ENDIAN keywords
+	- awk -> expr for sums optimizations
+	- all language bindings renamed from CHK to CHK_
+	- add [!] mode for each CHK_
+	- add RUBY extensions check support
+	- add RUBY support
+	- adopt GNU like crosscompile (thx2jemarch ;)
+	- fix cpp 2.9x problem
+	- fix relative path bug for VPATH
+	- fix VPATH bug for subdirs. (thx sepharad)
+	- fix gnu-awk warnings
+	- drop external program executions
+	- use_pthread requires lang_c
+	- drop cats from the house. (optimization)
+	- use_pthreads requires lang_c
+	- fix OS-X eval bug
+	- autoexport cflags-ldflags on pkgconfig
+	- added automatic context switching ( local inside {} )
+	- add_envword fixups and optimization
+	- changelog separation in overview/detailed
+	- more integration in context and nested concepts.
+	- add }{ and }ELSE{ aliases to branch alternative conditionals.
+	- fix 102% bug :)
+	- optimize progressbar
+	- better syntax documentation
+	- documentate contexts
+	- add LOCAL and GLOBAL contexts to manage definitions ( =,+=...)
+	- documentate IFEQVAL
+	- documentate nested conditionals
+	- add nested conditionals '{' and '}' keywords.
+	- hide last NOP command in debug
+	- fix mktemp portability bug
+	- drop CVS tags from dist file
+	- catch control-c in acr (remove tmp file)
+	- update make test to use -p
+	- add CSHARP example (may help someone :)
+	- add progressbar (-p|--progress-bar)
+	- split gmake into env_gmake and use_gmake
+	- fix MAKE stuff, GMAKE=0|1
+	- add REPORT_TOOLS
+	- new debug output format
+	- use numberline in errors
+	- add -n|--do-nothing flag into acr
+	- add wordcounter for better debugging
+	- add <- operator.
+	- allow to get value of variables (<-VAR)
+	- one word comments support '#.*' (manpage)
+	- add embed support to acr-recover
+	- add -e|--embed to acr
+	- add acr-recover manpage
+	- add metadatas for acr -r
+	- add_envword cleanup
+	- show prefix in ./configure output
+	- initial import of acr-recover
+	- update software signature in acr
+	- add -r|--recovery flag into acr
+	- add -o|--output flag into acr
+	- documentate sizeof, add example, update manpage
+	- fix whitespace before ';' in manpages
+	- add SIZEOF command
+	- add '((' '))' comments
+	- add <- definition. (get value of varname xx)
+	- add warnings for dupped exported variables
+	- add warnings for common typos
+	- add doc/make-tips
+	- add SUBST alias for SUBST_FILES
+	- fix REPORT_CXX
+	- fine get environment procedure (add_envword)
+	- move ENDSCRIPT before IFSCRIPTS
+	- split SEDFLAGS into different args (to be POSIX compliant)
+	- use mv -f to avoid user interactivity
+	- make pkg-config continue when no executable or package found.
+	- add EXPORT_DEFINED - to export only the defined variables (!""||0)
+	- fix EOF bug when configure.acr ends with one-word keyword. 
+	- add NOP keyword.
+	- fix .h creation when VPATH is used.
+	- Be autodetected by url2pkg from pkgsrc.
+	- add CHECK_CLASSPATH_REQUIRED
+	- fix sub -> gsub (reported by sepharad)
+	- add syntax tips into configure.acr
+
+0.3 - 20050421
+	- sync documentation and manpages
+	- add NOBACKUP command to drop .backup stuff
+	- unsubst gnumake-function integration with -m flag
+	- add 'security' check in SUBST_FILES by adding .backup and .orig
+	- `-> read doc/backup FYI
+	- fix ENVWORDS on env_java
+	- add S|H|SH_FILES into clean target makefile generation
+	- change all !"" to -z or -n 
+	- use command instead of my_whereis
+	- use (exec) instead of direct access to the cmd. (netbsd sh tip)
+	- check pthread_testcancel for PTHREADS and HAVE_LIBS=1
+	- register pthread into REQUIRED/OPTIONAL report
+	- add REQUIRE_ACR_VERSION.
+	- few documentation for acr hackers
+	- my_whereis checks for -x instead of -e
+	- switch from '-e' to '-f' (portability)
+	- fix jsh problem with [ -e '' ] (Solaris)
+	- LANG_PYTHON, CHK_PY documented into manpage
+	- simple process messages (creating...)
+	- add manpage entries for PYTHON and IF*
+	- more fixes on --help message
+	- add IFNULL and IFNOTNULL
+	- all conditional strings ends with ';'
+	- add IFEQVAL / IFNOTEQVAL conditional
+	- some conditional codes rewritted
+	- allow the use of \; on strings
+	- add 'concat' function for readibility
+	- conditional documentation added.
+	- major conditional syntax changes
+	- export HAVE_LANG_xxx after check each language.
+	- fix tabspaced flags (now uses spaces, support for long variable names)
+	- fix env_% envwords
+	- *WARNING* further change makes acr to break backward compat. *WARNING*
+	- split all language supports into required and supported (''/'!')
+	- fix env_c to take CFLAGS and LDFLAGS
+	- Entire rewrite of acr cmdline parser
+	- Use IS_KEYWORD for unexpected EOF.
+	- fix --help returns when no lang defiend.
+	- boolean flags also reset the value at the end of script.
+	- fix IFAND/IFNOTAND. It doesn't does what manpage says.
+	- fix CHKINC bug (doesn't check CFLAGS), doesn't uses HAVE_PROGS.
+	- fix bug parsing cmdline flags. (eval)
+	- more info in 'SUPPORT' file
+	- Hide errors when no pkg-config is found.
+	- Fix sh-portability tips on pkg-config stuff
+	- drop QUITE flag (-q, --silent, --quite) no sense
+	- add sandbox documentation
+	- Add --sandbox for sandboxed installs
+	- Cleaner (tabs) --report output.
+	- Some --help message fixups.
+	- USE_JNI must depends on LANG_C
+	- Use JAVA_HOME for javac checks
+	- Add envhelp for java
+	- initial crosscompile support (doc/crosscompile)
+	- add LANG_PYTHON and CHECK_PYTHON_MODULE
+	- fix missing keyword on manpage
+	- drop autoconf compatibility command.
+	- fix end with word bug.
+	- add JNI support.
+	- add CHKCP for classpath checks.
+	- catch control-c, centralize temporaly files.
+	- fixups for report langs
+	- drop test target from 'all' target.
+	- better makefile generation
+	- best c++ checks
+	- fix remove of temporally lang files.
+	- fix mar references in doc
+
+0.2 - 20050220
+	- fix version string
+	- fix some problems with add_flag
+	- fix variable overwritting bug
+	- drop --oldincludedir
+	- fix for REPORT (-r) cleanup output
+	- Create manpages
+	- Rename some commands
+	- Add EXEC command
+	- Add INSTALL_* environs
+	- Fix environ code using test -z
+	- Drop SHAREDSTATEDIR and OLDINCLUDEDIR from environ (deprecated)
+	- Fix standard SH tips for portability
+	- Add -m to acr wrapper to create Makefile.acr
+	- Add PERL support (PERL_THREAD,USE_PERL,CHK_PM)
+	- Fix sed expression bug
+	- Add --report|-r flag to the final ./configure
+	- add USE_X11 directive
+	- add LANG_TCL and USE_TK
+	- check length of --flags for clean --help output
+	- add USE_ICONV USE_DL
+	- add more --help typos
+	- add USE_PTHREAD command
+	- autodetect .orig files in subst stage
+	- catch [C|LD]FLAGS as exportable ones
+	- Add PKGCFG command
+	- Add -x flag for cmdline execution
+	- Check version of libraries
+	- Add ?= assignation
+	- Add IF[*]+ commands
+	- Add -d flag for Debugging mode
+	- Solve SED portability problems
+	- Set SH to the bash when LANG_BASH is defined.
+	- Add support for crosspath buildings
+	- Add support for '##'/'##' comments
+	- Add SUBCONF directive
+	- Add new examples
+	- Add the EXPORT directive
+	- Split HOST BUILD TARGET into _OS and _CPU and export them
+	- Conditional assignation now is an array
+	- Fix assignations spaces tip
+	- Renamed from MAR to ACR
+	- Add DIE/DIENOT crash commands
+	- Add IF/IFNOT/IFAND conditional scripts
+	- Add AUTOCONF directive to enable some GNU compatibility
+	- Solve ENVWORDS stage bug.
+	- Solve problems checking libs against CFLAGS/LDFLAGS
+	- Create mar and mar-sh scripts separattely (userfriendly)
+	- Add cmdline flags to mar
+	- Add documentation and tutorials
+	- Errors piped to stderr
+	- Add VERSION and PKGNAME to ENVWORDS
+	- Solve my_whereis problem
+	- Separate CHECKLIB functionality into CHECK_LIB and CHECK_FUNC
+
+0.1 - 2004/11/27
+	- Initial release

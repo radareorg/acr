@@ -1,0 +1,279 @@
+Keywords for the ACR configuration file:
+========================================
+
+Tips:
+-----
+- Arguments of the functions doesn't have '<' or '>' tags.
+- '"' character means that contains the text of the above line
+
+All LANG_?? sets HAVE_LANG_?? variable to 1 or 0. Append '!' character
+to crash when no target lang found.
+
+
+operations:
+-----------
+=  <varname> <string> <...> ;
++= <varname> <string> <...> ;
+?= <varname> <string> <...> ;
+	Assigns or appends the typed <strings> to the selected <varname>
+
+keywords:
+---------
+PKGNAME <pkgname>
+	Sets the target package name to be used.
+
+VERSION <version>
+	Sets the version number for the package
+
+CONTACT <name> ; <email>
+	Sets the Contact string for --help
+	environment:
+	CONTACT_MAIL: -> contact email
+	CONTACT_NAME: -> contact name
+
+REQUIRE_ACR_VERSION <number>
+	Check for ACR version before generating the configure.
+
+REPORT <varname> <varname> ;
+	Shows a final report of the results of ./configure script.
+
+LANG_C[!]
+	Tells to ACR that package needs a C compiler.
+	- sets CC to 'gcc' if not defined.
+	- adds implicit LANG_CPP
+
+LANG_CC[!]
+LANG_CXX[!]
+	Tells to ACR that package needs a C++ compiler.
+	- sets CXX to 'g++' if not defined.
+
+LANG_BASH[!]
+	Looks for bash shell installed on the system
+	- sets SH to the BASH path
+
+LANG_TCL[!]
+	Looks for tcl version and libraries.
+	- Sets TCL_VERSION, TCL_LIBS and HAVE_TCL=[0|1] 
+	- for more information look at ${pfx}/lib/tclConfig.sh
+
+LANG_JAVA[!]
+	Tells to use java
+	- adds --with-jikes and --with-kjc flags
+	- export JAVAC environ
+
+LANG_PERL
+	Looks for perl installed on current system
+
+LANG_RUBY
+	Looks for ruby binaries and exports HAVE_LANG_RUBY, RUBY and RUBY_VERSION
+
+USE_PERL_THREADS[!]
+	Looks for perl-threads on the system
+	- Sets HAVE_PERL_THREAD to 0|1
+
+USE_JNI
+	Checks JAVA_HOME to use it for building java native interfaces.
+	- Sets JCFLAGS
+	
+USE_DL
+	Autodetects if system needs libdl and sets LIBS_DL environ
+	- Sets LIBS_DL to -ldl or ""
+	- Sets HAVE_LIB_DL to 1|0
+
+USE_ICONV
+	Autodetects if system needs libiconv.
+	- Sets LIBS_ICONV
+
+USE_PTHREAD
+	Finds POSIX threads implementation and sets PTHREAD_LIBS variable to
+	the properly one that must be attached to the LDFLAGS by the user.
+
+NOP
+	Does nothing keyword. (NO OPERATION)
+
+USE_BACKUP
+	Use the .backup feature to recheck SUBST_FILES. (doc/backup)
+
+EXPORT_DEFINED
+	Export only variables that value != "" and != 0
+
+USE_X11
+	Adds --with-x11base=xx and --without-x flags
+	- Sets X11BASE
+
+USE_TK
+	Adds --with-tk-libdir flag
+	- Sets HAVE_TK TK_VERSION TK_CFLAGS and TK_LIBS
+
+USE_GMAKE
+	Finds the GNU version of make.
+	- sets MAKE to the GNU make path
+
+CHECK       <varname> <eof> <..code..> <eof>
+CHECK_EXEC  <varname> <eof> <..code..> <eof>
+	Executes the <..code..> delimited by the <eof> keyword and marks varname
+	as the target variable to be defined by the script.
+
+	(see examples/check.acr fmi)
+
+
+CHECK_INCLUDE[!]  <include.h>
+CHKINC[!]         <include.h>
+	Finds the requested include file
+	- needs LANG_C
+	- sets HAVE_INCLUDE_H to 1 or 0
+
+CHKFNC[!]          <libname> <function>
+CHECK_FUNCTION[!]  <libname> <function>
+	Checks if desired function exists in libname
+	- sets HAVE_FUNCTION environ to 0 or 1.
+
+	-> for example:
+	CHECK_FUNCTION SDL_mixer Mix_Linked_Version
+
+CHKLIB[!]         <libname>
+CHECK_LIBRARY[!]  <libname>
+	Finds the functionname in libname
+	- sets HAVE_LIB_LIBNAME environ to 0 or 1
+
+	-> for example:
+	CHECK_LIBRARY SDL
+
+ENDIAN
+CHECK_ENDIAN
+	Checks for host endianness (big or little) (not middle supported ;)
+
+	This keyword exports BYTEORDER LIL_ENDIAN and BIG_ENDIAN vars.
+
+	BYTEORDER is 1234 on little endian machines and 4321 for big endian.
+
+	LIL_ENDIAN and BIG_ENDIAN values are 0 xor 1
+
+
+INCLUDE <module-name>
+	Allows to include a file called 'module-name' in the acr module
+	directory ( ${prefix}/share/acr/modules/ ) or in the current
+	directory.
+	
+
+SIZEOF varname ;
+	Gets the size of the target value and assigns it to the variable.
+	SIZEOF_VARNAME.
+
+	-> for example:
+	SIZEOF int ;
+	SIZEOF long long ;
+
+CHK_PM <perl_module>
+CHECK_PERL_MODULE <perl_module>
+	Checks if the system have installed the desired perl module
+	- Sets HAVE_PM_xxx to 0|1
+
+CHKVER <pkgname> <version>
+CHECK_VERSION <pkgname> <version>
+	Checks if pkgname (software package registered into pkg-config db)
+	is <= version.
+
+CHKPRG[!]        <variable> <program>
+CHECK_PROGRAM[!] <variable> <program>
+	Finds the program in ${PATH} or uses the environment variable.
+	- define <variable> to path to <program>
+
+CHK_CP[!] <java_package_name>
+CHECK_CLASSPATH[!] <"">
+	Checks if the desired package name (java.util, org.gnu.gtk...) is
+	inside the CLASSPATH and can be used.
+
+CHK_PY[!] <python_module>
+CHECK_PYTHON_MODULE[!] <python module>
+	Checks for the requested python module. Sets HAVE_PY_xxx.
+
+CHK_RU[!] <python_module>
+CHECK_RUBY_EXTENSION[!] <ruby extension>
+	Checks for the requested ruby extension. Sets HAVE_PY_xxx.
+
+OUTPUT_H <file1> <file2> ;
+	Generates a .h file that #defines all environment variables
+
+OUTPUT_SH <file1> <file2> ;
+	Generate a shell-script compatible file that sets all result variables.
+
+SUBST_FILES <file1> <file2> ;
+	Subst all @VARNAME@ to value of ${VARNAME}
+
+SUBDIRS <dir1> <dir2> ;
+	Finds in dirs for Makefile.acr files to generate the final Makefile
+	(acr>=0.4) if the target is a file plus '.acr' then will use this
+	file as incomming filtering.
+
+SUBCONF <dirname> <dirname> ;
+	Call recursively other ./configure scripts found in <dirname> passing the 
+	root ./configure flag arguments.
+
+ARG_WITH    <varname> <flagname> <value> <description string> ;
+ARG_WITHOUT  " " " "
+ARG_ENABLE   " " " "
+ARG_DISABLE  " " " "
+	Adds a with/without/enable/disable flag to the configure script.
+	For example:
+		ARG_ENABLE STATIC static Build static binaries ;
+		-> will be used:
+		./configure --enable-static
+
+		ARG_WITH DATAPATH datapath Sets the path for the data
+		-> will be used:
+		./configure --with-datapath=/path/to/data
+
+CHECK <varname> <eof-string> <code> <eof-string>
+	Executes the <code> and sets <varname> to set the varname.
+	For example:
+		CHECK SDL_sound <<EOF
+			
+		<<EOF
+
+EXPORT <varname> <varname> ;
+	Exports a new varname to the ACR environment. This is used to subst
+	@XXX@ strings on files
+
+NOT <varname>
+	Negates the value of the requested varname.
+
+IF    <varname> <setvarname> <op> <value> ;
+IFNOT <varname> <setvarname> <op> <value> ;
+	Sets <setvarname> to <value> when <varname> = (IF=1,IFNOT=0)
+
+IFNULL    <varname> <setvarname> <op> <value> ;
+IFNOTNULL <varname> <setvarname> <op> <value> ;
+	Sets <setvarname> to <value> when <varname> = "" or not
+
+IFEQ    <varname> <value> ; <setvar> <op> <setvalue> ;
+IFNOTEQ <varname> <value> ; <setvar> <op> <setvalue> ;
+	If value of varname is equal to the given <value> then will set the
+	<setvalue> to the <setvar>.
+
+IFEQVAL    <varname> <varname2> <setvar> <op> <setvalue> ;
+IFNOTEQVAL <varname> <varname2> <setvar> <op> <setvalue> ;
+	If value of varname is equal to the value of <varname2> then will set the
+	<setvar> to the <setvar>.
+
+IFAND    <var1> <var2> <setvar> <op> <setvalue> ;
+IFNOTAND <var1> <var2> <setvar> <op> <setvalue> ;
+	If value of <var1> is the same that <var2> then <setvar> variable
+	will have the value of <setvalue>.
+
+DIE    <varname> <word> <word> <word> ;
+DIENOT <varname> <word> <word> <word> ;
+	Configure script fails when <varname> = (DIE=1,DIENOT=0)
+	DIE will print the array of words after crash.
+
+PKGCFG    <cflags-var> <ldflags-var> <pkg-config-name>
+PKGCONFIG
+PKGCFG+
+PKGCONFIG+
+	Uses pkg-config to set the cflags and ldflags values. Suffixing the command
+	by the '+' sign pkg-config output will be appended at the end of the
+	desired variable name.
+
+EXEC VAR command to be executed ;
+	Sets VAR=`command to be executed`
+	- Exports it.

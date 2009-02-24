@@ -1,0 +1,68 @@
+Command-Line usage of ACR
+=========================
+
+~$ ./acr -h
+acr: Usage './acr' [ -flag | acrfile ]
+ -x: execute the script directly
+ -v: show version information
+ -d: run acr in debug mode
+ -m: generate main Makefile.acr file
+ -h: show this help
+
+ACR only permits one argument. This may look as a restriction or limitation,
+but...isn't really needed.
+
+[ -x | --exec ]
+	Use this flag to execute directly the configure.acr script without
+	generating any configure script. - on the fly -
+
+	>> for example:
+	~/acr-tests$ acr -x --help
+	'configure' configures this package to adapt to many kinds of systems.
+	(...)
+
+[ -m ]
+	Auto-generate the Makefile.acr using some configure.acr stuff
+
+[ -v | -V | --version ]
+	Prints the version number of ACR.
+
+[ -d | --debug ]
+	Makes a trace of the configure.acr script. This flag is useful to find
+	syntax errors not catched by ACR.
+
+	>> for example:
+	~/acr-tests$ acr -d
+	|- LANG_C
+	|- USE_DL
+	|- CHKLIB
+	|- CHECK_VERSION
+	  `- gtk+-2.0
+	  `- 2.6.0
+	|- REPORT
+	  `- LDFLAGS
+	  `- HAVE_LIB_DL
+	acr: ./configure script created succesfully.
+	~/acr-tests$ 
+
+[ -p | --progress-bar ]
+	Shows a progressbar.
+
+	>> for example:
+   pancake@pl2:/tmp/csharp$ acr -p csharp.acr 
+     14% [########---------------------------------------------------------------]
+
+[ -o | --output ] [file]
+	Changes the final output file, by default 'configure'
+
+[ -e | --embed ]
+	Embed configure.acr into the final configure script.
+
+[ -r | --recover ]
+	Recovery mode. (see acr-recover(1))
+
+[ -h | --help ]
+	Shows the help message.
+
+[ -n | --do-nothing ]
+	Do not generate the final configure script.

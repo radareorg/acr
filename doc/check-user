@@ -1,0 +1,31 @@
+Checking users with ACR
+=======================
+
+*NOTE* This feature was added in acr 0.5.
+
+You can check for user or group existence by using the CHKUSR and CHKGRP
+commands.
+
+There's one problem by using this stuff in the configure stage, because some
+build systems runs only runs 'make install' as root, the rest with an
+unprivileged user. This may cause a fail. Another way to check users and
+groups, maybe parsing the /etc/passwd and /etc/group, instead of trying to
+chown a file.
+
+You can segmentate your configure into another tiny script by appending '-s'
+to 'acr' just like this:
+
+----------------------------------------
+$ cd src
+$ acr -s
+$ tail Makefile.acr
+
+install:
+	./configure  # check for users.
+	mkdir -p ${BINDIR}
+	${INSTALL} program ${BINDIR}/
+
+----------------------------------------
+
+Don't forget to use CHKUSR! and CHKGRP! if you want to stop the script there
+if an error has occurred.

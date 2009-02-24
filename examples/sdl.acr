@@ -1,0 +1,4 @@
+EXEC SDL_LIBS sdl-config --libs ;
+EXEC SDL_CFLAGS sdl-config --cflags ;
+
+REPORT SDL_LIBS SDL_CFLAGS ;

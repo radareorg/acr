@@ -1,0 +1,27 @@
+.Dd Jul 1, 2006
+.Dt CONFIGURE.AMR 5
+.Os
+.Sh NAME
+.Nm configure.amr
+.Nd configuration file for AMR
+.Sh DESCRIPTION
+.Pp
+This file is used by amr(1) to autogenerate the Makefile.acr files and/or
+configure.acr files.
+.Pp
+.Sh SYNTAX
+.Bl -tag -width indent
+.It CDIR path1 path2\ ;
+.It CSOURCES foo.c bar.c\ ;
+.It CINCLUDES include1 include2\ ;
+Include files used by the src files.
+.It CDEPS file1 file2 ;
+.Sh SEE ALSO
+.Xr acr 1
+.Xr amr 1
+.Xr acr-recover 1
+.Xr configure.acr 5
+.Sh AUTHOR
+Written by pancake <pancake@phreaker.net>
+.Pp
+http://news.nopcode.org/pancake/acr.html

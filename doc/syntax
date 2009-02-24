@@ -1,0 +1,67 @@
+Syntax:
+=======
+
+This documents explains the ACR syntax, not the keyworkds.
+
+
+The Configure.Acr file:
+-----------------------
+Acr needs a configure.acr configuration file to create the final configure
+script. Now I will explain some syntax tips. You don't have to think about
+all the autotools complexity. This is ACR, and the *ONLY* compatible tip
+with autotools is the final generated "./configure" script.
+
+This is a word-parsed file. Acr doesn't know anything about the line or eofs.
+Instead of that, acr uses three different syntax strings:
+
+- fixed ones
+	- Function knows how many parameters requires.
+	for example:
+
+		PKGNAME HelloWorld
+		CHECK_LIB c printf
+
+- array ones
+	- There'r some keywords that require a space separated list of names.
+	Acr gets them until a semicolon ';' is found.
+	for example:
+
+		OUTPUT_H config.h src/config.h ;
+		+= CFLAGS -Dfoo ;
+
+- piped ones
+	- It's also possible to create external scripts, long multi-line messages
+	for example:
+		CHECK COW <<EOF
+		echo "COW";
+		<<EOF
+
+	- Acr will read from file until the found a string like the <<XXX typed
+
+Comments in ACR are limmited by "//" and "\\" strings, for example:
+	PKGNAME FooBar
+	//
+	this is a comment
+	no code is readed here
+	just a simple message
+	\\
+	VERSION 1.4
+
+You are also allowed to use the "##" comments by the same way:
+	## this is a comment       ##
+	PKGNAME foo
+	## use it when you need it ##
+	VERSION 3.2
+
+
+Force-required
+--------------
+Some commands allows to throw an error when condition fails, for example:
+
+We want to check if a optional library is found:
+	CHECK_LIB c printf
+
+We want to check if a library needed is found on the target system:
+	CHECK_LIB! c printf
+
+Just type a '!' suffix :)

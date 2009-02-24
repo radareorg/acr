@@ -1,0 +1,24 @@
+
+PKGNAME foo
+
+LANG_C
+
+FOO = 1 ;
+BAR = 1 ;
+
+IFAND FOO BAR
+{
+	IFEQ CC gcc ; FOO = 0 ;
+
+	COW = SMILE ;
+	ROW = is nice ;
+
+	IFEQ CC gcc ; FOO = 0 ;
+
+	IFNOT FOO
+	{
+		IFEQ FOO 0 ; FOO = 666 ;
+	}
+}
+
+REPORT FOO ROW ;

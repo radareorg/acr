@@ -1,0 +1,94 @@
+#!/bin/sh
+#
+# if -d is set force +x ? or just warn when no X ?
+#
+# usage:
+#   $ install-acr [options] source1 source2 ... destdir/file
+#   $ install-acr -d dir1 dir2 dir3
+#   $ install-acr -P PLIST -D /usr/local -x dir/* bin/
+#
+# install -program : -c -s -o root -g root -m 555 
+# install -library : -c -o root -g root -m 555 
+# install -data    : -o root -g root -m 755
+#
+# -c         : ignored
+# -d DIR     : create directories
+# -g GROUP   : change the group
+# -m MODE    :
+# -o OWNER   :
+# -R         : recursive
+# -b         : backup existing files before overwriting
+# -D DESTDIR : destdir
+# -p         : preserve timestamps
+# -s         : strip symbol tables
+# -S SUFFIX  : override the default backup suffix
+# -P PLIST   : append files copied to this file
+# -x         : only copy executables
+
+# TODO: multiple sources
+
+flags=""
+noflags=""
+plist_file=""
+CMD=""
+
+show_help() {
+cat <<EOF
+install-acr wrapper for standard install program.
+
+-program : sets permisions and flags to install a program.
+-script  : sets permisions and flags to install an script.
+-library : sets permisions and flags to install an library.
+-data    : sets permisions and flags to install data stuff (share).
+
+[ press intro ]
+EOF
+read
+}
+
+for A in $@ ; do
+	case "$CMD" in
+	"PLIST")
+		plist_file="$A"
+		CMD=""
+		continue
+		;;
+	esac
+
+	case "$A" in
+	"-program")
+		flags="$flags -c -s -o root -g root -m 555"
+		continue;
+		;;
+	"-script")
+		flags="$flags -c -o root -g root -m 555"
+		continue;
+		;;
+	"-library")
+		flags="$flags -c -o root -g root -m 555"
+		continue
+		;;
+	"-data")
+		flags="$flags -o root -g root -m 755"
+		continue
+		;;
+	"-h"|"--help")
+		show_help
+		;;
+	"-P")
+		CMD="PLIST"
+		continue;
+		break;
+		;;
+	esac
+
+	flags="$flags $A"
+	file2=$file
+	file=$A
+done
+
+install $flags
+
+if [ "$PLIST" ]; then
+echo $file >> $plist_file
+fi

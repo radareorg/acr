@@ -1,0 +1,45 @@
+USING LIBTOOL WITH ACR
+======================
+
+- write this rule in your configure.acr:
+
+PKGNAME libmoo
+VERSION 1.0.2
+USE_LIBTOOL
+
+
+Now acr will find for libtool and export the following environ:
+ LIBTOOL_CC
+ LIBTOOL_SHARED
+ LIBTOOL_INSTALL
+
+Now you must edit the Makefile.acr and put someting like that:
+
+LIB_VERSION=@VERSION@
+LIBTOOL_CC=@LIBTOOL_CC@
+LIBTOOL_SHARED=@LIBTOOL_SHARED@
+LIBTOOL_INSTALL=@LIBTOOL_INSTALL@
+
+Now things will look like this:
+
+LIB_VERSION=@VERSION@
+LIBTOOL_CC=@LIBTOOL_CC@
+LIBTOOL_SHARED=@LIBTOOL_SHARED@
+LIBTOOL_INSTALL=@LIBTOOL_INSTALL@
+LIBDIR=@LIBDIR@
+
+LIBNAME=libtest
+
+%.lo:%.c
+        ${LIBTOOL_CC} $<
+
+all: file1.lo file2.lo
+        ${LIBTOOL_SHARED} ${LIBNAME}.la file1.lo file2.lo
+
+install:
+        mkdir -p ${LIBDIR}
+        ${LIBTOOL_INSTALL} ${LIBNAME}.la ${LIBDIR}
+
+clean:
+        -rm -rf .libs
+        -rm *.o *.lo *.la

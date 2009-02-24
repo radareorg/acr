@@ -1,0 +1,18 @@
+((
+  Checks sizes of various C variables
+  requires LANG_C
+))
+
+LANG_C!
+
+SIZEOF! char ;
+SIZEOF! short ;
+SIZEOF! short int ;
+SIZEOF! int ;
+SIZEOF! long ;
+SIZEOF! long int ;
+SIZEOF! long long ;
+SIZEOF! double ;
+SIZEOF! long double ;
+SIZEOF! float ;
+SIZEOF! void* ;

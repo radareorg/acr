@@ -1,0 +1,73 @@
+VPATH=@VPATH@
+INSTALL_SCRIPT?=@INSTALL_SCRIPT@
+INSTALL_DATA?=@INSTALL_DATA@
+INSTALL_MAN?=@INSTALL_DATA@
+BINDIR?=@BINDIR@
+MANDIR?=@MANDIR@
+DATADIR?=@DATADIR@
+VERSION=@VERSION@
+.PHONY: all todo test install deinstall dist clean mrproper
+
+all:
+	@echo void build
+
+todo:
+	cat TODO
+	cat src/*.orig | grep -e TODO -e XXX
+
+test:
+	cd tests/ && sh test.sh
+
+install:
+	mkdir -p ${BINDIR}
+	${INSTALL_SCRIPT} src/acr ${BINDIR}/acr
+	${INSTALL_SCRIPT} src/acr-sh ${BINDIR}/acr-sh
+	${INSTALL_SCRIPT} src/amr ${BINDIR}/amr
+	#${INSTALL_SCRIPT} ${VPATH}/src/install-acr ${BINDIR}/install-acr
+	${INSTALL_SCRIPT} ${VPATH}/src/acr-recover ${BINDIR}/acr-recover
+	mkdir -p ${MANDIR}/man1/ ${MANDIR}/man5/
+	${INSTALL_MAN} ${VPATH}/man/man1/acr.1 ${MANDIR}/man1/
+	${INSTALL_MAN} ${VPATH}/man/man1/amr.1 ${MANDIR}/man1/
+	${INSTALL_MAN} ${VPATH}/man/man1/acr-recover.1 ${MANDIR}/man1/
+	#${INSTALL_MAN} ${VPATH}/man/man1/install-acr.1 ${MANDIR}/man1/
+	${INSTALL_MAN} ${VPATH}/man/man5/configure.acr.5 ${MANDIR}/man5/
+	${INSTALL_MAN} ${VPATH}/man/man5/configure.amr.5 ${MANDIR}/man5/
+	mkdir -p ${DATADIR}/examples/acr
+	for A in `find ${VPATH}/examples -maxdepth 1 -type f`; do \
+	${INSTALL_DATA} $${A} ${DATADIR}/examples/acr ; done
+	mkdir -p ${DATADIR}/doc/acr/developers
+	for A in `find ${VPATH}/doc -maxdepth 1 -type f`; do \
+	${INSTALL_DATA} $${A} ${DATADIR}/doc/acr ; done
+	for A in `find ${VPATH}/doc/developers -maxdepth 1 -type f`; do \
+	${INSTALL_DATA} $${A} ${DATADIR}/doc/acr/developers ; done
+	mkdir -p ${DATADIR}/acr/vim/
+	mkdir -p ${DATADIR}/acr/vim/ftplugin
+	mkdir -p ${DATADIR}/acr/vim/syntax
+	${INSTALL_SCRIPT} ${VPATH}/src/vim/install.sh ${DATADIR}/acr/vim/install.sh
+	${INSTALL_DATA} ${VPATH}/src/vim/ftplugin/acr.vim ${DATADIR}/acr/vim/ftplugin/acr.vim
+	${INSTALL_DATA} ${VPATH}/src/vim/syntax/acr.vim ${DATADIR}/acr/vim/syntax/acr.vim
+	${INSTALL_DATA} ${VPATH}/src/vim/vimrc ${DATADIR}/acr/vim/vimrc
+	mkdir -p ${DATADIR}/acr/modules/
+	-${INSTALL_DATA} modules/* ${DATADIR}/acr/modules/
+
+deinstall:
+	-rm -f ${BINDIR}/acr-sh ${BINDIR}/acr
+	-rm -f ${MANDIR}/man1/acr.1 ${MANDIR}/man5/configure.acr.5
+	-rm -rf ${DATADIR}/doc/examples/acr ${DATADIR}/doc/acr
+
+dist: clean
+	cd ../ && \
+	mv acr acr-${VERSION} && \
+	tar czvf acr-${VERSION}.tar.gz `find acr-${VERSION} -type f|grep -v CVS` &&\
+	mv acr-${VERSION} acr
+
+clean:
+	-rm -f src/vim/install.sh
+	-mv -f src/acr.orig src/acr || rm src/acr
+	-mv -f src/acr-sh.orig src/acr-sh || rm src/acr-sh
+	-rm -f Makefile
+	-rm -f miau `find tests -type f | egrep -v 'CVS|test.sh'`
+	-chmod +x src/acr src/acr-sh
+
+mrproper: clean
+	rm -f configure

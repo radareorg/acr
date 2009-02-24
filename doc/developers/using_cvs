@@ -1,0 +1,23 @@
+Using acr with version control systems:
+=======================================
+
+I heard some people talking about the conflicts between cvs/svn and autoconf.
+
+IMHO this is not a autoconf problem, is just a developer problem. The main
+problem of using control versions and auto build systems is that you can
+subst some tags from one file and acr will make a backup from the original
+file with name : (old-name).orig
+
+If you up/ci your repository these files will be obviously modified, and
+may result on corrupt sources with diff tags like rows ("=====>") or
+erroneous commits.
+
+To fix this tips, I recommend to use always SUBDIRS, and be aware if you
+use SUBST_FILES because it creates backups and overrides the original content
+of the file.
+
+Just type "-mv -f (file).orig (file)" into your Makefile's /clean/ target and
+don't forget to type "make clean" before each cvs update!
+
+Also remember that cleaning this, your modified files will be lost, be
+aware, and modify only the .orig files when they exists, and re-run ./configure

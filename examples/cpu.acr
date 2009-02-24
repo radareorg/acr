@@ -1,0 +1,13 @@
+PKGNAME only_x86
+VERSION 0.1
+
+// architecture detection \\
+ARCH_OK = 0 ;
+IFEQ HOST_CPU i686 ;
+	ARCH_OK = 1 ;
+IFEQ HOST_CPU i386 ;
+	ARCH_OK = 1 ;
+DIENOT 
+	ARCH_OK Your CPU is not supported ;
+
+REPORT HOST_OS HOST_CPU ARCH_OK ;

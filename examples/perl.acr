@@ -1,0 +1,8 @@
+LANG_PERL
+USE_PERL_THREADS
+
+CHK_PM Net::FTP
+CHK_PM Net::DNS
+CHK_PM Net::Jabber
+
+## DIENOT HAVE_PM_NETDNS You need the Net::DNS perl module!! ; ##

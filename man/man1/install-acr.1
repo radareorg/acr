@@ -1,0 +1,37 @@
+.Dd September 7, 2005
+.Dt INSTALL-ACR 1
+.Os
+.Sh NAME
+.Nm install-acr
+.Nd acr wrapper for install program
+.Sh SYNOPSYS
+.Nm install-acr
+.Op Fl program|script|library|data
+.Op Ar -P plist-file
+.Op Ar source target
+.Sh DESCRIPTION
+.Pp
+install-acr is an '/usr/bin/install' program wrapper. The main purpouse of it is to bring to the end user some interesting features to install programs, by this way you can create realtime PLISTs of the installed files and directories, and set default permissions by a simple word like '-program'.
+.Bl -tag -width indent
+.It Fl -program
+sets the proper flags to set permisions to install programs.
+.It Fl -script
+sets the proper flags to set permisions to install an script.
+.It Fl -library
+sets the proper flags to set permisions to install libraries.
+.It Fl -data
+sets the proper flags to set permisions to install a data directory or file (like share/ files (images, documentation, etc)
+.It Fl -h --help
+Shows install and install-acr help messages.
+.El
+.Sh SEE ALSO
+.Xr install 1
+.Xr acr 1
+.Xr amr 1
+.Xr acr-recover 5
+.Xr configure.acr 5
+.Xr configure.amr 5
+.Sh AUTHOR
+Written by pancake <pancake@phreaker.net>
+.Pp
+http://news.nopcode.org/pancake/acr.html

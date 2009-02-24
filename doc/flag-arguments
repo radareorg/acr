@@ -1,0 +1,58 @@
+ACR flag arguments
+===================
+
+Flag argument use in ACR are very simple. But also powerful :)
+
+From the user view arguments are checked by the main argument parsing loop,
+where the script checks for flags like '--prefix' '--host'. But the user
+can add some new flags to allow some program specific options.
+
+For example:
+$ ./configure --report | grep FLAGS
+FLAGS:     --enable-debug
+
+$ ./configure --prefix=/usr --enable-debug
+
+
+Types of arguments:
+-------------------
+There'r two type of argument flags in ACR. The boolean and the variable ones.
+
+
+Boolean:
+--------
+Boolean flag arguments are just flags that allows a true or false values.
+They are used to enable or disable some options of your program.
+
+The '--with' and '--enable' ones have a default value of 0, giving a true
+value to the variable when the user calls ./configure with this flag.
+
+The '--without' and '--disable' are just the inverse of above.
+
+Let's see an example of a boolean flag argument: Type this in your favorite
+configure.acr file :)
+
+----8<------------------------
+ARG_ENABLE DEBUG debug  compiles the program with debugging features. ;
+--------->8-------------------
+
+This will add a --enable-debug flag in your ./configure script that sets
+DEBUG=0 at the beggining of the script. And sets DEBUG=1 when the user
+uses the --enable-debug flag.
+
+
+
+Variable:
+---------
+Variable flag arguments are used to specify paths, strings or something
+variable for the user. Let's see an example of use:
+
+---8<------------------------
+ARG_WITH WWWUSER=www wwwuser  sets the default user for http. ;
+ARG_WITH WWWROOT=/home/www/ wwwroot sets the default root for http. ;
+------->8--------------------
+
+This will set WWWUSER to "www" allowing the user to change this value by
+using the --with-wwwuser=VALUE. For example:
+
+$ ./configure --with-wwwroot=/var/www --with-wwwuser=webmaster

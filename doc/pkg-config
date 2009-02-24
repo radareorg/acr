@@ -1,0 +1,33 @@
+pkg-config with ACR
+===================
+
+You can easily create .pc files for your program by adding a simple template
+file like this in your project:
+
+--- libfoo.pc.acr
+# Package Information for pkg-config
+
+prefix=@PREFIX@
+exec_prefix=${prefix}
+libdir=@LIBDIR@
+includedir=@INCLUDEDIR@
+
+Name: @PKGNAME@
+Description: Your description
+Version: @VERSION@
+Libs: -L${libdir} -Wl,-R${libdir} -lfoo
+Cflags: -I${INCLUDEDIR}
+---
+
+You must add the following line in your Makefile.acr:
+
+--- Makefile.acr
+install:
+	${INSTALL_DATA} libfoo.pc ${LIBDIR}/pkgconfig/
+---
+
+And of course...you must handle this file into the configure.acr:
+
+--- configure.acr
+SUBDIRS libfoo.pc ;
+---
