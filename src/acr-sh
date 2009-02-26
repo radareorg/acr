@@ -990,8 +990,7 @@ EOF
 fi
 
 	SCRIPT="${SCRIPT}
-check_library ${VAR} ${_CHKLIB_NAME} ${_REQUIRED}
-"
+check_library ${VAR} ${_CHKLIB_NAME} ${_REQUIRED} "
 }
 ## }}}
 ## {{{ | Check Functions
@@ -1792,8 +1791,7 @@ WORDS_T=`echo ${WORDS} | wc -w ` # total number of words
 
 [ "${DEBUG}" = 1 ] && echo "acr: parsing '${ACRFILE}'" >&2
 
-for STR2 in ${WORDS} NOP ;
-do
+for STR2 in ${WORDS} NOP ; do
 	INSIDE_INCLUDE=0
 	if [ "$MODE" = "include" ]; then
 		[ "${DEBUG}" = 1 ] && echo "$word < include $STR2"  >&2
@@ -2372,15 +2370,15 @@ if [ !\"`"
 				# set
 				# TODO create a new function that concats SCRIPT checking IF_OP
 				case ${_IF_OP} in
-					"=")  SCRIPT="${SCRIPT} export ${_IF_SETVAR}=\"${_IF_SETVAL}\" ; fi ;"
-						;;
-					"+=")	SCRIPT="${SCRIPT} export ${_IF_SETVAR}=\"${S}{${_IF_SETVAR}} ${_IF_SETVAL}\" ; fi ;"
-						;;
-					"?=") SCRIPT="${SCRIPT} if [ -z \"${S}${_IF_SETVAR}\" ]; then export ${_IF_SETVAR}=\"${_IF_SETVAL}\"; fi ; fi ;"
-						;;
-					"<-")  SCRIPT="${SCRIPT} export ${_IF_SETVAR}=\"\`eval 'echo \$${_IF_SETVAL}'\`\"; fi"
-						echo "$word | The '<-' keyword is deprecated. Use $VAR instead" >&2
-						;;
+				"=") SCRIPT="${SCRIPT} export ${_IF_SETVAR}=\"${_IF_SETVAL}\" ; fi ;"
+					;;
+				"+=") SCRIPT="${SCRIPT} export ${_IF_SETVAR}=\"${S}{${_IF_SETVAR}} ${_IF_SETVAL}\" ; fi ;"
+					;;
+				"?=") SCRIPT="${SCRIPT} if [ -z \"${S}${_IF_SETVAR}\" ]; then export ${_IF_SETVAR}=\"${_IF_SETVAL}\"; fi ; fi ;"
+					;;
+				"<-") SCRIPT="${SCRIPT} export ${_IF_SETVAR}=\"\`eval 'echo \$${_IF_SETVAL}'\`\"; fi"
+					echo "$word | The '<-' keyword is deprecated. Use $VAR instead" >&2
+					;;
 				esac
 				# reset
 				_IFEQ=0
@@ -2465,7 +2463,6 @@ if [ ${OGLE} = \"${S}${_IF_VAR}${S}${_IF_VAR2}\" ]; then
 if [ ${OGLE} = \"${S}${_IF_VAR}\" ]; then
 if [ ${OGLE} = \"${S}${_IF_VALUE}\" ]; then
 ${STR} ; fi ; fi"
-
 ## TODO XXX this must be other command (IFEQVAR..or something similar
 #if [ ${OGLE}"${S}${_IF_VAR}" = "${S}${_IF_VALUE}" ]; then ${_IF_SETVAR}="${STR}" ; fi ;
 				MODE=""
