@@ -1620,6 +1620,7 @@ EOF
 check_path() {
 	[ "${SPLIT}" = 1 ] && return
 	cat <<EOF
+[ -n "${S}{prefix}" ] && PREFIX=${S}{prefix}
 echo "checking for working directories... ${S}{WODIS}"
 echo "using prefix '${S}{PREFIX}'"
 EOF
