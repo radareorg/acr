@@ -1635,7 +1635,7 @@ echo "checking target system type... ${S}{TARGET}"
 [ "${S}{CROSSBUILD}" = 1 ] && echo "using crosscompilation mode."
 
 split_host BUILD HOST TARGET
-[ -z "${S}ACRHOOK" ] && ACRHOOK=configure.hook
+[ -z "${S}ACRHOOK" ] && ACRHOOK=./configure.hook
 [ -e "${S}ACRHOOK" ] && . ${S}{ACRHOOK}
 EOF
 }
