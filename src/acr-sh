@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# Copyright (C) 2005, 2006
+# Copyright (C) 2005-2009
 #       pancake <@youterm.com>
 #
 # acr is free software; you can redistribute it and/or modify
@@ -23,7 +23,7 @@
 #
 # @license:  GPLv2
 # @author:   pancake <youterm.com>
-# @homepage: http://news.nopcode.org/pancake/acr.html
+# @homepage: http://www.nopcode.org/
 # @version:  @VERSION@
 #
 # acr-sh:
@@ -1635,6 +1635,8 @@ echo "checking target system type... ${S}{TARGET}"
 [ "${S}{CROSSBUILD}" = 1 ] && echo "using crosscompilation mode."
 
 split_host BUILD HOST TARGET
+[ -z "${S}ACRHOOK" ] && ACRHOOK=configure.hook
+[ -e "${S}ACRHOOK" ] && . ${S}{ACRHOOK}
 EOF
 }
 

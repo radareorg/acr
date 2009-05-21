@@ -1,6 +1,6 @@
 (( package information ))
 PKGNAME acr
-VERSION 0.7.1
+VERSION 0.7.2
 CONTACT pancake ; @youterm.com
 
 (( needed programs ))
