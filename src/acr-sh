@@ -1603,6 +1603,9 @@ esac
 
 # MAIN #
 take_environ
+split_host BUILD HOST TARGET
+[ -z "${S}ACRHOOK" ] && ACRHOOK=./configure.hook
+[ -e "${S}ACRHOOK" ] && . ${S}{ACRHOOK}
 
 while : ; do
 [ -z "\$1" ] && break
@@ -1634,9 +1637,7 @@ echo "checking host system type... ${S}{HOST}"
 echo "checking target system type... ${S}{TARGET}"
 [ "${S}{CROSSBUILD}" = 1 ] && echo "using crosscompilation mode."
 
-split_host BUILD HOST TARGET
-[ -z "${S}ACRHOOK" ] && ACRHOOK=./configure.hook
-[ -e "${S}ACRHOOK" ] && . ${S}{ACRHOOK}
+#split_host BUILD HOST TARGET
 EOF
 }
 
