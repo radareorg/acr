@@ -1650,8 +1650,8 @@ create_script() {
 	check_path
 
 	echo "ACR_RMFILES=\"${ACR_RMFILES}\""
-	[ "${USE_X11}" = 1 ]   && use_x11
-	[ "${USE_TK}" = 1 ]    && use_tk
+	[ "${USE_X11}" = 1 ] && use_x11
+	[ "${USE_TK}" = 1 ] && use_tk
 	[ "${USE_GMAKE}" = 1 ] && use_gmake
 
 	echo "${SCRIPT}" | sed -e 's,##d##,%d,g'
@@ -1673,6 +1673,7 @@ for A in ${S}{ENVWORDS} ; do
 	eval "VAR=\\${S}${S}{A}"
 	VAR="\`echo ${S}{VAR} | sed -e 's/\,/\\\\\,/g'\`"
 	[ ${S}COUNT = 10 ] && COUNT=0 && SEDFLAGS="${S}{SEDFLAGS}' -e '"
+	COUNT=${S}((${S}COUNT+1))
 	SEDFLAGS="${S}{SEDFLAGS}s,@${S}{A}@,${S}{VAR},g;"
 done
 SEDFLAGS="${S}{SEDFLAGS}'"
