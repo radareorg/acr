@@ -930,7 +930,7 @@ if [ ! ${S}? = 0 ]; then
 	exit 1
 fi
 LIL_ENDIAN=${S}(./a.out)
-if [ "${S}{LIL_ENDIAN}" = 1 ]; then
+if [ \"${S}{LIL_ENDIAN}\" = 1 ]; then
 	BYTEORDER=1234
 	BIG_ENDIAN=0
 	echo little
@@ -1674,6 +1674,7 @@ for A in ${S}{ENVWORDS} ; do
 	eval "VAR=\\${S}${S}{A}"
 	VAR="\`echo ${S}{VAR} | sed -e 's/\,/\\\\\,/g'\`"
 	[ ${S}COUNT = 10 ] && COUNT=0 && SEDFLAGS="${S}{SEDFLAGS}' -e '"
+	COUNT=${S}((${S}COUNT+1))
 	SEDFLAGS="${S}{SEDFLAGS}s,@${S}{A}@,${S}{VAR},g;"
 done
 SEDFLAGS="${S}{SEDFLAGS}'"
