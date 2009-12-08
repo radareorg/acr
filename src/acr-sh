@@ -2227,13 +2227,13 @@ ${SCRIPT}
 if [ \"${S}${_IF_VAR}\" = \"${_IF_BOOL}\" ]; then"
 			# check_ifop TODO -> use ifop instead of that.
 			case ${_IF_OP} in
-				"=") SCRIPT="${SCRIPT} export ${_IF_SETVAR}=\"${_IF_SETVAL}\" ; fi"
+				"=") SCRIPT="${SCRIPT} ${_IF_SETVAR}=\"${_IF_SETVAL}\" ; fi"
 					;;
-				"+=") SCRIPT="${SCRIPT} export ${_IF_SETVAR}=\"${S}{${_IF_SETVAR}} ${_IF_SETVAL}\" ; fi"
+				"+=") SCRIPT="${SCRIPT} ${_IF_SETVAR}=\"${S}{${_IF_SETVAR}} ${_IF_SETVAL}\" ; fi"
 					;;
-				"?=") SCRIPT="${SCRIPT} if [ -z \"${S}${_IF_SETVAR}\" ]; then export ${_IF_SETVAR}=\"${_IF_SETVAL}\"; fi"
+				"?=") SCRIPT="${SCRIPT} if [ -z \"${S}${_IF_SETVAR}\" ]; then ${_IF_SETVAR}=\"${_IF_SETVAL}\"; fi"
 					;;
-				"<-") SCRIPT="${SCRIPT} export ${_IF_SETVAR}=\"\`eval 'echo \$${_IF_SETVAL}'\`\"; fi"
+				"<-") SCRIPT="${SCRIPT} ${_IF_SETVAR}=\"\`eval 'echo \$${_IF_SETVAL}'\`\"; fi"
 
 					# XXX deprecated in 0.6
 					echo "$word | The '<-' keyword is deprecated. Use $VAR instead" >&2
@@ -2298,14 +2298,14 @@ if [ !"
 
 						# TODO this must be in a external function
 						case ${_IF_OP} in
-							"=")  SCRIPT="${SCRIPT} export ${_IF_SETVAR}=\"${_IF_SETVAL}\" ; fi"
+							"=")  SCRIPT="${SCRIPT} ${_IF_SETVAR}=\"${_IF_SETVAL}\" ; fi"
 								;;
-							"+=") SCRIPT="${SCRIPT} export ${_IF_SETVAR}=\"${S}{${_IF_SETVAR}} ${_IF_SETVAL}\" ; fi"
+							"+=") SCRIPT="${SCRIPT} ${_IF_SETVAR}=\"${S}{${_IF_SETVAR}} ${_IF_SETVAL}\" ; fi"
 								;;
-							"?=") SCRIPT="${SCRIPT} if [ -z \"${S}${_IF_SETVAR}\" ]; then export ${_IF_SETVAR}=\"${_IF_SETVAL}\"; fi"
+							"?=") SCRIPT="${SCRIPT} if [ -z \"${S}${_IF_SETVAR}\" ]; then ${_IF_SETVAR}=\"${_IF_SETVAL}\"; fi"
 								;;
 
-							"<-") SCRIPT="${SCRIPT} export ${_IF_SETVAR}=\"\`eval 'echo \$${_IF_SETVAL}'\`\"; fi"
+							"<-") SCRIPT="${SCRIPT} ${_IF_SETVAR}=\"\`eval 'echo \$${_IF_SETVAL}'\`\"; fi"
 								# XXX this is deprecated
 								echo "$word | The '<-' keyword is deprecated. Use $VAR instead" >&2
 								;;
@@ -2377,13 +2377,13 @@ if [ !\"`"
 				# set
 				# TODO create a new function that concats SCRIPT checking IF_OP
 				case ${_IF_OP} in
-				"=") SCRIPT="${SCRIPT} export ${_IF_SETVAR}=\"${_IF_SETVAL}\" ; fi ;"
+				"=") SCRIPT="${SCRIPT} ${_IF_SETVAR}=\"${_IF_SETVAL}\" ; fi ;"
 					;;
-				"+=") SCRIPT="${SCRIPT} export ${_IF_SETVAR}=\"${S}{${_IF_SETVAR}} ${_IF_SETVAL}\" ; fi ;"
+				"+=") SCRIPT="${SCRIPT} ${_IF_SETVAR}=\"${S}{${_IF_SETVAR}} ${_IF_SETVAL}\" ; fi ;"
 					;;
-				"?=") SCRIPT="${SCRIPT} if [ -z \"${S}${_IF_SETVAR}\" ]; then export ${_IF_SETVAR}=\"${_IF_SETVAL}\"; fi ; fi ;"
+				"?=") SCRIPT="${SCRIPT} if [ -z \"${S}${_IF_SETVAR}\" ]; then ${_IF_SETVAR}=\"${_IF_SETVAL}\"; fi ; fi ;"
 					;;
-				"<-") SCRIPT="${SCRIPT} export ${_IF_SETVAR}=\"\`eval 'echo \$${_IF_SETVAL}'\`\"; fi"
+				"<-") SCRIPT="${SCRIPT} ${_IF_SETVAR}=\"\`eval 'echo \$${_IF_SETVAL}'\`\"; fi"
 					echo "$word | The '<-' keyword is deprecated. Use $VAR instead" >&2
 					;;
 				esac
@@ -2753,10 +2753,10 @@ ${EQUAL}\""
 				;;
 			esac
 			case "${EQUAL}" in
-			1)  EQUAL="export ${STR}=\"${STRING}" ;;                               # =
-			2)  EQUAL="export ${STR}=\"${S}{${STR}} ${STRING}" ;;                  # +=
-			3)  EQUAL="[ -z \"${S}{${STR}}\" ]  && export ${STR}=\"${STRING}" ;; # ?=
-			4)  EQUAL="export ${STR}=\"${S}${STRING}" ; ;;                # <- XXX deprecated!!
+			1)  EQUAL="${STR}=\"${STRING}" ;;                               # =
+			2)  EQUAL="${STR}=\"${S}{${STR}} ${STRING}" ;;                  # +=
+			3)  EQUAL="[ -z \"${S}{${STR}}\" ]  && ${STR}=\"${STRING}" ;; # ?=
+			4)  EQUAL="${STR}=\"${S}${STRING}" ; ;;                # <- XXX deprecated!!
 			*)  #STRING=`concat "${STRING}" "${STR}"`
 			    EQUAL=`concat "${EQUAL}" "${STR}"` ; ;;          # .concat()
 			esac
