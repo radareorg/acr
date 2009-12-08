@@ -152,7 +152,7 @@ _IF_BOOL=0
 _IF_SETVAR=""
 _IF_VALUE=""
 _IF_SETVALUE=""
-_IF_VALUE_EOF="0"
+_IF_VALUE_EOF=0
 _IFAND=0
 _IFEQ=0
 _IFEQVAL=0
@@ -182,8 +182,8 @@ EQUAL=""
 EQUALSCR=""
 _PKGNAME=""
 PACKAGE_BUGREPORT=""
-S_FILES=""     # subst files
-S_MKDIR=""     # subst directories to be created
+S_FILES="" # subst files
+S_MKDIR="" # subst directories to be created
 SD_FILES=""
 INIVARS=""
 SUBDIRS=0
@@ -349,7 +349,6 @@ if [ ${S}? = 0 ]; then echo ${S}{JAVAC}; else
 	echo no ; HAVE_LANG_JAVA=0
 _EOF_
 `
-
 	if [ "${LANG_JAVA_REQUIRED}" = 1 ]; then
 SCRIPT="
 ${SCRIPT}
@@ -394,7 +393,7 @@ fi
 JCFLAGS="-I${S}{JAVA_HOME}/include -I${S}{JAVA_HOME}/include/linux"
 echo "#include <jni.h>" > test.c
 ${S}{CC} test.c ${S}{JCFLAGS} -c >/dev/null 2>&1
-if [ \"${S}?\" = \"0\" ]; then
+if [ \"${S}?\" = 0 ]; then
 	echo ok
 else
 	echo no
@@ -673,7 +672,7 @@ if [ ${S}? = 0 ]; then
   echo ok ; HAVE_LANG_PERL=1 ; else
   echo no "
 	word=`get_word_number`
-	if [ "${_REQUIRED}" = "1" ]; then
+	if [ "${_REQUIRED}" = 1 ]; then
 	SCRIPT="${SCRIPT}
 echo \"${LINENO}: You need perl installed on your system.\" >&2
 exit 1"
@@ -800,7 +799,7 @@ HAVE_LANG_CXX=1
 printf "checking for c++ compiler... "
 if [ "${S}{CROSSBUILD}" = 1 ]; then
 (command -v ${S}{HOST}-${S}{CXX} 2>&1 >/dev/null)
-if [ "${S}?" = "0" ]; then CXX=\"${S}{HOST}-${S}{CXX}\"; fi
+if [ "${S}?" = 0 ]; then CXX=\"${S}{HOST}-${S}{CXX}\"; fi
 fi
 echo "#include <iostream>" > test.cxx
 echo "main(){ std::cout << \\\"\\\"; }" >> test.cxx
@@ -1317,26 +1316,28 @@ subst_dirs() {
 	else
 		echo "for A in ${SD_FILES} ; do # SUBDIRS"
 	fi
-	echo " if [ -f \"${S}{VPATH}/${S}{A}.acr\" ]; then"
-	echo "  SD_TARGET=${S}{A}"
-	echo " else"
-	echo "  if [ -d \"${S}{VPATH}/${S}{A}\" ]; then"
-	echo "   SD_TARGET=${S}{A}/Makefile"
-	echo "   mkdir -p ${S}{A}"
-	echo "  else"
-	echo "   echo \"ERROR: Cannot find ${S}{VPATH}/${S}{A}.acr\" >&2"
-	echo "   exit 1"
-	echo "  fi"
-	echo " fi"
-	echo " echo \"creating ${S}{SD_TARGET}\""
-	echo "mkdir -p \$(echo ${S}{A} | sed -e \"s,/\`basename ${S}{A}\`\$,,g\")"
-	echo " cat ${S}{VPATH}/${S}{SD_TARGET}.acr | \\"
-	echo "eval sed -e \"s,@VPATH@,${S}{VPATH}/${S}{A},g\" ${S}{SEDFLAGS} > ${S}{SD_TARGET}.tmp"
+	cat <<EOF
+if [ -f "${S}{VPATH}/${S}{A}.acr" ]; then
+  SD_TARGET=${S}{A}
+ else
+  if [ -d "${S}{VPATH}/${S}{A}" ]; then
+   SD_TARGET=${S}{A}/Makefile
+   mkdir -p ${S}{A}
+  else
+   echo "ERROR: Cannot find ${S}{VPATH}/${S}{A}.acr" >&2
+   exit 1
+  fi
+ fi
+ echo "creating ${S}{SD_TARGET}"
+mkdir -p \$(echo ${S}{A} | sed -e "s,/\`basename ${S}{A}\`\$,,g")
+ cat ${S}{VPATH}/${S}{SD_TARGET}.acr | \\
+eval sed -e "s,@VPATH@,${S}{VPATH}/${S}{A},g" ${S}{SEDFLAGS} > ${S}{SD_TARGET}.tmp
+EOF
 	# Support for ##MARKS##
 	echo "
 for A in ${S}{ENVWORDS}; do
 VALUE=\`eval echo \"$\"${S}{A}\`
-if [ \"${S}VALUE\" = \"0\" ]; then ## FALSE
+if [ \"${S}VALUE\" = 0 ]; then ## FALSE
  MARK=\"##${S}{A}##\"
 if [ -n \"\`grep '${S}{MARK}' ${S}{SD_TARGET}.tmp\`\" ]; then
  mv ${S}{SD_TARGET}.tmp ${S}{SD_TARGET}.tmp2
@@ -1926,7 +1927,7 @@ ${SCRIPT}
 printf \"checking for classpath ${STR}... \"
 echo \"import ${STR}.*;\" > test.java
 ${S}{JAVAC} test.java 2>&1 > /dev/null
-if [ \"${S}?\" = \"0\" ]; then echo yes
+if [ \"${S}?\" = 0 ]; then echo yes
 ${VAR}=1
 else echo no
 ${VAR}=0
@@ -2263,7 +2264,7 @@ if [ \"${S}${_IF_VAR}\" = \"${_IF_BOOL}\" ]; then"
 						if [ "${STR}" = "{" ]; then
 							NKEYS=$(($NKEYS+1))
 
-							if [ "${_IF_BOOL}" = "1" ]; then
+							if [ "${_IF_BOOL}" = 1 ]; then
 								SCRIPT="${SCRIPT}
 if ["
 							else
@@ -2287,7 +2288,7 @@ if [ !"
 						check_ifop ${_IF_OP}
 					else
 						if [ "${STR}" = ";" ]; then
-							if [ "${_IF_BOOL}" = "1" ]; then
+							if [ "${_IF_BOOL}" = 1 ]; then
 								SCRIPT="${SCRIPT}
 if ["
 							else
@@ -2332,7 +2333,7 @@ if [ !"
 			_IF_VAR=${STR}
 			is_envword "${STR}"
 		else
-		if [ "${_IF_VALUE_EOF}" = "0" ]; then
+		if [ "${_IF_VALUE_EOF}" = 0 ]; then
 			if [ "${STR}" = ";" ]; then
 				_IF_VALUE_EOF=1
 			else
@@ -2341,7 +2342,7 @@ if [ !"
 		else
 			if [ -z "${_IF_SETVAR}" ]; then
 				if [ "${STR}" = "{" ]; then
-					if [ "${_IF_BOOL}" = "1" ]; then
+					if [ "${_IF_BOOL}" = 1 ]; then
 						SCRIPT="`printf \"${SCRIPT}\nif [\"`"
 					else
 						SCRIPT="`printf \"${SCRIPT}\nif [ !\"`"
@@ -2365,7 +2366,7 @@ if [ !"
 			else
 			if [ "${STR}" = ";" ]; then
 				# bool
-				if [ "${_IF_BOOL}" = "1" ]; then
+				if [ "${_IF_BOOL}" = 1 ]; then
 					SCRIPT="`echo -n \"${SCRIPT}
 if [\"`"
 				else
@@ -2423,7 +2424,7 @@ if [ !\"`"
 			if [ "${STR}" = "{" ]; then
 				NKEYS=$(($NKEYS+1))
 
-				if [ "${_IF_BOOL}" = "1" ]; then
+				if [ "${_IF_BOOL}" = 1 ]; then
 				OGLE="11" ; else OGLE="00" ; fi
 
 				SCRIPT="${SCRIPT}
@@ -2524,8 +2525,8 @@ if [ ${_IF_BOOL} = \"${S}${_IF_VAR}\" ] || [ ${_IF_BOOL} = \"${S}${_IF_VAR2}\" ]
 							_IF_SETVAL="${_IF_SETVAL} ${STR}"
 							fi
 						else
-							if [ "${_IF_BOOL}" = "1" ]; then
-							OGLE="1" ; else OGLE="0" ; fi
+							if [ "${_IF_BOOL}" = 1 ]; then
+							OGLE=1 ; else OGLE=0 ; fi
 
 							case ${_IF_OP} in
 								"=")  STR="${_IF_SETVAR}=\"${_IF_SETVAL}\""
@@ -2573,7 +2574,7 @@ ${STR} ; fi"
 				## - flags - ##
 				SCRIPT="`printf \"${SCRIPT}\ntmp=\\\`pkg-config --cflags ${STR} 2>/dev/null\\\`\"`"
 				SCRIPT="`printf \"${SCRIPT}\nif [ ${S}? = 1 ]; then echo no ; ${TMP_VAR}=0; else \"`"
-				if [ "${_PKGCONFIG_PLUS}" = "1" ]; then
+				if [ "${_PKGCONFIG_PLUS}" = 1 ]; then
 				SCRIPT="`printf \"${SCRIPT}\n${_PC_CFLAGS}=\\\"${S}${_PC_CFLAGS} ${S}tmp\\\"; \"`"
 				else
 				SCRIPT="`printf \"${SCRIPT}\n${_PC_CFLAGS}=${S}tmp; \"`"
@@ -2609,7 +2610,7 @@ ${STR} ; fi"
 				## - flags - ##
 				SCRIPT="`printf \"${SCRIPT}\ntmp=\\\`pkg-config --cflags ${STR} 2>/dev/null\\\`\"`"
 				SCRIPT="`printf \"${SCRIPT}\nif [ ${S}? = 1 ]; then echo no ; else \"`"
-				if [ "${_PKGCONFIG_PLUS}" = "1" ]; then
+				if [ "${_PKGCONFIG_PLUS}" = 1 ]; then
 				SCRIPT="`printf \"${SCRIPT}\n${_PC_CFLAGS}=\\\"${S}${_PC_CFLAGS} ${S}tmp\\\"; \"`"
 				else
 				SCRIPT="`printf \"${SCRIPT}\n${_PC_CFLAGS}=${S}tmp; \"`"
@@ -2787,7 +2788,7 @@ ${EQUAL}\""
 		;;
 	"contact")
 		IS_KEYWORD=0
-		if [ "${_CONTACT}" = "1" ]; then
+		if [ "${_CONTACT}" = 1 ]; then
 			if [ "${STR}" = ";" ]; then 
 				_CONTACT=2
 			else
@@ -2854,8 +2855,8 @@ ${EQUAL}\""
 		[ -n "${MODE}" ] && spaces=", ${spaces}"
 	fi
 
-	if [ "${IS_KEYWORD}" = "0" ]; then
-		if [ "${DEBUG}" = "1" ]; then
+	if [ "${IS_KEYWORD}" = 0 ]; then
+		if [ "${DEBUG}" = 1 ]; then
 		if [ ! "${STR}" = ";" ]; then
 			printf "%04d |$spaces " $WORDS_N >&2
 			echo "${STR}" >&2
@@ -3179,7 +3180,7 @@ else"
 	"CHKVER!"|"CHECK_VERSION!"|"CHKVER"|"CHECK_VERSION")
 		enter_mode "chkver" ${STR} ;;
 	"USE_DL")
-		if [ "${_USE_DL_USED}" = "0" ]; then
+		if [ "${_USE_DL_USED}" = 0 ]; then
 			MODE="usedl"
 			_USE_DL_USED=`get_word_number`
 		else
@@ -3260,7 +3261,7 @@ INSTALL_PROGRAM=@INSTALL_PROGRAM@
 .PHONY: all install dist clean mrproper
 EOF
 
-if [ "${LANG_JAVA}" = "1" ]; then
+if [ "${LANG_JAVA}" = 1 ]; then
 cat >> Makefile.acr <<EOF
 JAVAC=@JAVAC@
 
@@ -3275,14 +3276,14 @@ CC=@CC@
 CFLAGS=@CFLAGS@
 EOF
 
-[ "${LANG_CXX}" = "1" ] &&\
+[ "${LANG_CXX}" = 1 ] &&\
 cat >> Makefile.acr <<EOF
 CXX=@CXX@
 CXXFLAGS=@CXXFLAGS@
 EOF
 
 # XXX this will be deprecated!
-if [ "${USE_BACKUP}" = "1" ]; then
+if [ "${USE_BACKUP}" = 1 ]; then
 cat >> Makefile.acr <<EOF
 define unsubst
    @echo unsubst ${S}{1}
@@ -3359,7 +3360,7 @@ dist: mrproper
 EOF
 	echo "acr: Makefile.acr created succesfully." >&2
 else
-	if [ "${PBAR}" = "1" ]; then
+	if [ "${PBAR}" = 1 ]; then
 	echo >&2 ; fi
 	create_script
 	
@@ -3368,7 +3369,7 @@ else
 		exit 1
 	fi
 	show_report
-	if [ "${NOPE}" = "0" ]; then
+	if [ "${NOPE}" = 0 ]; then
 		echo "acr: ${CONFIGURE} script created succesfully." >&2
 	fi
 fi
@@ -3378,7 +3379,7 @@ makedist_failed(){
 	exit 1
 }
 
-if [ "${MAKEDIST}" = "1" ]; then
+if [ "${MAKEDIST}" = 1 ]; then
 	if [ -z "$PKGNAME" ]; then
 		makedist_failed "PKGNAME not defined"
 	fi
