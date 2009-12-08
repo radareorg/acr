@@ -297,7 +297,7 @@ done
 fi
 
 for A in . src/vim/install.sh  ; do # SUBDIRS
- if [ -f "${VPATH}/${A}.acr" ]; then
+if [ -f "${VPATH}/${A}.acr" ]; then
   SD_TARGET=${A}
  else
   if [ -d "${VPATH}/${A}" ]; then
@@ -315,11 +315,11 @@ eval sed -e "s,@VPATH@,${VPATH}/${A},g" ${SEDFLAGS} > ${SD_TARGET}.tmp
 
 for A in ${ENVWORDS}; do
 VALUE=`eval echo "$"${A}`
-if [ "$VALUE" = "0" ]; then ## FALSE
+if [ "$VALUE" = 0 ]; then ## FALSE
  MARK="##${A}##"
-if [ -n "`grep '${MARK}' ${SD_TARGET}.tmp`" ]; then
+if [ -n "`grep \"${MARK}\" ${SD_TARGET}.tmp`" ]; then
  mv ${SD_TARGET}.tmp ${SD_TARGET}.tmp2
- cat ${SD_TARGET}.tmp2 | MARK=$MARK awk 'BEGIN{a=0;}{if($1==ENVIRON["MARK"]){ if(a)a=0;else a=1 }else{if(!a)print;}}' > ${SD_TARGET}.tmp
+ cat ${SD_TARGET}.tmp2 | MARK=$MARK awk 'BEGIN{a=0;}{if($1==ENVIRON["MARK"]){if(a)a=0;else a=1}else{if(!a)print;}}' > ${SD_TARGET}.tmp
  fi
 fi
 done
