@@ -171,12 +171,12 @@ echo "VERSION:   0.8"
 	# ignored: acr have no cache
 	;;
 "--build")
-	BUILD="$value"; ;;
+	BUILD="$value"; split_host BUILD ; ;;
 "--host")
-	CROSSBUILD=1
-	HOST="$value"; ;;
+	CROSSBUILD=1 # XXX
+	HOST="$value"; split_host HOST ; ;;
 "--target")
-	TARGET="$value"; ;;
+	TARGET="$value"; split_host TARGET ; ;;
 "--prefix")
 	PREFIX="$value"; ;;
 "--exec-prefix")
