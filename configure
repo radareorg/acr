@@ -82,9 +82,8 @@ create_environ() {
 : ${MANDIR:=${SPREFIX}/man}
 : ${LOCALSTATEDIR:=${SPREFIX}/var}
 for A in `echo ${PATH} | sed -e 's,:, ,g'` ; do
-if [ -e $A/install ]; then
-: ${INSTALL:=$A/install}
-fi
+  [ -e $A/ginstall ] && : ${INSTALL:=$A/ginstall} && break
+  [ -e $A/install ] && : ${INSTALL:=$A/install} && break
 done
 : ${INSTALL_DIR:=${INSTALL} -d}
 : ${INSTALL_DATA:=${INSTALL} -m 644}
@@ -92,12 +91,12 @@ done
 : ${INSTALL_PROGRAM:=${INSTALL} -m 755 -s}
 : ${INSTALL_MAN:=${INSTALL} -m 444}
 : ${INSTALL_LIB:=${INSTALL} -c}
- PKGNAME='acr' ; VERSION='0.8' ; CONTACT_MAIL="@youterm.com" ; CONTACT_NAME="pancake" ; CONTACT="pancake <@youterm.com>" ;
+ PKGNAME='acr' ; VERSION='0.8.1' ; CONTACT_MAIL="@youterm.com" ; CONTACT_NAME="pancake" ; CONTACT="pancake <@youterm.com>" ;
 }
                 
 show_usage() {
 cat <<EOF2
-'configure' configures acr-0.8 to adapt to many kinds of systems.
+'configure' configures acr-0.8.1 to adapt to many kinds of systems.
 
 Usage: ./configure [OPTION]... [VAR=VALUE]...
 
@@ -146,7 +145,7 @@ take_environ() {
 }
 
 show_version() {
-echo "acr-0.8 configuration script done with acr v0.8.
+echo "acr-0.8.1 configuration script done with acr v0.8.
 The 'Free Software Foundation' message is only for autodetection.
 Originally written by pancake <youterm.com>."
 exit 0
@@ -164,7 +163,7 @@ case $flag in
 	show_version ; ;;
 "-r"|"--r"|"--report")
 echo "PKGNAME:   acr"
-echo "VERSION:   0.8"
+echo "VERSION:   0.8.1"
 	exit 0
 	;;
 "--cache-file") 
@@ -329,14 +328,14 @@ done
 
 echo
 echo "Final report:"
-for A in  SPREFIX PREFIX VERSION CONTACT ; do # REPORT
+for A in  SPREFIX PREFIX INSTALL VERSION CONTACT ; do # REPORT
 eval VAL="\$${A}"
 [ -z "${VAL}" ] && VAL="(null)"
 echo " - ${A} = ${VAL}"
 done
 #ACR# (( package information ))
 #ACR# PKGNAME acr
-#ACR# VERSION 0.8
+#ACR# VERSION 0.8.1
 #ACR# CONTACT pancake ; @youterm.com
 #ACR# 
 #ACR# (( needed programs ))
@@ -347,4 +346,4 @@ done
 #ACR# SUBST_FILES src/acr src/acr-sh ;
 #ACR# 
 #ACR# (( final report ))
-#ACR# REPORT SPREFIX PREFIX VERSION CONTACT ;
+#ACR# REPORT SPREFIX PREFIX INSTALL VERSION CONTACT ;

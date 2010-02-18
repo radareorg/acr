@@ -1,6 +1,6 @@
 (( package information ))
 PKGNAME acr
-VERSION 0.8
+VERSION 0.8.1
 CONTACT pancake ; @youterm.com
 
 (( needed programs ))
@@ -11,4 +11,4 @@ SUBDIRS . src/vim/install.sh ;
 SUBST_FILES src/acr src/acr-sh ;
 
 (( final report ))
-REPORT SPREFIX PREFIX VERSION CONTACT ;
+REPORT SPREFIX PREFIX INSTALL VERSION CONTACT ;

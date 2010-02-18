@@ -1424,7 +1424,6 @@ create_environ() {
 for A in \`echo ${S}{PATH} | sed -e 's,:, ,g'\` ; do
   [ -e ${S}A/ginstall ] && : ${S}{INSTALL:=${S}A/ginstall} && break
   [ -e ${S}A/install ] && : ${S}{INSTALL:=${S}A/install} && break
-fi
 done
 : ${S}{INSTALL_DIR:=${S}{INSTALL} -d}
 : ${S}{INSTALL_DATA:=${S}{INSTALL} -m 644}
