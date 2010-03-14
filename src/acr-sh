@@ -816,7 +816,7 @@ do_remove
 exit 1
 "
 	fi
-	SCRIPT="${SCRIPT} ; fi"
+	SCRIPT="${SCRIPT} fi"
 	lang_cpp
 }
 
