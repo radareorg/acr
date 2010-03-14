@@ -742,7 +742,6 @@ do_remove
 echo \"ERROR: ${S}{CC} cannot create executables\" >&2 ;
 exit 1"
 	fi
-
 	SCRIPT="${SCRIPT} ; fi"
 	lang_cpp
 }
@@ -794,30 +793,28 @@ lang_cpp() {
 ## {{{ C++
 lang_cxx() {
 	add_envword "CXX"
-	SCRIPT=`cat <<_EOF_
+	SCRIPT="
 ${SCRIPT}
 HAVE_LANG_CXX=1
-printf "checking for c++ compiler... "
-if [ "${S}{CROSSBUILD}" = 1 ]; then
+printf \"checking for c++ compiler... \"
+if [ \"${S}{CROSSBUILD}\" = 1 ]; then
 (command -v ${S}{HOST}-${S}{CXX} 2>&1 >/dev/null)
-if [ "${S}?" = 0 ]; then CXX=\"${S}{HOST}-${S}{CXX}\"; fi
+if [ \"${S}?\" = 0 ]; then CXX=\"${S}{HOST}-${S}{CXX}\"; fi
 fi
-echo "#include <iostream>" > test.cxx
-echo "main(){ std::cout << \\\"\\\"; }" >> test.cxx
+echo \"#include <iostream>\" > test.cxx
+echo \"main(){ std::cout << \\\"\\\"; }\" >> test.cxx
 (exec ${S}{CXX} ${S}{CXXFLAGS} ${S}{LDFLAGS} test.cxx -lstdc++ >/dev/null 2>&1)
 if [ \$? = 0 ]; then echo ${S}{CXX}; else
 HAVE_LANG_CXX=0
 echo no
-_EOF_
-`
+"
 	if [ "${LANG_CXX_REQUIRED}" = 1 ]; then
-	SCRIPT=`cat _EOF_
+	SCRIPT="
 ${SCRIPT}
-echo "ERROR: ${S}{CXX} cannot create executables" >&2 ;
+echo \"ERROR: ${S}{CXX} cannot create executables\" >&2 ;
 do_remove
 exit 1
-_EOF_
-`
+"
 	fi
 	SCRIPT="${SCRIPT} ; fi"
 	lang_cpp
