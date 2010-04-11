@@ -802,7 +802,7 @@ if [ \"${S}{CROSSBUILD}\" = 1 ]; then
 if [ \"${S}?\" = 0 ]; then CXX=\"${S}{HOST}-${S}{CXX}\"; fi
 fi
 echo \"#include <iostream>\" > test.cxx
-echo \"main(){ std::cout << \\\"\\\"; }\" >> test.cxx
+echo \"main(){ std::cout << 1; }\" >> test.cxx
 (exec ${S}{CXX} ${S}{CXXFLAGS} ${S}{LDFLAGS} test.cxx -lstdc++ >/dev/null 2>&1)
 if [ \$? = 0 ]; then echo ${S}{CXX}; else
 HAVE_LANG_CXX=0
@@ -2570,7 +2570,11 @@ ${STR} ; fi"
 				SCRIPT="`printf \"${SCRIPT}\nprintf 'checking pkg-config flags for ${STR}... '\"`"
 				## - flags - ##
 				SCRIPT="`printf \"${SCRIPT}\ntmp=\\\`pkg-config --cflags ${STR} 2>/dev/null\\\`\"`"
-				SCRIPT="`printf \"${SCRIPT}\nif [ ${S}? = 1 ]; then echo no ; ${TMP_VAR}=0; else \"`"
+				SCRIPT="`printf \"${SCRIPT}\nif [ ${S}? = 1 ]; then echo no ; ${TMP_VAR}=0; \"`"
+				if [ "${_REQUIRED}" = 1 ]; then
+				SCRIPT="`printf \"${SCRIPT}\necho 'This package is required'\nexit 1\"`"
+				fi
+				SCRIPT="`printf \"${SCRIPT}\nelse \"`"
 				if [ "${_PKGCONFIG_PLUS}" = 1 ]; then
 				SCRIPT="`printf \"${SCRIPT}\n${_PC_CFLAGS}=\\\"${S}${_PC_CFLAGS} ${S}tmp\\\"; \"`"
 				else
@@ -2588,42 +2592,7 @@ ${STR} ; fi"
 				## -eof- ##
 				_PC_CFLAGS=""
 				_PC_LDFLAGS=""
-				MODE=""
-			fi
-		fi
-		;;
-	"pkgconfig")
-		IS_KEYWORD=0
-		if [ -z "${_PC_CFLAGS}" ]; then
-			_PC_CFLAGS="${STR}"
-		else
-			if [ -z "${_PC_LDFLAGS}" ]; then
-				_PC_LDFLAGS="${STR}"
-			else
-				add_envword ${_PC_CFLAGS}
-				add_envword ${_PC_LDFLAGS}
-				REPORT_PKGCFG="${REPORT_PKGCFG} ${STR}"
-				SCRIPT="`printf \"${SCRIPT}\nprintf 'checking pkg-config flags for ${STR}... '\"`"
-				## - flags - ##
-				SCRIPT="`printf \"${SCRIPT}\ntmp=\\\`pkg-config --cflags ${STR} 2>/dev/null\\\`\"`"
-				SCRIPT="`printf \"${SCRIPT}\nif [ ${S}? = 1 ]; then echo no ; else \"`"
-				if [ "${_PKGCONFIG_PLUS}" = 1 ]; then
-				SCRIPT="`printf \"${SCRIPT}\n${_PC_CFLAGS}=\\\"${S}${_PC_CFLAGS} ${S}tmp\\\"; \"`"
-				else
-				SCRIPT="`printf \"${SCRIPT}\n${_PC_CFLAGS}=${S}tmp; \"`"
-				fi
-				## - libs - ##
-				SCRIPT="`printf \"${SCRIPT}\ntmp=\\\`pkg-config --libs ${STR} 2>/dev/null\\\`\"`"
-				SCRIPT="`printf \"${SCRIPT}\nif [ ! ${S}? = 1 ]; then \"`"
-				SCRIPT="`printf \"${SCRIPT}\necho yes\"; `"
-				if [ "${_PKGCONFIG_PLUS}" = 1 ]; then
-				SCRIPT="`printf \"${SCRIPT}\n${_PC_LDFLAGS}=\\\"${S}${_PC_LDFLAGS} ${S}tmp\\\"; fi; fi\"`"
-				else
-				SCRIPT="`printf \"${SCRIPT}\n${_PC_LDFLAGS}=${S}tmp; fi; fi\"`"
-				fi
-				## -eof- ##
-				_PC_CFLAGS=""
-				_PC_LDFLAGS=""
+				_REQUIRED=0
 				MODE=""
 			fi
 		fi
@@ -3052,6 +3021,11 @@ else"
 			exit 1
 		fi
 		enter_mode "sizeof" ${STR}
+		;;
+	"PKGCONFIG!"|"PKGCFG!")
+		MODE="pkgconfig"
+		_PKGCONFIG_PLUS=0
+		_REQUIRED=1
 		;;
 	"PKGCONFIG"|"PKGCFG")
 		MODE="pkgconfig"
