@@ -3195,7 +3195,8 @@ if [ "${COMMENT}" = 1 ]; then
 fi
 
 # Final stage
-if [ "${MAKEFILE}" = 1 ] && [ -f Makefile.acr ]; then
+if [ "${MAKEFILE}" = 1 ]; then
+if [ -f Makefile.acr ]; then
 	echo "ERROR: Makefile.acr already exists. Remove't manually." >&2
 	exit 1
 fi
