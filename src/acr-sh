@@ -782,7 +782,7 @@ lang_cpp() {
 	echo "printf \"checking for cpp... \""
 	echo "if [ \"${S}{CROSSBUILD}\" = 1 ]; then"
 	echo "(exec ${S}{HOST}-${S}{CPP} --help >/dev/null 2>&1)"
-	echo "[ ${S}? = 0 ] && CPP=\"${S}{HOST}-${S}{CPP}"
+	echo "[ ${S}? = 0 ] && CPP=\"${S}{HOST}-${S}{CPP}\""
 	echo "fi"
 	echo "(echo \"main(){}\" | ${S}{CPP} ${CPPFLAGS} >/dev/null 2>&1)"
 	echo "if [ \$? = 0 ]; then echo ${S}{CPP}; else"
