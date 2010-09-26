@@ -1,7 +1,7 @@
 #!/bin/sh
 #
-# Copyright (C) 2005, 2006
-#       pancake <pancake@phreaker.net>
+# Copyright (C) 2005-2010
+#       pancake <pancake@youterm.com>
 #
 # acr is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -22,8 +22,8 @@
 # ACR: AutoConf Replacement
 #
 # @license:  GPLv2
-# @author:   pancake <pancake@phreaker.net>
-# @homepage: http://news.nopcode.org/pancake/acr.html
+# @author:   pancake <pancake@youterm.com>
+# @homepage: http://hg.youterm.com/acr
 # @version:  @VERSION@
 #
 # acr:
@@ -43,40 +43,37 @@ CONFIGURE="./configure"
 ACRFILE="configure.acr"
 TMP_FILE=""
 
-control_c()
-{
+control_c() {
 	echo
 	echo "^C : interrupted execution."
-	if [ -n "${TMP_FILE}" ]; then
-		rm -f ${TMP_FILE}
-	fi
+	[ -n "${TMP_FILE}" ] && rm -f ${TMP_FILE}
 	exit 1
 }
 
 trap control_c 2
 
-show_version()
-{
+show_version() {
 	echo "acr: version @VERSION@"
 	exit 0
 }
 
-show_usage()
-{
-	echo "acr: Usage '$0' [-flags] [file] [args]"
-	echo "  -d         runs in debug mode."
-	echo "  -D         creates the distribution tarball."
-	echo "  -e         embed configure.acr into final script as comment."
-	echo "  -h         show this help."
-	echo "  -m         generate main Makefile.acr file."
-	echo "  -n         do not generate the final configure script. (parse only)"
-	echo "  -o [file]  output file (default: configure)."
-	echo "  -p         show progress bar."
-	echo "  -r         recovery mode. (runs acr-recover)"
-	echo "  -s         strip default code generation."
-	echo "  -v         show version information."
-	echo "  -w [num]   cats the configure.acr highlighting the [num] word."
-	echo "  -x         execute the script directly."
+show_usage() {
+	cat<<EOF
+acr: Usage '$0' [-flags] [file] [args]
+  -d         runs in debug mode.
+  -D         creates the distribution tarball.
+  -e         embed configure.acr into final script as comment.
+  -h         show this help.
+  -m         generate main Makefile.acr file.
+  -n         do not generate the final configure script. (parse only)
+  -o [file]  output file (default: configure).
+  -p         show progress bar.
+  -r         recovery mode. (runs acr-recover)
+  -s         strip default code generation.
+  -v         show version information.
+  -w [num]   cats the configure.acr highlighting the [num] word.
+  -x         execute the script directly."
+EOF
 	exit $1
 }
 
@@ -114,7 +111,9 @@ while [ $# -gt 0 ]; do
 		DEBUG=1
 		;;
 	"-m"|"--makefile")
-		MAKEFILE=1
+		env MAKEDIST=${MAKEDIST} STRIP=${STRIP} MAKEFILE=1 PBAR=${PBAR} NOPE=${NOPE} \
+		acr-sh "${ACRFILE}" "${CONFIGURE}" > /dev/null
+		exit $?
 		;;
 	"-h"|"--help")
 		show_usage 0
@@ -139,7 +138,6 @@ while [ $# -gt 0 ]; do
 		ACRFILE="$1"
 		;;
 	esac
-
 	shift
 done
 
@@ -159,7 +157,7 @@ if [ ! -f "${ACRFILE}" ]; then
 	exit 1
 fi
 
-if [ "${WORD}" ]; then
+if [ -n "${WORD}" ]; then
 	N=0
 	WORDS=`cat ${ACRFILE}`
 	NW=`echo $WORDS | wc -w `
@@ -188,36 +186,30 @@ if [ "${EXEC}" = 1 ]; then
 	sh ${TMP_FILE} $@
 	rm ${TMP_FILE}
 else
-	if [ "${MAKEFILE}" = 1 ]; then
-		env MAKEDIST=${MAKEDIST} STRIP=${STRIP} MAKEFILE=1 PBAR=${PBAR} NOPE=${NOPE} \
+	if [ "${NOPE}" = 1 ]; then
+		env MAKEDIST=${MAKEDIST} STRIP=${STRIP} NOPE=1 PBAR=${PBAR} DEBUG=${DEBUG} \
 		acr-sh "${ACRFILE}" "${CONFIGURE}" > /dev/null
 		RET=$?
 	else
-		if [ "${NOPE}" = 1 ]; then
-			env MAKEDIST=${MAKEDIST} STRIP=${STRIP} NOPE=1 PBAR=${PBAR} DEBUG=${DEBUG} \
-			acr-sh "${ACRFILE}" "${CONFIGURE}" > /dev/null
-			RET=$?
-		else
 		TMP_FILE=`mktemp -t acr.XXXXXX`
 		env NOPE=0 DEBUG=${DEBUG} STRIP=${STRIP} PBAR=${PBAR} \
 		acr-sh "${ACRFILE}" "${CONFIGURE}" > ${TMP_FILE}
-		if [ ! "$?" = 0 ]; then
-			rm -f ${TMP_FILE}
-		else
+		RET=$?
+		if [ "$?" = 0 ]; then
 			mv ${TMP_FILE} "${CONFIGURE}"
 			chmod +x "${CONFIGURE}"
-			if [ "${EMBED}" = 1 ]; then
+			[ "${EMBED}" = 1 ] && \
 				cat ${ACRFILE} | awk '{print "#ACR# " $0}' >> "${CONFIGURE}"
-			fi
+		else
+			rm -f ${TMP_FILE}
 		fi
 	fi
-	fi
 
-	if [ "${RET}" = 1 ]; then
-		echo "acr: error handled by acr."
-		exit 1
-	else
+	if [ "${RET}" = 0 ]; then
 		[ "${NOPE}" = 0 ] && echo "acr: all done."
 		exit 0
+	else
+		echo "acr: error handled by acr."
+		exit 1
 	fi
 fi

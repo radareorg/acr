@@ -1,7 +1,7 @@
 #!/bin/sh
 #
-# Copyright (C) 2005, 2006
-#       pancake <pancake@phreaker.net>
+# Copyright (C) 2005-2010
+#       pancake <pancake@youterm.com>
 #
 # acr is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -20,22 +20,24 @@
 #===========================================================================
 #
 # AMR : Auto Make Replacement
-# @author: pancake@phreaker.net
+# @author: pancake@youterm.com
 
-VERSION="0.1"
+VERSION="0.2"
 NESTED=0
 S=\$
 
 show_usage() {
-	echo "Usage: amr [options]"
-	echo " -a : recursive scan directories and prints the configure.amr"
-	echo " -c : parse configure.amr to print a configure.acr"
-	echo " -m : parse configure.amr and generate the propers Makefile.acr"
-	echo " -s : shellscript that simulates a makefile"
-	echo " -d : prints all directories where amr must run"
-	echo " -r : show report"
-	echo " -g : print out autogen.sh"
-	echo " -v : show version information"
+	cat <<EOF
+Usage: amr [options]
+ -a : recursive scan directories and prints the configure.amr
+ -c : parse configure.amr to print a configure.acr
+ -m : parse configure.amr and generate the propers Makefile.acr
+ -s : shellscript that simulates a makefile
+ -d : prints all directories where amr must run
+ -r : show report
+ -g : print out autogen.sh
+ -v : show version information"
+EOF
 	exit $1
 }
 
@@ -106,7 +108,6 @@ CINCLUDES=""
 _MODE=0
 _COMMENT=0
 
-
 check_cidep() {
 	FILE=$1
 	for A in $CINCLUDES ; do
@@ -116,6 +117,7 @@ check_cidep() {
 	echo "CInclude ${FILE} not found" > /dev/stderr
 	exit 1
 }
+
 check_cdep() {
 	FILE=$1
 	for A in $CSOURCES ; do
@@ -131,13 +133,13 @@ MYDIR=${PWD}
 RTDIR=${PWD}
 NESTED=0
 while : ; do
-cd ..
-if [ -e "configure.amr" ]; then
-	RTDIR=${PWD}
-	NESTED=1
-	break
-fi
-[ "${PWD}" = "/" ] && break
+	cd ..
+	if [ -e "configure.amr" ]; then
+		RTDIR=${PWD}
+		NESTED=1
+		break
+	fi
+	[ "${PWD}" = "/" ] && break
 done
 
 cd ${RTDIR}
@@ -146,66 +148,63 @@ PKGNAME=`basename ${PWD}`
 cd ${MYDIR}
 
 if [ "gen-configure" = "$AMR" ]; then
-FILES="`find . -type f`"
-for A in $FILES ; do
-	if [ "`echo $A | grep \"\\.c$\"`" ]; then
-		CDIR="`echo $A| awk -F / '{ for(i=1;i<NF;i++){ str=str$i"/" } print str }'`"
-		if [ -z "`echo $CDIRS|grep $CDIR`" ]; then
-			CDIRS="${CDIRS} ${CDIR}"
-		fi
-		CSOURCES="${CSOURCES} $A"
-		_INCLUDES=`cat ${A} | grep '#include' | grep '<' | sed -e 's,<,,' -e 's,>,,' | cut -d \  -f 2`
-		for INC in  ${_INCLUDES}; do
-			if [ -z "`echo ${CINCLUDES} | grep ${INC}`" ]; then
-				CINCLUDES="${CINCLUDES} ${INC}"
+	FILES="`find . -type f`"
+	for A in $FILES ; do
+		if [ "`echo $A | grep \"\\.c$\"`" ]; then
+			CDIR="`echo $A| awk -F / '{ for(i=1;i<NF;i++){ str=str$i"/" } print str }'`"
+			if [ -z "`echo $CDIRS|grep $CDIR`" ]; then
+				CDIRS="${CDIRS} ${CDIR}"
 			fi
-		done
-	else
-true
-	# TODO
-#	if [ "`echo $A | grep \"\\.h$\"`" ]; then
-	#	CINCLUDES="${CINCLUDES} $A"
-#	fi
-	fi
-done
-
-COLDIR=$CDIRS
-echo "## sample configure.amr ##"
-for A in $CDIRS ; do
-	CDIR=$A
-	echo "CDIR $CDIR"
-	[ ! "${CDIR}" = "./" ] && continue
-	echo
-	CFILES=""
-	for B in $CSOURCES; do
-		FILE="`echo $CDIR $B | awk '{print substr($2,length($1)+1); }'`"
-		CFILES="${CFILES} ${FILE}"
-	done
-	[ "${CFILES}" ] && echo "CSOURCES ${CFILES} ;"
-
-	HFILES=""
-	HFILES=`find . | grep \.h | sed -e 's,\./,,'`
-	#for B in ${CINCLUDES}; do
-	#	FILE="`echo $CDIR $B | awk '{print substr($2,length($1)+1); }'`"
-	#	FILE="`echo $CDIR $B | awk '{print substr($2,length($1)+1); }'`"
-	#	HFILES="${HFILES} ${FILE}"
-	#done
-	echo "CINCLUDES ${CINCLUDES} ;"
-	echo
-
-	for B in $HFILES ; do
-		STR=""
-		for C in $CFILES ; do
-			if [ -n "`cat ${CDIR}/$C | grep '#include "' | grep $B`" ]; then
-				STR="${STR} ${C}"
-			fi
-		done
-		if [ -n "${STR}" ]; then
-			echo "CDEPS ${B}${STR} ;"
+			CSOURCES="${CSOURCES} $A"
+			_INCLUDES=`cat ${A} | grep '#include' | grep '<' | sed -e 's,<,,' -e 's,>,,' | cut -d \  -f 2`
+			for INC in  ${_INCLUDES}; do
+				if [ -z "`echo ${CINCLUDES} | grep ${INC}`" ]; then
+					CINCLUDES="${CINCLUDES} ${INC}"
+				fi
+			done
+		#else
+			# TODO
+			#if [ "`echo $A | grep \"\\.h$\"`" ]; then
+			#	CINCLUDES="${CINCLUDES} $A"
+			#fi
 		fi
 	done
-done
-exit 0
+
+	COLDIR=$CDIRS
+	echo "## sample configure.amr ##"
+	for A in $CDIRS ; do
+		CDIR=$A
+		echo "CDIR $CDIR"
+		[ ! "${CDIR}" = "./" ] && continue
+		echo
+		CFILES=""
+		for B in $CSOURCES; do
+			FILE="`echo $CDIR $B | awk '{print substr($2,length($1)+1); }'`"
+			CFILES="${CFILES} ${FILE}"
+		done
+		[ "${CFILES}" ] && echo "CSOURCES ${CFILES} ;"
+
+		HFILES=""
+		HFILES=`find . | grep \.h | sed -e 's,\./,,'`
+		#for B in ${CINCLUDES}; do
+		#	FILE="`echo $CDIR $B | awk '{print substr($2,length($1)+1); }'`"
+		#	FILE="`echo $CDIR $B | awk '{print substr($2,length($1)+1); }'`"
+		#	HFILES="${HFILES} ${FILE}"
+		#done
+		echo "CINCLUDES ${CINCLUDES} ;"
+		echo
+
+		for B in $HFILES ; do
+			STR=""
+			for C in $CFILES ; do
+				if [ -n "`cat ${CDIR}/$C | grep '#include "' | grep $B`" ]; then
+					STR="${STR} ${C}"
+				fi
+			done
+			[ -n "${STR}" ] && echo "CDEPS ${B}${STR} ;"
+		done
+	done
+	exit 0
 fi
 
 if [ ! -e "configure.amr" ]; then
@@ -275,8 +274,7 @@ for A in $CONFIGURE_AMR ; do
 			exit 1
 			;;
 		esac
-
-		;; esac
+	;; esac
 done
 }
 
@@ -297,8 +295,8 @@ case "$AMR" in
 	# TODO: handle multiple subdirectories
 	if [ "${CDIR}" = "./" ]; then
 		echo "OBJ=${COBJECTS}"
-		echo "BIN=${PKGNAME}"
-		echo "VERSION=${VERSION}"
+		echo "BIN=@PKGNAME@"
+		echo "VERSION=@VERSION@"
 		echo
 		echo "all: \${OBJ}"
 		echo "	\${CC} \${LDFLAGS} \${OBJ} -o \${BIN}"
@@ -332,10 +330,10 @@ case "$AMR" in
 		echo "  cd ${CDIR} && ${S}{MAKE} mrproper"
 		echo
 		echo "dist: mrproper"
-        	echo "	cd .. && mv radare radare-${S}{VERSION}"
-        	echo "	-cd .. && tar czvf radare-${S}{VERSION}.tar.gz \\"
-        	echo "	\`find radare-${S}{VERSION} -type f|grep -v git\`"
-        	echo "	cd .. && mv radare-${S}{VERSION} radare"
+        	echo "	cd .. && mv ${S}{PKGNAME}-${S}{VERSION}"
+        	echo "	-cd .. && tar czvf ${S}{PKGNAME}-${S}{VERSION}.tar.gz \\"
+        	echo "	\`find ${S}{PKGNAME}-${S}{VERSION} -type f|grep -v git\`"
+        	echo "	cd .. && mv ${S}{PKGNAME}-${S}{VERSION} ${S}{PKGNAME}"
 		echo
 	fi
 	;;
@@ -356,9 +354,7 @@ case "$AMR" in
 	echo "CONTACT your name ; your@email" # TODO
 	echo
 	fi
-	if [ -n "${CSOURCES}" ]; then
-		echo "LANG_C!"
-	fi
+	[ -n "${CSOURCES}" ] && echo "LANG_C!"
 	echo
 	for A in ${CINCLUDES} ; do
 		echo "CHKINC! ${A}"
@@ -387,5 +383,3 @@ esac
 # if [ main.h > main.o ]; then
 #  rm -f main.o usage.o engine.o
 # fi
-
-
