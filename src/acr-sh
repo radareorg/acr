@@ -2908,8 +2908,8 @@ else"
 	"LANG_PYTHON!")         LANG_PYTHON_REQUIRED=1 ; env_python ; ;;
 	"LANG_JAVA")            env_java ; ;;
 	"LANG_JAVA!")           LANG_JAVA_REQUIRED=1 ; env_java ; ;;
-	"LANG_LUA")            env_lua ; ;;
-	"LANG_LUA!")           LANG_LUA_REQUIRED=1 ; env_lua ; ;;
+	"LANG_LUA")             env_lua ; ;;
+	"LANG_LUA!")            LANG_LUA_REQUIRED=1 ; env_lua ; ;;
 	"LANG_PERL")            env_perl ; ;;
 	"LANG_PERL!")           LANG_PERL_REQUIRED=1 ; env_perl ; ;;
 	"USE_PERL_THREADS") 	env_perl_threads ; ;;
@@ -2942,9 +2942,9 @@ else"
 			MODE="include" ; ;;
 	"REQUIRE_ACR_VERSION") MODE="requireacrversion" ; ;;
 	"CHECK_INCLUDE"|"CHECK_INCLUDE!"|"CHKINC"|"CHKINC!")
-		if [ -z "${LANG_C}" ]; then
+		if [ -z "${LANG_C}${LANG_CXX}" ]; then
 			word=`get_word_number`
-			echo "$word | Define LANG_C before use CHECK_INC" >&2
+			echo "$word | Define LANG_C or LANG_CXX before use CHECK_INC" >&2
 			exit 1
 		fi
 		enter_mode "chkinc" ${STR}
@@ -2958,10 +2958,10 @@ else"
 		enter_mode "chkcp" ${STR}
 		;;
 	"CHKFNC"|"CHKFNC!"|"CHECK_FUNCTION"|"CHECK_FUNCTION!")
-		if [ -z "${LANG_C}" ]; then
-		word=`get_word_number`
-		echo "$word | Define LANG_C before use CHECK_FUNC" >&2
-		exit 1
+		if [ -z "${LANG_C}${LANG_CXX}" ]; then
+			word=`get_word_number`
+			echo "$word | Define LANG_C or LANG_CXX before use CHECK_FUNC" >&2
+			exit 1
 		fi
 		enter_mode "chkfunc" ${STR}
 		;;
@@ -2990,9 +2990,9 @@ else"
 		enter_mode "chkpm" ${STR}
 		;;
 	"CHKLIB"|"CHKLIB!"|"CHECK_LIBRARY"|"CHECK_LIBRARY!") 
-		if [ -z "${LANG_C}" ]; then
+		if [ -z "${LANG_C}${LANG_CXX}" ]; then
 			word=`get_word_number`
-			echo "$word | Define LANG_C before use CHECK_LIB" >&2
+			echo "$word | Define LANG_C or LANG_CXX before use CHECK_LIB" >&2
 			exit 1
 		fi
 		enter_mode "chklib" ${STR}
@@ -3007,17 +3007,17 @@ else"
 		enter_mode "chkgrp" ${STR}
 		;;
 	"ENDIAN"|"CHECK_ENDIAN")
-		if [ -z "${LANG_C}" ]; then
+		if [ -z "${LANG_C}${LANG_CXX}" ]; then
 			word=`get_word_number`
-			echo "$word | Define LANG_C before use CHECK_ENDIAN" >&2
+			echo "$word | Define LANG_C or LANG_CXX before use CHECK_ENDIAN" >&2
 			exit 1
 		fi
 		check_endian
 		;;
 	"SIZEOF")
-		if [ -z "${LANG_C}" ]; then
+		if [ -z "${LANG_C}${LANG_CXX}" ]; then
 			word=`get_word_number`
-			echo "$word | Define LANG_C before use SIZEOF" >&2
+			echo "$word | Define LANG_C or LANG_CXX before use SIZEOF" >&2
 			exit 1
 		fi
 		enter_mode "sizeof" ${STR}
@@ -3036,12 +3036,10 @@ else"
 		_PKGCONFIG_PLUS=1
 		;;
 	"USE_LIBTOOL"|"USE_LIBTOOL!")
-		if [ -z "${LANG_C}" ]; then
-			if [ -z "${LANG_CXX}" ]; then
-				word=`get_word_number`
-				echo "$word | USE_PTHREAD requires LANG_C or LANG_CXX." >&2
-				exit 1
-			fi
+		if [ -z "${LANG_C}${LANG_CXX}" ]; then
+			word=`get_word_number`
+			echo "$word | USE_LIBTOOL requires LANG_C or LANG_CXX." >&2
+			exit 1
 		fi
 		# TODO: Use mode for libtool
 		if [ "`echo ${STR}| grep '!'`" ]; then 
@@ -3052,9 +3050,9 @@ else"
 		use_libtool
 		;;
 	"USE_PTHREAD"|"USE_PTHREAD!")
-		if [ -z "${LANG_C}" ]; then
+		if [ -z "${LANG_C}${LANG_CXX}" ]; then
 			word=`get_word_number`
-			echo "$word | USE_PTHREAD requires LANG_C." >&2
+			echo "$word | USE_PTHREAD requires LANG_C or LANG_CXX." >&2
 			exit 1
 		fi
 		if [ "`echo ${STR}| grep '!'`" ]; then 
@@ -3072,14 +3070,9 @@ else"
 		_REPORT_DEFINED=1
 		;;
 	"USE_JNI")
-		if [ -z "${LANG_C}" ]; then
+		if [ -z "${LANG_C}${LANG_CXX}${LANG_JAVA}" ]; then
 			word=`get_word_number`
-			echo "$word | USE_JNI requires LANG_C and LANG_JAVA" >&2
-			exit 1
-		fi
-		if [ -z "${LANG_JAVA}" ]; then
-			word=`get_word_number`
-			echo "$word | USE_JNI requires LANG_C and LANG_JAVA" >&2
+			echo "$word | USE_JNI requires LANG_C or LANG_CXX and LANG_JAVA" >&2
 			exit 1
 		fi
 		use_jni
@@ -3185,7 +3178,6 @@ else"
 		SET_VAR=$STR
 		;;
 	esac
-
 done # inner loop
 
 done
@@ -3203,8 +3195,7 @@ if [ "${COMMENT}" = 1 ]; then
 fi
 
 # Final stage
-if [ "${MAKEFILE}" = 1 ]; then
-if [ -f Makefile.acr ]; then
+if [ "${MAKEFILE}" = 1 ] && [ -f Makefile.acr ]; then
 	echo "ERROR: Makefile.acr already exists. Remove't manually." >&2
 	exit 1
 fi
