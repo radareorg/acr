@@ -882,7 +882,7 @@ echo \"#include <${A}>\" >>test.c"
 	SCRIPT=`cat <<EOF
 ${SCRIPT}
 echo "main(){}" >>test.c
-eval \\\\${S}${S}{COMPILER} ${S}{CFLAGS} test.c >/dev/null 2>&1
+eval \\\\${S}${S}{COMPILER} ${S}{CFLAGS} ${S}{CXXFLAGS} test.c >/dev/null 2>&1
 if [ ${S}? = 0 ]; then
 	eval ${S}{VAR}=1
 	echo yes
