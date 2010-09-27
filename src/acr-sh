@@ -65,9 +65,7 @@ fi
 AWK=awk
 AWK_STRING="`awk -V 2>/dev/null`"
 [ -z "${AWK_STRING}" ] && AWK_STRING="`awk -W version 2>&1`"
-if [ `expr "$AWK_STRING" : "mawk"` -gt 0 ]; then
-	AWK="awk -W interactive"
-fi
+[ `expr "$AWK_STRING" : "mawk"` -gt 0 ] && AWK="awk -W interactive"
 
 ##
 ## boolean() {
@@ -414,7 +412,7 @@ add_flag() {
 	REPORT_FLAGS="${REPORT_FLAGS} --${1}-${3}"
 	add_envword ${2}
 	_TMP_=""
-	TABS="`echo \"--${1}-${3}\" | awk '{ len=23-length($1); if (len<1) { print ""; len=25 } ; for (i=0;i<len;i++) { printf " "; } }'`"
+	TABS="`echo \"--${1}-${3}\" | ${AWK} '{ len=23-length($1); if (len<1) { print ""; len=25 } ; for (i=0;i<len;i++) { printf " "; } }'`"
 	if [ -z "${4}" ]; then
 		case $1 in
 			"enable"|"with") value=1; echo "${2}=0"; ;;
@@ -476,7 +474,7 @@ for A in \\\`echo ${S}{PATH} | sed -e 's,:, ,g'\\\`; do
 RUBY=\\\`ls ${S}{A}/ruby* 2>/dev/null\\\`
  if [ "${S}{RUBY}" ]; then 
    RUBY=\\\`echo ${S}{RUBY} | cut -d\  -f 1\\\`
-   RUBY_VERSION=\\\`echo ${S}{RUBY} ${S}{A} | awk '{ print substr(${S}1,length(${S}2)+6) }'\\\`
+   RUBY_VERSION=\\\`echo ${S}{RUBY} ${S}{A} | ${AWK} '{ print substr(${S}1,length(${S}2)+6) }'\\\`
    echo ${S}{RUBY} ; HAVE_LANG_RUBY=1 ; break
  fi
 done
@@ -501,7 +499,7 @@ check_ru() {
 	VAR=`echo "HAVE_RU_$1" | \
 		sed -e 's, ,,g' | \
 		sed -e 's,/,_,g' | \
-		awk '{ print toupper($0); }'`
+		${AWK} '{ print toupper($0); }'`
 	add_envword "${VAR}"
 
 	SCRIPT=`cat <<EOF
@@ -539,7 +537,7 @@ HAVE_LANG_PYTHON=0
 for A in \\\`echo ${S}{PATH} | sed -e 's,:, ,g'\\\` ; do
 PYTHON=\\\`ls ${S}{A}/python* 2>/dev/null\\\`
 if [ "${S}{PYTHON}" ]; then
- PYTHON=\\\`echo ${S}{PYTHON} | awk '{print ${S}1; }'\\\`
+ PYTHON=\\\`echo ${S}{PYTHON} | ${AWK} '{print ${S}1; }'\\\`
  echo ${S}{PYTHON} ; HAVE_LANG_PYTHON=1 ; break ; fi
 done
 if [ -z "${S}{PYTHON}" ]; then
@@ -698,7 +696,7 @@ env_perl() {
 ## {{{ + modules
 check_pm() {
 	HAVE_LIBS=1
-	VAR=`echo "HAVE_PM_$1" | sed -e 's, ,,g;s,:,,g' | awk '{ print toupper($0); }'`
+	VAR=`echo "HAVE_PM_$1" | sed -e 's, ,,g;s,:,,g' | tr '[a-z]' '[A-Z]'`
 	add_envword "${VAR}"
 
 	SCRIPT="${SCRIPT}
@@ -1390,7 +1388,7 @@ if [ -e "${S}{VPATH}/config.guess" ]; then
 	return
 fi
 CPU="\`uname -m|sed -e 's, ,,g'\`"
-OS="\`uname -s|awk '{print(tolower(${S}0))}'\`"
+OS="\`uname -s|tr '[A-Z]' '[a-z]'\`"
 GNU="\`uname --help 2>&1 | grep gnu\`"
 [ "${S}{GNU}" ] && OS="${S}{OS}-gnu"
 [ "${S}{CPU}" = ppc ] && CPU="powerpc"
@@ -1721,14 +1719,9 @@ EOF
 
 is_buggy() {
 	WORD=$1
-
-	if [ ! "${MODE}" = "check" ]; then
-	if [ ! "${WORD}" = ";" ]; then 
-		if [ "`echo $1 | grep ';'`" ]; then
-			word=`get_word_number`
-			echo "$word | Warning: keyword '$1' contains a ';'. Is this fine?" >&2
-		fi
-	fi
+	if [ ! "${MODE}" = "check" ] && [ ! "${WORD}" = ";" ] && [ -n "`echo $1 | grep ';'`" ]; then
+		word=`get_word_number`
+		echo "$word | Warning: keyword '$1' contains a ';'. Is this fine?" >&2
 	fi
 }
 
@@ -1779,9 +1772,9 @@ enter_mode() {
 
 cat_file() {
 	cat "$1" \
-	 |	sed -e 's,/\*,((,g' \
-	 |	sed -e 's,\*/,)),g' \
-	 |	awk '{ print $0" _n_";}'
+	 | sed -e 's,/\*,((,g' \
+	 | sed -e 's,\*/,)),g' \
+	 | awk '{ print $0" _n_";}'
 }
 
 # MAIN LOOP #
@@ -3216,13 +3209,15 @@ if [ $NKEYS -lt 0 ]; then
 fi
 
 cat > Makefile.acr <<EOF
-VPATH=@VPATH@
-PKGNAME=@PKGNAME@
-VERSION=@VERSION@
-INSTALL_DATA=@INSTALL_DATA@
-INSTALL_PROGRAM=@INSTALL_PROGRAM@
 .PHONY: all install dist clean mrproper
+
+VPATH=@VPATH@
 EOF
+
+echo "PKGNAME=@""PKGNAME@" >> Makefile.acr
+echo "VERSION=@""VERSION@" >> Makefile.acr
+echo "INSTALL_DATA=@""INSTALL_DATA@" >> Makefile.acr
+echo "INSTALL_PROGRAM=@""INSTALL_PROGRAM@" >> Makefile.acr
 
 if [ "${LANG_JAVA}" = 1 ]; then
 cat >> Makefile.acr <<EOF

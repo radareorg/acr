@@ -111,9 +111,7 @@ while [ $# -gt 0 ]; do
 		DEBUG=1
 		;;
 	"-m"|"--makefile")
-		env MAKEDIST=${MAKEDIST} STRIP=${STRIP} MAKEFILE=1 PBAR=${PBAR} NOPE=${NOPE} \
-		acr-sh "${ACRFILE}" "${CONFIGURE}" > /dev/null
-		exit $?
+		MAKEFILE=1
 		;;
 	"-h"|"--help")
 		show_usage 0
@@ -186,7 +184,11 @@ if [ "${EXEC}" = 1 ]; then
 	sh ${TMP_FILE} $@
 	rm ${TMP_FILE}
 else
-	if [ "${NOPE}" = 1 ]; then
+	if [ "${MAKEFILE}" = 1 ]; then
+		env MAKEDIST=${MAKEDIST} STRIP=${STRIP} MAKEFILE=1 PBAR=${PBAR} NOPE=${NOPE} \
+		acr-sh "${ACRFILE}" "${CONFIGURE}" > /dev/null
+		RET=$?
+	elif [ "${NOPE}" = 1 ]; then
 		env MAKEDIST=${MAKEDIST} STRIP=${STRIP} NOPE=1 PBAR=${PBAR} DEBUG=${DEBUG} \
 		acr-sh "${ACRFILE}" "${CONFIGURE}" > /dev/null
 		RET=$?
