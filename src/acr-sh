@@ -827,7 +827,7 @@ COMPILER=CXX"
 	[ "${LANG_CXX_ENV}" ] && return
 	LANG_CXX=1
 	REPORT_LANGS="${REPORT_LANGS} c++"
-	ACR_RMFILES="${ACR_RMFILES} test.cxx a.out a.exe"
+	ACR_RMFILES="${ACR_RMFILES} test.c test.cxx a.out a.exe"
 	LANG_CXX_ENV="CXX CXXFLAGS LDFLAGS HAVE_LANG_CXX"
 	add_lang_envwords "CXX"
 	ENVHELP=`cat <<EOF
