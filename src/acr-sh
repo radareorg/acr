@@ -391,7 +391,7 @@ if [ -z "${S}{JAVA_HOME}" ]; then
 fi
 JCFLAGS="-I${S}{JAVA_HOME}/include -I${S}{JAVA_HOME}/include/linux"
 echo "#include <jni.h>" > test.c
-${S}{CC} test.c ${S}{JCFLAGS} -c >/dev/null 2>&1
+eval \\\\${S}${S}{COMPILER} test.c ${S}{JCFLAGS} -c >/dev/null 2>&1
 if [ \"${S}?\" = 0 ]; then
 	echo ok
 else
@@ -917,8 +917,9 @@ check_endian() {
 	SCRIPT="
 ${SCRIPT}
 printf \"checking host endianness... \"
-echo 'main(){int a=1;char *b=(char*)&a;printf(\"##d##\",b[0]);}' > test.c
-${S}{CC} ${S}{CFLAGS} ${S}{LDFLAGS} -o a.out test.c >/dev/null 2>&1
+echo '#include <stdio.h>' > test.c
+echo 'main(){int a=1;char *b=(char*)&a;printf(\"##d##\",b[0]);}' >> test.c
+eval \\\\${S}${S}{COMPILER} ${S}{CFLAGS} ${S}{CXXFLAGS} ${S}{LDFLAGS} -o a.out test.c >/dev/null 2>&1
 if [ ! ${S}? = 0 ]; then
 	echo unexpected error
 	do_remove
@@ -959,7 +960,7 @@ _CHKLIB_NAME=${S}2
 _CHKLIB_LIBS=${S}(echo \"-l${S}{_CHKLIB_NAME}\" | sed 's,\\+, -l,g')
 printf \"checking for lib${S}{_CHKLIB_NAME} ... \"
 echo \"main(){ }\" > test.c
-eval ${S}{S}${S}{COMPILER} ${S}{CFLAGS} ${S}{LDFLAGS} ${S}{_CHKLIB_LIBS} test.c >/dev/null 2>&1
+eval ${S}{S}${S}{COMPILER} ${S}{CFLAGS} ${S}{CXXFLAGS} ${S}{LDFLAGS} ${S}{_CHKLIB_LIBS} test.c >/dev/null 2>&1
 if [ ${S}? = 0 ]; then
 	eval ${S}{VAR}=1
 	echo yes
@@ -1027,8 +1028,9 @@ check_sizeof() {
 	SCRIPT="
 ${SCRIPT}
 printf 'checking size of $1... '
-echo 'main(){printf(\"##d##\",sizeof($1));}' >test.c
-${S}{CC} ${S}{CFLAGS} -o a.out test.c >/dev/null 2>&1
+echo '#include <stdio.h>' > test.c
+echo 'main(){printf(\"##d##\",sizeof($1));}' >>test.c
+eval \\\\${S}${S}{COMPILER} ${S}{CFLAGS} ${S}{CXXFLAGS} -o a.out test.c >/dev/null 2>&1
 if [ 0 = ${S}? ]; then 
  ${VAR}=${S}(./a.out)
  echo ${S}{${VAR}}
@@ -1066,7 +1068,7 @@ PTHREAD_LIBS=-pthread ; else
 PTHREAD_LIBS=-lpthread ; fi
 echo '#include <pthread.h>' > test.c
 echo 'main(){pthread_testcancel();}' >> test.c
-(exec ${S}{CC} ${S}{CFLAGS} ${S}{LDFLAGS} ${S}{PTHREAD_LIBS} test.c 2>&1 >/dev/null)
+eval \\\\${S}${S}{COMPILER} ${S}{PTHREAD_LIBS} test.c 2>&1 >/dev/null
 if [ \$? = 1 ]; then
 HAVE_PTHREAD=0 ; echo no ; else HAVE_PTHREAD=1; echo yes ; fi
 "
@@ -2951,9 +2953,9 @@ else"
 		enter_mode "chkcp" ${STR}
 		;;
 	"CHKFNC"|"CHKFNC!"|"CHECK_FUNCTION"|"CHECK_FUNCTION!")
-		if [ -z "${LANG_C}${LANG_CXX}" ]; then
+		if [ -z "${LANG_C}" ]; then
 			word=`get_word_number`
-			echo "$word | Define LANG_C or LANG_CXX before use CHECK_FUNC" >&2
+			echo "$word | Define LANG_C before use CHECK_FUNC" >&2
 			exit 1
 		fi
 		enter_mode "chkfunc" ${STR}
