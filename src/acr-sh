@@ -1967,7 +1967,7 @@ exit 1
 SCRIPT=`cat <<EOF
 ${SCRIPT}
 printf "checking for ${CHECK_VAR}... "
-${TMP_VAR} 
+${TMP_VAR}
 if [ "${S}${CHECK_VAR}" = 1 ]; then
 	echo yes
 else
@@ -1984,9 +1984,9 @@ EOF
 				TMP_VAR=""
 			else
 				if [ "${STR}" = "\\" ]; then
-				TMP_VAR="${CHECK_STR} ; "
+				TMP_VAR="${TMP_VAR} ; "
 				else
-				TMP_VAR="${CHECK_STR}${STR} "
+				TMP_VAR="${TMP_VAR}${STR} "
 				fi
 			fi
 		fi
@@ -3162,7 +3162,7 @@ else"
 	"ARG_DISABLE")
 		MODE="argument"
 		ARGUMENT=disable ;;
-	"CHECK") MODE="check"; ;;
+	"CHECK"|"CHECK_EXEC") MODE="check"; ;;
 	"="|"+="|"?="|"<-")
 		echo "The *old* format <op> <var> <value> is deprecated."  >&2
 		echo "Please use the standard format <var> <op> <value>."  >&2
