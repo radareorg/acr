@@ -278,7 +278,7 @@ if [ "${WODIS}" = "crosspath" ]; then
 if [ $? = 1 ]; then echo Cannot write target file ; control_c ; fi
  done
 else #--
-for A in  src/acr src/acr-sh ; do # SUBST_FILES
+for A in  ; do # SUBST_FILES
  echo "filtering ${A}"
  if [ -f "${VPATH}/${A}.orig" ]; then
    mv -f ${VPATH}/${A}.orig ${VPATH}/${A}
@@ -296,7 +296,7 @@ if [ $? = 1 ]; then echo Cannot write target file ; control_c ; fi
 done
 fi
 
-for A in . src/vim/install.sh  ; do # SUBDIRS
+for A in . src/vim/install.sh src/acr src/acr-sh ; do # SUBDIRS
 if [ -f "${VPATH}/${A}.acr" ]; then
   SD_TARGET=${A}
  else

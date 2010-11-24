@@ -62,12 +62,9 @@ dist: clean
 	mv acr-${VERSION} acr
 
 clean:
-	-rm -f src/vim/install.sh
-	-mv -f src/acr.orig src/acr || rm src/acr
-	-mv -f src/acr-sh.orig src/acr-sh || rm src/acr-sh
-	-rm -f Makefile
-	-rm -f miau `find tests -type f | egrep -v 'CVS|test.sh'`
-	-chmod +x src/acr src/acr-sh
+	rm -f src/vim/install.sh
+	rm -f src/acr src/acr-sh
+	rm -f Makefile
 
 mrproper: clean
 	rm -f configure

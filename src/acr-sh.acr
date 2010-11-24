@@ -63,8 +63,15 @@ fi
 
 ##AWK##
 AWK=awk
-AWK_STRING="`awk -V 2>/dev/null`"
-[ -z "${AWK_STRING}" ] && AWK_STRING="`awk -W version 2>&1`"
+AWK_STRING="`awk 2>/dev/null`"
+if [ -z "${AWK_STRING}" ]; then
+	Q=`${AWK} 2>&1`
+	if [ 1 = "$(echo ${Q} | wc -l | awk '{print $1}')" ]; then
+		AWK_STRING=awk
+	else
+		AWK_STRING="`awk -W version 2>&1`"
+	fi
+fi
 [ `expr "$AWK_STRING" : "mawk"` -gt 0 ] && AWK="awk -W interactive"
 
 ##
