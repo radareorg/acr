@@ -56,10 +56,9 @@ deinstall:
 	-rm -rf ${DATADIR}/doc/examples/acr ${DATADIR}/doc/acr
 
 dist: clean
-	cd ../ && \
-	mv acr acr-${VERSION} && \
-	tar czvf acr-${VERSION}.tar.gz `find acr-${VERSION} -type f|grep -v CVS` &&\
-	mv acr-${VERSION} acr
+	hg clone . acr-${VERSION}
+	rm -rf acr-${VERSION}/.hg
+	tar czvf acr-${VERSION}.tar.gz acr-${VERSION}
 
 clean:
 	rm -f src/vim/install.sh
