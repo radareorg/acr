@@ -55,7 +55,8 @@ deinstall:
 	-rm -f ${MANDIR}/man1/acr.1 ${MANDIR}/man5/configure.acr.5
 	-rm -rf ${DATADIR}/doc/examples/acr ${DATADIR}/doc/acr
 
-dist: clean
+dist:
+	rm -rf acr-${VERSION}
 	hg clone . acr-${VERSION}
 	rm -rf acr-${VERSION}/.hg
 	tar czvf acr-${VERSION}.tar.gz acr-${VERSION}
