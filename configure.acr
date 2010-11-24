@@ -1,14 +1,13 @@
 (( package information ))
 PKGNAME acr
-VERSION 0.8.2
-CONTACT pancake ; @youterm.com
+VERSION 0.8.4
+CONTACT pancake ; @nopcode.org
 
 (( needed programs ))
 CHECK_PROGRAM INSTALL install
 
 (( directories ))
 SUBDIRS . src/vim/install.sh src/acr src/acr-sh ;
-(( SUBST_FILES src/acr.acr src/acr-sh.acr ; ))
 
 (( final report ))
 REPORT SPREFIX PREFIX INSTALL VERSION CONTACT ;

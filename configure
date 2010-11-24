@@ -92,12 +92,12 @@ done
 : ${INSTALL_PROGRAM:=${INSTALL} -m 755 -s}
 : ${INSTALL_MAN:=${INSTALL} -m 444}
 : ${INSTALL_LIB:=${INSTALL} -c}
- PKGNAME='acr' ; VERSION='0.8.2' ; CONTACT_MAIL="@youterm.com" ; CONTACT_NAME="pancake" ; CONTACT="pancake <@youterm.com>" ;
+ PKGNAME='acr' ; VERSION='0.8.4' ; CONTACT_MAIL="@youterm.com" ; CONTACT_NAME="pancake" ; CONTACT="pancake <@youterm.com>" ;
 }
                 
 show_usage() {
 cat <<EOF2
-'configure' configures acr-0.8.2 to adapt to many kinds of systems.
+'configure' configures acr-0.8.4 to adapt to many kinds of systems.
 
 Usage: ./configure [OPTION]... [VAR=VALUE]...
 
@@ -135,7 +135,8 @@ System types:
   --target=TARGET        configure for building compilers for TARGET [HOST]
 EOF2
 
-printf "\nReport bugs to: pancake <@youterm.com>"
+printf "
+Report bugs to: pancake <@youterm.com>"
 echo ""
 exit 0
 }
@@ -146,7 +147,7 @@ take_environ() {
 }
 
 show_version() {
-echo "acr-0.8.2 configuration script done with acr v0.8.2.
+echo "acr-0.8.4 configuration script done with acr v0.8.2.
 The 'Free Software Foundation' message is only for autodetection.
 Originally written by pancake <youterm.com>."
 exit 0
@@ -164,7 +165,7 @@ case $flag in
 	show_version ; ;;
 "-r"|"--r"|"--report")
 echo "PKGNAME:   acr"
-echo "VERSION:   0.8.2"
+echo "VERSION:   0.8.4"
 	exit 0
 	;;
 "--cache-file") 
@@ -270,33 +271,7 @@ for A in ${ENVWORDS} ; do
 	SEDFLAGS="${SEDFLAGS}s,@${A}@,${VAR},g;"
 done
 SEDFLAGS="${SEDFLAGS}'"
-if [ "${WODIS}" = "crosspath" ]; then
- mkdir -p  src/ src/
- for A in  src/acr src/acr-sh ; do
- echo "filtering ${A}"
-  cat ${VPATH}/${A} | eval sed ${SEDFLAGS} > ${A}
-if [ $? = 1 ]; then echo Cannot write target file ; control_c ; fi
- done
-else #--
-for A in  ; do # SUBST_FILES
- echo "filtering ${A}"
- if [ -f "${VPATH}/${A}.orig" ]; then
-   mv -f ${VPATH}/${A}.orig ${VPATH}/${A}
- fi
- if [ -f "${VPATH}/${A}" ]; then
-   mv -f ${VPATH}/${A} ${VPATH}/${A}.orig
- else
-  if [ ! -f "${VPATH}${A}.orig" ]; then
-    echo "ERROR: Cannot find ${VPATH}/${A}.orig" >&2
-    exit 1
-  fi
- fi
- cat ${VPATH}/${A}.orig | eval sed ${SEDFLAGS} > ${VPATH}/${A}
-if [ $? = 1 ]; then echo Cannot write target file ; control_c ; fi
-done
-fi
-
-for A in . src/vim/install.sh src/acr src/acr-sh ; do # SUBDIRS
+for A in . src/vim/install.sh src/acr src/acr-sh  ; do # SUBDIRS
 if [ -f "${VPATH}/${A}.acr" ]; then
   SD_TARGET=${A}
  else
@@ -311,7 +286,7 @@ if [ -f "${VPATH}/${A}.acr" ]; then
  echo "creating ${SD_TARGET}"
 mkdir -p $(echo ${A} | sed -e "s,/`basename ${A}`$,,g")
  cat ${VPATH}/${SD_TARGET}.acr | \
-eval sed -e "s,@VPATH@,${VPATH}/${A},g" ${SEDFLAGS} > ${SD_TARGET}.tmp
+eval sed -e "s,./src/acr-sh,${VPATH}/${A},g" ${SEDFLAGS} > ${SD_TARGET}.tmp
 
 for A in ${ENVWORDS}; do
 VALUE=`eval echo "$"${A}`
@@ -336,15 +311,15 @@ echo " - ${A} = ${VAL}"
 done
 #ACR# (( package information ))
 #ACR# PKGNAME acr
-#ACR# VERSION 0.8.2
+#ACR# VERSION 0.8.4
 #ACR# CONTACT pancake ; @youterm.com
 #ACR# 
 #ACR# (( needed programs ))
 #ACR# CHECK_PROGRAM INSTALL install
 #ACR# 
 #ACR# (( directories ))
-#ACR# SUBDIRS . src/vim/install.sh ;
-#ACR# SUBST_FILES src/acr src/acr-sh ;
+#ACR# SUBDIRS . src/vim/install.sh src/acr src/acr-sh ;
+#ACR# (( SUBST_FILES src/acr.acr src/acr-sh.acr ; ))
 #ACR# 
 #ACR# (( final report ))
 #ACR# REPORT SPREFIX PREFIX INSTALL VERSION CONTACT ;
