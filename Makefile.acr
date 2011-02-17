@@ -32,9 +32,9 @@ install:
 	#${INSTALL_MAN} ${VPATH}/man/man1/install-acr.1 ${MANDIR}/man1/
 	${INSTALL_MAN} man/man5/configure.acr.5 ${MANDIR}/man5/
 	${INSTALL_MAN} man/man5/configure.amr.5 ${MANDIR}/man5/
-	mkdir -p ${DATADIR}/examples/acr
+	mkdir -p ${DATADIR}/acr/examples
 	for A in `find examples -maxdepth 1 -type f`; do \
-	${INSTALL_DATA} $${A} ${DATADIR}/examples/acr ; done
+	${INSTALL_DATA} $${A} ${DATADIR}/acr/examples ; done
 	mkdir -p ${DATADIR}/doc/acr/developers
 	for A in `find doc -maxdepth 1 -type f`; do \
 	${INSTALL_DATA} $${A} ${DATADIR}/doc/acr ; done
