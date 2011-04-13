@@ -1,6 +1,7 @@
 By now ACR works on:
 
 Supported OSs:
+	GNU/FreeBSD (kFreeBSD)
 	GNU/Linux
 	GNU/Hurd
 	Darwin
@@ -35,4 +36,4 @@ Autoconf diff:
 	faster and smaller final script
 
 PD: Send me mails for adding support to other OSs or bug reports to:
-	pancake@phreaker.net
+	pancake@youterm.com

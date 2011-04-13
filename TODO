@@ -1,11 +1,18 @@
-0.5 series:
-===========
+Missing languages
+=================
+- Go
+- LANG_CXX in USE_LIBTOOL (must be tested)
+- CPP is never used/checked
+- mono/dotgnu/msc (semi-done as a module)
+- elisp/clisp/guile/chicken
+- icon
+
+** 0.5 series
+=============
 - SUBCONF IS BROKEN CONCEPT ?!?!!
 - IF XX FOO += BAR ; is also broken!! works with IF XX { ... } ; next change!!
-- CPP is never used/checked
 - optimize cat foo|awk -> awk < foo
 - make something generic to create HAVE_BLABL variables
-- LANG_CXX in USE_LIBTOOL (must be tested)
 - add yacc/lex/bison/flex support USE_LEX_AND_YACC
 - cdeps in AMR is nosense ? amr must be redefined from the ground!
 
@@ -29,13 +36,6 @@ Automake:
 - add keyword REBUILD, to mark the variables that has changed,
   to force a make clean
 - lot of testing and dubidu
-
-
-Planned languages to be supported:
-==================================
-- icon
-- mono/dotgnu/msc (semi-done as a module)
-- elisp/clisp/guile/chicken
 
 
 TOTHINK:
