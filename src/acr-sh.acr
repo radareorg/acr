@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# Copyright (C) 2005-2010
+# Copyright (C) 2005-2011
 #       pancake <@youterm.com>
 #
 # acr is free software; you can redistribute it and/or modify
@@ -1974,7 +1974,7 @@ exit 1
 SCRIPT=`cat <<EOF
 ${SCRIPT}
 printf "checking for ${CHECK_VAR}... "
-${TMP_VAR}
+${TMP_VAR} 
 if [ "${S}${CHECK_VAR}" = 1 ]; then
 	echo yes
 else
@@ -1991,9 +1991,9 @@ EOF
 				TMP_VAR=""
 			else
 				if [ "${STR}" = "\\" ]; then
-				TMP_VAR="${TMP_VAR} ; "
+				TMP_VAR="${CHECK_STR} ; "
 				else
-				TMP_VAR="${TMP_VAR}${STR} "
+				TMP_VAR="${CHECK_STR}${STR} "
 				fi
 			fi
 		fi
@@ -2132,7 +2132,7 @@ EOF
 ${SCRIPT}
 printf "checking for dynamic library... "
 HAVE_LIB_DL=0
-for OS in linux syllable sunos darwin beos solaris ; do
+for OS in linux gnu/kfreebsd syllable sunos darwin beos solaris ; do
 if [ "${S}{HOST_OS}" = "${S}{OS}" ]; then
 	HAVE_LIB_DL=1
 	break;
@@ -3169,7 +3169,7 @@ else"
 	"ARG_DISABLE")
 		MODE="argument"
 		ARGUMENT=disable ;;
-	"CHECK"|"CHECK_EXEC") MODE="check"; ;;
+	"CHECK") MODE="check"; ;;
 	"="|"+="|"?="|"<-")
 		echo "The *old* format <op> <var> <value> is deprecated."  >&2
 		echo "Please use the standard format <var> <op> <value>."  >&2
