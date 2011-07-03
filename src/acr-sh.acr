@@ -1421,10 +1421,10 @@ create_environ() {
 : ${S}{SYSCONFDIR:=${S}{SPREFIX}/etc}
 : ${S}{LIBDIR:=${S}{SPREFIX}/lib}
 : ${S}{LIBEXECDIR:=${S}{SPREFIX}/libexec}
-: ${S}{DATADIR:=${S}{SPREFIX}/share}
 : ${S}{INCLUDEDIR:=${S}{SPREFIX}/include}
-: ${S}{INFODIR:=${S}{SPREFIX}/info}
-: ${S}{MANDIR:=${S}{SPREFIX}/man}
+: ${S}{DATADIR:=${S}{SPREFIX}/share}
+: ${S}{INFODIR:=${S}{DATADIR}/info}
+: ${S}{MANDIR:=${S}{DATADIR}/man}
 : ${S}{LOCALSTATEDIR:=${S}{SPREFIX}/var}
 for A in \`echo ${S}{PATH} | sed -e 's,:, ,g'\` ; do
   [ -e ${S}A/ginstall ] && : ${S}{INSTALL:=${S}A/ginstall} && break
