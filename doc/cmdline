@@ -59,7 +59,7 @@ but...isn't really needed.
 	Embed configure.acr into the final configure script.
 
 [ -r | --recover ]
-	Recovery mode. (see acr-recover(1))
+	Recovery mode. (see acr-cat(1))
 
 [ -h | --help ]
 	Shows the help message.

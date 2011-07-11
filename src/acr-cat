@@ -19,11 +19,11 @@
 # ACR: AutoConf Replacement
 #
 # @license:  GPLv2
-# @author:   pancake <pancake@phreaker.net>
+# @author:   pancake <pancake@nopcode.org>
 # @homepage: http://www.nopcode.org/?t=acr
 # @version:  @VERSION@
 #
-# acr-recovery:
+# acr-cat:
 #   Recovery utility that allows the user to recover the original configure.acr
 #   file from a generated acr-configure script.
 #

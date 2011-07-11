@@ -4,6 +4,6 @@
  
 PATH=./src:${PATH}
 ./configure $@
-chmod +x ./src/acr ./src/acr-sh ./src/acr-recover
+chmod +x ./src/acr ./src/acr-sh ./src/acr-cat
 acr -e -p
 make clean

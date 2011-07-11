@@ -1,7 +1,7 @@
 #!/bin/sh
 #
 # Copyright (C) 2005-2011
-#       pancake <pancake@youterm.com>
+#       pancake <pancake@nopcode.org>
 #
 # acr is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -68,7 +68,7 @@ acr: Usage '$0' [-flags] [file] [args]
   -n         do not generate the final configure script. (parse only)
   -o [file]  output file (default: configure).
   -p         show progress bar.
-  -r         recovery mode. (runs acr-recover)
+  -r         recovery mode. (runs acr-cat)
   -s         strip default code generation.
   -v         show version information.
   -w [num]   cats the configure.acr highlighting the [num] word.
@@ -145,7 +145,7 @@ done
 #fi
 
 if [ "${RECOVER}" = 1 ]; then
-	exec acr-recover ${ACRFILE}
+	exec acr-cat ${ACRFILE}
 	# TODO manage output
 	exit 1
 fi

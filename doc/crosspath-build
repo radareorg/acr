@@ -84,7 +84,7 @@ install:
 	mkdir -p ${BINDIR}
 	${INSTALL_SCRIPT} src/acr ${BINDIR}/acr
 	${INSTALL_SCRIPT} src/acr-sh ${BINDIR}/acr-sh
-	${INSTALL_SCRIPT} ${VPATH}/src/acr-recover ${BINDIR}/acr-recover
+	${INSTALL_SCRIPT} ${VPATH}/src/acr-cat ${BINDIR}/acr-cat
 ...
 ---[ acr's makefile.acr ]---
 
