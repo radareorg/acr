@@ -148,26 +148,24 @@ PKGNAME=`basename ${PWD}`
 cd ${MYDIR}
 
 if [ "gen-configure" = "$AMR" ]; then
-	FILES="`find . -type f`"
+	FILES=`find . -type f -name "*.c"`
 	for A in $FILES ; do
-		if [ "`echo $A | grep \"\\.c$\"`" ]; then
+		case "$A" in
+		*c$)
 			CDIR="`echo $A| awk -F / '{ for(i=1;i<NF;i++){ str=str$i"/" } print str }'`"
 			if [ -z "`echo $CDIRS|grep $CDIR`" ]; then
 				CDIRS="${CDIRS} ${CDIR}"
 			fi
 			CSOURCES="${CSOURCES} $A"
-			_INCLUDES=`cat ${A} | grep '#include' | grep '<' | sed -e 's,<,,' -e 's,>,,' | cut -d \  -f 2`
+			_INCLUDES=`grep '#include <' "${A}" | sed -e 's,<,,' -e 's,>,,' | cut -d \  -f 2`
 			for INC in  ${_INCLUDES}; do
 				if [ -z "`echo ${CINCLUDES} | grep ${INC}`" ]; then
 					CINCLUDES="${CINCLUDES} ${INC}"
 				fi
 			done
-		#else
-			# TODO
-			#if [ "`echo $A | grep \"\\.h$\"`" ]; then
-			#	CINCLUDES="${CINCLUDES} $A"
-			#fi
-		fi
+			;;
+		*)
+		esac
 	done
 
 	COLDIR=$CDIRS
@@ -324,10 +322,10 @@ case "$AMR" in
 		echo "	cd ${CDIR} && ${S}{MAKE} install"
 		echo
 		echo "clean:"
-		echo "  cd ${CDIR} && ${S}{MAKE} clean"
+		echo "	cd ${CDIR} && ${S}{MAKE} clean"
 		echo 
 		echo "mrproper:"
-		echo "  cd ${CDIR} && ${S}{MAKE} mrproper"
+		echo "	cd ${CDIR} && ${S}{MAKE} mrproper"
 		echo
 		echo "dist: mrproper"
         	echo "	cd .. && mv ${S}{PKGNAME}-${S}{VERSION}"

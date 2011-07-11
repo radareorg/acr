@@ -33,7 +33,7 @@ CONFIGURE=""
 
 get_value_of() {
 	VAR=$1	
-	echo `./${CONFIGURE} --report | grep "${VAR}:" | awk -F : '{print $2}'`
+	echo `./${CONFIGURE} --report | awk -F : '/'${VAR}':/{print $2}'`
 }
 
 get_library_name() {
@@ -65,9 +65,11 @@ fi
 CONFIGURE="$1"
 ## TODO: if configure does not starts with / or ., add  ./ at begining
 
-EMBED="`cat ${CONFIGURE} | grep '#ACR#'`"
+
+# XXX: this grep is done twice, wtf
+EMBED="`grep '#ACR#' ${CONFIGURE}`"
 if [ -n "${EMBED}" ]; then
-	cat ${CONFIGURE} | grep '#ACR#' | cut -c 7-
+	grep '#ACR#' ${CONFIGURE} | cut -c 7-
 	exit 0
 fi
 
@@ -131,13 +133,13 @@ if [ -n "${CONTACT}" ]; then
 	echo "CONTACT ${NAME} ; ${MAIL}"
 fi
 
-ENDIAN=`cat ${CONFIGURE} | grep BYTEORDER=1234`
+ENDIAN=`grep BYTEORDER=1234 ${CONFIGURE}`
 if [ -n "${ENDIAN}" ]; then
 	echo "CHECK_ENDIAN"
 fi
 
 SD=""
-SUBDIRS=`cat ${CONFIGURE}| grep 'do # SUBDIRS'|cut -c 9-`
+SUBDIRS=`grep 'do # SUBDIRS' ${CONFIGURE} | cut -c 9-`
 if [ -n "${SUBDIRS}" ]; then
 	for A in $SUBDIRS ; do
 		if [ "${A}" = ";" ]; then break; fi
@@ -147,20 +149,20 @@ if [ -n "${SUBDIRS}" ]; then
 fi
 
 SD=""
-SUBDIRS=`cat ${CONFIGURE}| grep 'do # SUBST_FILES'|cut -c 9-`
+SUBDIRS=`grep 'do # SUBST_FILES' ${CONFIGURE} | cut -c 9-`
 if [ -n "${SUBDIRS}" ]; then
 	for A in $SUBDIRS ; do
-		if [ "${A}" = ";" ]; then break; fi
+		[ "${A}" = ";" ] && break
 		SD="${SD} ${A}"
 	done
 	echo "SUBST_FILES $SD ;"
 fi
 
 SD=""
-SUBDIRS=`cat ${CONFIGURE}| grep 'do # REPORT'|cut -c 9-`
+SUBDIRS=`grep 'do # REPORT' ${CONFIGURE} | cut -c 9-`
 if [ -n "${SUBDIRS}" ]; then
 	for A in $SUBDIRS ; do
-		if [ "${A}" = ";" ]; then break; fi
+		[ "${A}" = ";" ] && break
 		SD="${SD} ${A}"
 	done
 	echo "REPORT $SD ;"

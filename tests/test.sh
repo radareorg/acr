@@ -44,7 +44,7 @@ for A in ../examples/*.acr ; do
 		acr >/dev/null
 		ERROR=$(($ERROR+1))
 	fi
-	COUNT=$(($CONUT+1))
+	COUNT=$(($COUNT+1))
 	rm configure.acr
 done
 
