@@ -1,10 +1,11 @@
 #VPATH=@VPATH@
+DESTDIR?=
 INSTALL_SCRIPT?=@INSTALL_SCRIPT@
 INSTALL_DATA?=@INSTALL_DATA@
 INSTALL_MAN?=@INSTALL_DATA@
-BINDIR?=@BINDIR@
-MANDIR?=@MANDIR@
-DATADIR?=@DATADIR@
+BINDIR=${DESTDIR}/@BINDIR@
+MANDIR=${DESTDIR}/@MANDIR@
+DATADIR=${DESTDIR}/@DATADIR@
 VERSION=@VERSION@
 .PHONY: all todo test install deinstall dist clean mrproper
 
@@ -25,7 +26,7 @@ install:
 	sed -e 's,@''VERSION@,${VERSION},g' src/acr-sh > ${BINDIR}/acr-sh
 	chmod +x ${BINDIR}/acr-sh
 	${INSTALL_SCRIPT} src/amr ${BINDIR}/amr
-	#${INSTALL_SCRIPT} ${VPATH}/src/install-acr ${BINDIR}/install-acr
+	${INSTALL_SCRIPT} src/acr-install ${BINDIR}/acr-install
 	${INSTALL_SCRIPT} src/acr-cat ${BINDIR}/acr-cat
 	mkdir -p ${MANDIR}/man1/ ${MANDIR}/man5/
 	${INSTALL_MAN} man/man1/acr.1 ${MANDIR}/man1/

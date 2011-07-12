@@ -308,3 +308,17 @@ eval VAL="\$${A}"
 [ -z "${VAL}" ] && VAL="(null)"
 echo " - ${A} = ${VAL}"
 done
+#ACR# (( package information ))
+#ACR# PKGNAME acr
+#ACR# VERSION 0.8.6
+#ACR# CONTACT pancake ; @nopcode.org
+#ACR# 
+#ACR# (( needed programs ))
+#ACR# CHECK_PROGRAM INSTALL install
+#ACR# 
+#ACR# (( directories ))
+#ACR# SUBDIRS . src/vim/install.sh ;
+#ACR# (( src/acr src/acr-sh ))
+#ACR# 
+#ACR# (( final report ))
+#ACR# REPORT SPREFIX PREFIX INSTALL VERSION CONTACT ;
