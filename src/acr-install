@@ -3,9 +3,9 @@
 # if -d is set force +x ? or just warn when no X ?
 #
 # usage:
-#   $ install-acr [options] source1 source2 ... destdir/file
-#   $ install-acr -d dir1 dir2 dir3
-#   $ install-acr -P PLIST -D /usr/local -x dir/* bin/
+#   $ acr-install [options] source1 source2 ... destdir/file
+#   $ acr-install -d dir1 dir2 dir3
+#   $ acr-install -P PLIST -D /usr/local -x dir/* bin/
 #
 # install -program : -c -s -o root -g root -m 555 
 # install -library : -c -o root -g root -m 555 
@@ -34,7 +34,7 @@ CMD=""
 
 show_help() {
 cat <<EOF
-install-acr wrapper for standard install program.
+acr-install wrapper for standard install program.
 
 -program : sets permisions and flags to install a program.
 -script  : sets permisions and flags to install an script.

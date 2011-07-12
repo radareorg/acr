@@ -20,8 +20,10 @@ test:
 
 install:
 	mkdir -p ${BINDIR}
-	${INSTALL_SCRIPT} src/acr ${BINDIR}/acr
-	${INSTALL_SCRIPT} src/acr-sh ${BINDIR}/acr-sh
+	sed -e 's,@''VERSION@,${VERSION},g' src/acr > ${BINDIR}/acr
+	chmod +x ${BINDIR}/acr
+	sed -e 's,@''VERSION@,${VERSION},g' src/acr-sh > ${BINDIR}/acr-sh
+	chmod +x ${BINDIR}/acr-sh
 	${INSTALL_SCRIPT} src/amr ${BINDIR}/amr
 	#${INSTALL_SCRIPT} ${VPATH}/src/install-acr ${BINDIR}/install-acr
 	${INSTALL_SCRIPT} src/acr-cat ${BINDIR}/acr-cat
@@ -63,7 +65,6 @@ dist:
 
 clean:
 	rm -f src/vim/install.sh
-	rm -f src/acr src/acr-sh
 	rm -f Makefile
 
 mrproper: clean
