@@ -924,15 +924,7 @@ check_endian() {
 	SCRIPT="
 ${SCRIPT}
 printf \"checking host endianness... \"
-echo '#include <stdio.h>' > test.c
-echo 'main(){int a=1;char *b=(char*)&a;printf(\"##d##\",b[0]);}' >> test.c
-eval \\\\${S}${S}{COMPILER} ${S}{CFLAGS} ${S}{CXXFLAGS} ${S}{LDFLAGS} -o a.out test.c >/dev/null 2>&1
-if [ ! ${S}? = 0 ]; then
-	echo unexpected error
-	do_remove
-	exit 1
-fi
-LIL_ENDIAN=${S}(./a.out)
+LIL_ENDIAN=${S}(printf I|od -to2|awk '{print substr(${S}2,6,1);exit}')
 if [ \"${S}{LIL_ENDIAN}\" = 1 ]; then
 	BYTEORDER=1234
 	BIG_ENDIAN=0
