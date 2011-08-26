@@ -4,7 +4,7 @@ DOW = 2 ;
 MOW = is like a cow ;
 ROW = '' ;
 
-IFNOTEQVAL COW DOW ROW = hahaha ;
+IFNOTEQ COW $DOW ; ROW = hahaha ;
 IFNULL COW ROW = haha ;
 IFNOT COW FOO += howdow and cows x) ;
 IFEQ COW mama ; ROW = haha ;

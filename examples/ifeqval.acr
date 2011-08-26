@@ -1,4 +1,7 @@
-HOST_CPU = food ;
-IFEQVAL PREFIX /usr/local PREFIX <- HOST_CPU ;
+HOST_CPU = x86 ;
+
+IFEQ PREFIX /usr/local ; {
+	PREFIX = $HOST_CPU ;
+}
 
 REPORT PREFIX ;

@@ -12,14 +12,14 @@ print_report() {
 }
 
 do_remove() {
-	rm -f `ls | egrep -v "test.sh|CVS"`
+	rm -f `ls | egrep -v "test.sh|Makefile"`
 }
 
 control_c() { 
-  printf "\n\n^C control-c : script execution interrupted.\n" 
-  do_remove 
-  print_report
-  exit 1 
+	printf "\n\n^C control-c : script execution interrupted.\n" 
+	do_remove
+	print_report
+	exit 1
 } 
 
 trap control_c 2 
@@ -31,17 +31,27 @@ chmod +x ../src/acr ../src/acr-sh
 ERROR=0
 COUNT=0
 
-for A in ../examples/*.acr ; do
-	echo "[*] generating ${A} "
-	cp ${A} configure.acr
-	acr -p >/dev/null
+if [ -z "$@" ]; then
+	FILES=`ls ../examples/*.acr`
+else
+	FILES=$@
+fi
+
+for A in ${FILES} ; do
+	if [ ! -e "${A}" ]; then
+		echo "[*] error: cannot find ${A}"
+		continue
+	fi
+	echo "[*] generating ${A}"
+	cp "${A}" configure.acr
+	acr > /dev/null
 	if [ "$?" = "0" ]; then
 		echo "[>] executing ${A}"
-		./configure 2>/dev/null > /dev/null
-		echo ""
+		./configure 2> /dev/null > /dev/null
+		echo
 	else
 		echo "[FAILED]"
-		acr >/dev/null
+		acr > /dev/null
 		ERROR=$(($ERROR+1))
 	fi
 	COUNT=$(($COUNT+1))

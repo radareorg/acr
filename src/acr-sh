@@ -223,13 +223,10 @@ _EOF_
 ## {{{ Help Functions
 ##FUNCS##
 add_envword() {
-	word=`get_word_number`
-
 	for A in ${ENVWORDS}; do
 	if [ "${A}" = "$1" ]; then
 		if [ "${EQUAL}" = 1 ]; then # IFOP='='
-			word=`get_word_number`
-			echo "$word < Warning: duplicated export variable '$1'." >&2
+			echo "`word` < Warning: duplicated export variable '$1'." >&2
 		fi
 		return;
 	fi
@@ -246,8 +243,18 @@ add_lang_envwords() {
 	done
 }
 
-get_word_number() {
+word() {
 	printf "%04d" $WORDS_N
+}
+
+reset_vars() {
+	MODE=""
+	_IF_OP=""
+	_IF_VAR=""
+	_IF_VAR2=""
+	_IF_SETVAR=""
+	_IF_SETVAL=""
+	_IF_VALUE=""
 }
 
 get_current_compiler() {
@@ -279,14 +286,14 @@ concat() {
 
 check_ifop() {
 	IFOP=$1
-	case ${IFOP} in
+	case "${IFOP}" in
 	"="|"+="|"?=")
 		;;
 	"<-")
-		echo "$word | The '<-' keyword is deprecated. Use $VAR instead" >&2
+		echo "`word` | The '<-' keyword is deprecated. Use $VAR instead" >&2
 		;;
 	*)
-		echo "$word | Invalid operator '${IFOP}' in assignment." >&2
+		echo "`word` | Invalid operator '${IFOP}' in assignment." >&2
 		exit 1
 		;;
 	esac
@@ -327,7 +334,6 @@ else
 EOF
 `
 	if [ "${_CHKPRG_REQUIRED}" = 1 ]; then
-	word=`get_word_number`
 	SCRIPT=`cat <<EOF
 ${SCRIPT}
   echo "error: This program is required." >&2
@@ -649,8 +655,7 @@ env_lua() {
 env_perl_threads() {
 	add_envword "HAVE_LANG_PERL_THREADS"
 	if [ -z "${LANG_PERL}" ]; then
-		word=`get_word_number`
-		echo "$word You must set LANG_PERL before calling USE_PERL_THREADS" >&2
+		echo "`word` You must set LANG_PERL before calling USE_PERL_THREADS" >&2
 		exit 1
 	fi
 
@@ -677,7 +682,6 @@ ${S}{PERL} -e '' 2>&1 > /dev/null
 if [ ${S}? = 0 ]; then
   echo ok ; HAVE_LANG_PERL=1 ; else
   echo no "
-	word=`get_word_number`
 	if [ "${_REQUIRED}" = 1 ]; then
 	SCRIPT="${SCRIPT}
 echo \"${LINENO}: You need perl installed on your system.\" >&2
@@ -685,7 +689,6 @@ exit 1"
 	fi
 
 	SCRIPT="${SCRIPT} ; fi"
-
 }
 
 env_perl() {
@@ -1721,8 +1724,7 @@ EOF
 is_buggy() {
 	WORD=$1
 	if [ ! "${MODE}" = "check" ] && [ ! "${WORD}" = ";" ] && [ -n "`echo $1 | grep ';'`" ]; then
-		word=`get_word_number`
-		echo "$word | Warning: keyword '$1' contains a ';'. Is this fine?" >&2
+		echo "`word` | Warning: keyword '$1' contains a ';'. Is this fine?" >&2
 	fi
 }
 
@@ -1747,7 +1749,7 @@ is_envword() {
 	done
 
 	[ -z "$found" ] && \
-	echo "$word | Warning: Variable '$1' not defined." >&2
+	echo "`word` | Warning: Variable '$1' not defined." >&2
 }
 
 ## string mode ##
@@ -1793,7 +1795,7 @@ WORDS_T=`echo ${WORDS} | wc -w ` # total number of words
 for STR2 in ${WORDS} NOP ; do
 	INSIDE_INCLUDE=0
 	if [ "$MODE" = "include" ]; then
-		[ "${DEBUG}" = 1 ] && echo "$word < include $STR2"  >&2
+		[ "${DEBUG}" = 1 ] && echo "`word` < include $STR2"  >&2
 
 		if [ -e "@DATADIR@/acr/modules/${STR2}.acr" ]; then
 			FILE="@DATADIR@/acr/modules/${STR2}.acr";
@@ -1802,10 +1804,10 @@ for STR2 in ${WORDS} NOP ; do
 		if [ -e "$FILE" ]; then
 			MODE=""
 			INSIDE_INCLUDE=1
-			WORDS_N=$(($WORDS_N+1))
+			#WORDS_N=$(($WORDS_N+1))
 			WORDS2=`cat_file ${FILE}`
 		else
-			echo "$word | ERROR: Cannot include file '$FILE'. File not found."  >&2
+			echo "`word` | ERROR: Cannot include file '$FILE'. File not found."  >&2
 			exit 1
 		fi
 	else
@@ -1817,10 +1819,9 @@ for STR2 in ${WORDS} NOP ; do
 
 	# Progress bar
 	if [ "${INSIDE_INCLUDE}" = 0 ]; then
-		if [ "${PBAR}" = 1 ]; then
-		show_progress_bar ; fi
-		WORDS_N=$(($WORDS_N+1))
+		[ "${PBAR}" = 1 ] && show_progress_bar
 	fi
+	WORDS_N=$(($WORDS_N+1))
 
 	IS_KEYWORD=1
 	is_buggy ${STR}
@@ -1831,8 +1832,7 @@ for STR2 in ${WORDS} NOP ; do
 			VAR="`echo ${STR} | cut -c 3-`"
 			TMP="${S}${VAR}"
 			if [ "${DEBUG}" = 1 ]; then
-				word=`get_word_number`
-				echo "$word > get value" >&2
+				echo "`word` > get value" >&2
 			fi
 			STR=${TMP}
 		fi
@@ -1875,7 +1875,7 @@ for STR2 in ${WORDS} NOP ; do
 	
 	# one word comment
 	[ "`echo $STR | cut -c 1`" = "#" ] && \
-	echo "$word | One word comment is deprecated." >&2 && \
+	echo "`word` | One word comment is deprecated." >&2 && \
 	continue
 
 	# CONDITION FLAGS #
@@ -1884,7 +1884,6 @@ for STR2 in ${WORDS} NOP ; do
 	if [ "${MODE}" = "string" ]; then
 		if [ "${STR}" = "NOP" ]; then STR=";" ; fi
 		if [ "${STR}" = ";" ] ; then
-			#word=`get_word_number` && \
 			[ "${DEBUG}" = 1 ] && \
 			echo "     |     $spaces\"${STRING}\"" >&2
 			MODE="${MODE_OLD}"
@@ -1958,11 +1957,9 @@ exit 1
 		if [ -z "${CHECK_VAR}" ]; then	
 			SET_VAR=""
 			CHECK_VAR=${STR};
-		else
-		if [ -z "${CHECK_EOF}" ]; then
+		elif [ -z "${CHECK_EOF}" ]; then
 			CHECK_EOF=${STR}
-		else
-			if [ "${STR}" = "${CHECK_EOF}" ]; then
+		elif [ "${STR}" = "${CHECK_EOF}" ]; then
 SCRIPT=`cat <<EOF
 ${SCRIPT}
 printf "checking for ${CHECK_VAR}... "
@@ -1976,19 +1973,17 @@ fi
 
 EOF
 `
-				add_envword ${CHECK_VAR}
-				MODE=""
-				CHECK_VAR=""
-				CHECK_EOF=""
-				TMP_VAR=""
-			else
-				if [ "${STR}" = "\\" ]; then
+			add_envword ${CHECK_VAR}
+			MODE=""
+			CHECK_VAR=""
+			CHECK_EOF=""
+			TMP_VAR=""
+		else
+			if [ "${STR}" = "\\" ]; then
 				TMP_VAR="${CHECK_STR} ; "
-				else
+			else
 				TMP_VAR="${CHECK_STR}${STR} "
-				fi
 			fi
-		fi
 		fi
 		;;
 	"chkgrp")
@@ -2191,8 +2186,7 @@ case \"${S}${_DIE_VAR}\" in 0|\"\") ;; *) echo ; echo \"ERROR: ${STRING}\" >&2 ;
 		if [ -z "${_IF_VAR}" ]; then
 			_IF_VAR=${STR}
 			is_envword "${STR}"
-		else
-		if [ -z "${_IF_SETVAR}" ]; then
+		elif [ -z "${_IF_SETVAR}" ]; then
 			if [ "${STR}" = "{" ]; then
 				NKEYS=$(($NKEYS+1))
 				SCRIPT="${SCRIPT}
@@ -2202,12 +2196,11 @@ if [ \"${S}${_IF_VAR}\" = \"${_IF_BOOL}\" ]; then"
 				_IF_SETVAR=""
 				_IF_OP=""
 			else
-			_IF_SETVAR=${STR}
-			is_envword ${STR}
-			_IF_SETVAL=""
+				_IF_SETVAR=${STR}
+				is_envword ${STR}
+				_IF_SETVAL=""
 			fi
-		else
-		if [ -z "${_IF_OP}" ]; then
+		elif [ -z "${_IF_OP}" ]; then
 			_IF_OP=${STR}
 			check_ifop ${_IF_OP}
 		else
@@ -2219,26 +2212,20 @@ ${SCRIPT}
 if [ \"${S}${_IF_VAR}\" = \"${_IF_BOOL}\" ]; then"
 			# check_ifop TODO -> use ifop instead of that.
 			case ${_IF_OP} in
-				"=") SCRIPT="${SCRIPT} ${_IF_SETVAR}=\"${_IF_SETVAL}\" ; fi"
-					;;
-				"+=") SCRIPT="${SCRIPT} ${_IF_SETVAR}=\"${S}{${_IF_SETVAR}} ${_IF_SETVAL}\" ; fi"
-					;;
-				"?=") SCRIPT="${SCRIPT} if [ -z \"${S}${_IF_SETVAR}\" ]; then ${_IF_SETVAR}=\"${_IF_SETVAL}\"; fi"
-					;;
-				"<-") SCRIPT="${SCRIPT} ${_IF_SETVAR}=\"\`eval 'echo \$${_IF_SETVAL}'\`\"; fi"
+			"=") SCRIPT="${SCRIPT} ${_IF_SETVAR}=\"${_IF_SETVAL}\" ; fi"
+				;;
+			"+=") SCRIPT="${SCRIPT} ${_IF_SETVAR}=\"${S}{${_IF_SETVAR}} ${_IF_SETVAL}\" ; fi"
+				;;
+			"?=") SCRIPT="${SCRIPT} if [ -z \"${S}${_IF_SETVAR}\" ]; then ${_IF_SETVAR}=\"${_IF_SETVAL}\"; fi"
+				;;
+			"<-") SCRIPT="${SCRIPT} ${_IF_SETVAR}=\"\`eval 'echo \$${_IF_SETVAL}'\`\"; fi"
 
-					# XXX deprecated in 0.6
-					echo "$word | The '<-' keyword is deprecated. Use $VAR instead" >&2
-					;;
+				# XXX deprecated in 0.6
+				echo "`word` | The '<-' keyword is deprecated. Use $VAR instead" >&2
+				;;
 			esac
-			MODE=""
-			_IF_OP=""
-			_IF_VAR=""
-			_IF_SETVAR=""
-			_IF_SETVAL=""
+			reset_vars
 			leave_string_mode
-		fi
-		fi
 		fi
 		;;
 	"ifeqval")
@@ -2247,75 +2234,58 @@ if [ \"${S}${_IF_VAR}\" = \"${_IF_BOOL}\" ]; then"
 		if [ -z "${_IF_VAR}" ]; then
 			_IF_VAR=$STR
 			is_envword "${STR}"
-		else
-			if [ -z "${_IF_VAR2}" ]; then
-				_IF_VAR2=$STR
-			else
-				if [ -z "${_IF_SETVAR}" ]; then
-						if [ "${STR}" = "{" ]; then
-							NKEYS=$(($NKEYS+1))
+		elif [ -z "${_IF_VAR2}" ]; then
+			_IF_VAR2=$STR
+		elif [ -z "${_IF_SETVAR}" ]; then
+			if [ "${STR}" = "{" ]; then
+				NKEYS=$(($NKEYS+1))
 
-							if [ "${_IF_BOOL}" = 1 ]; then
-								SCRIPT="${SCRIPT}
+				if [ "${_IF_BOOL}" = 1 ]; then
+					SCRIPT="${SCRIPT}
 if ["
-							else
-								SCRIPT="${SCRIPT}
-if [ !"
-							fi
-							SCRIPT="${SCRIPT} \\\"${S}${_IF_VAR}\\\" = \\\"${S}${_IF_VAR2}\\\" ]; then"
-							MODE=""
-							_IFEQVAL=0
-							_IF_VAR=""
-							_IF_VAR2=""
-							_IF_SETVAR=""
-							_IF_SETVAL=""
-							_IF_OP=""
-						else
-							_IF_SETVAR=${STR}
-						fi
 				else
-					if [ -z "${_IF_OP}" ]; then
-						_IF_OP=${STR}
-						check_ifop ${_IF_OP}
-					else
-						if [ "${STR}" = ";" ]; then
-							if [ "${_IF_BOOL}" = 1 ]; then
-								SCRIPT="${SCRIPT}
-if ["
-							else
-								SCRIPT="${SCRIPT}
+					SCRIPT="${SCRIPT}
 if [ !"
-							fi
-						SCRIPT="${SCRIPT} \"${S}${_IF_VAR}\" = \"${S}${_IF_VAR2}\" ]; then "
-
-						# TODO this must be in a external function
-						case ${_IF_OP} in
-							"=")  SCRIPT="${SCRIPT} ${_IF_SETVAR}=\"${_IF_SETVAL}\" ; fi"
-								;;
-							"+=") SCRIPT="${SCRIPT} ${_IF_SETVAR}=\"${S}{${_IF_SETVAR}} ${_IF_SETVAL}\" ; fi"
-								;;
-							"?=") SCRIPT="${SCRIPT} if [ -z \"${S}${_IF_SETVAR}\" ]; then ${_IF_SETVAR}=\"${_IF_SETVAL}\"; fi"
-								;;
-
-							"<-") SCRIPT="${SCRIPT} ${_IF_SETVAR}=\"\`eval 'echo \$${_IF_SETVAL}'\`\"; fi"
-								# XXX this is deprecated
-								echo "$word | The '<-' keyword is deprecated. Use $VAR instead" >&2
-								;;
-						esac
-						MODE=""
-						_IFEQVAL=0
-						_IF_BOOL=0
-						_IF_VAR=""
-						_IF_VAR2=""
-						_IF_SETVAR=""
-						_IF_OP=""
-						_IF_VALUE=""
-						else
-							_IF_SETVAL="`concat "${_IF_SETVAL}" "${STR}"`"
-						fi
-					fi
 				fi
+				SCRIPT="${SCRIPT} \\\"${S}${_IF_VAR}\\\" = \\\"${S}${_IF_VAR2}\\\" ]; then"
+				_IFEQVAL=0
+				reset_vars
+			else
+				_IF_SETVAR=${STR}
 			fi
+		elif [ -z "${_IF_OP}" ]; then
+			_IF_OP=${STR}
+			check_ifop ${_IF_OP}
+		elif [ "${STR}" = ";" ]; then
+			if [ "${_IF_BOOL}" = 1 ]; then
+				SCRIPT="${SCRIPT}
+if ["
+			else
+				SCRIPT="${SCRIPT}
+if [ !"
+			fi
+			SCRIPT="${SCRIPT} \"${S}${_IF_VAR}\" = \"${S}${_IF_VAR2}\" ]; then "
+
+			# TODO this must be in a external function
+			case ${_IF_OP} in
+			"=")  SCRIPT="${SCRIPT} ${_IF_SETVAR}=\"${_IF_SETVAL}\" ; fi"
+				;;
+			"+=") SCRIPT="${SCRIPT} ${_IF_SETVAR}=\"${S}{${_IF_SETVAR}} ${_IF_SETVAL}\" ; fi"
+				;;
+			"?=") SCRIPT="${SCRIPT} if [ -z \"${S}${_IF_SETVAR}\" ]; then ${_IF_SETVAR}=\"${_IF_SETVAL}\"; fi"
+				;;
+
+			"<-") SCRIPT="${SCRIPT} ${_IF_SETVAR}=\"\`eval 'echo \$${_IF_SETVAL}'\`\"; fi"
+				# XXX this is deprecated
+				echo "`word` | The '<-' keyword is deprecated. Use $VAR instead" >&2
+				;;
+			esac
+			MODE=""
+			_IFEQVAL=0
+			_IF_BOOL=0
+			reset_vars
+		else
+			_IF_SETVAL="`concat "${_IF_SETVAL}" "${STR}"`"
 		fi
 		;;
 	"ifeq")
@@ -2323,157 +2293,117 @@ if [ !"
 		if [ -z "${_IF_VAR}" ]; then
 			_IF_VAR=${STR}
 			is_envword "${STR}"
-		else
-		if [ "${_IF_VALUE_EOF}" = 0 ]; then
+		elif [ "${_IF_VALUE_EOF}" = 0 ]; then
 			if [ "${STR}" = ";" ]; then
 				_IF_VALUE_EOF=1
+			elif [ "${STR}" = "{" ]; then
+				echo "`word` | Missing ; in ifeq expression" >&2
+				exit 1
 			else
 				_IF_VALUE="`concat "${_IF_VALUE}" "${STR}"`"
 			fi
-		else
-			if [ -z "${_IF_SETVAR}" ]; then
-				if [ "${STR}" = "{" ]; then
-					if [ "${_IF_BOOL}" = 1 ]; then
-						SCRIPT="`printf \"${SCRIPT}\nif [\"`"
-					else
-						SCRIPT="`printf \"${SCRIPT}\nif [ !\"`"
-					fi
-					SCRIPT="`printf \"${SCRIPT} \\\"${S}${_IF_VAR}\\\" = \\\"${_IF_VALUE}\\\" ]; then\"`"
-					NKEYS=$(($NKEYS+1))
-					MODE=""
-					_IF_VALUE_EOF=0
-					_IF_VAR2=""
-					_IF_VAR=""
-					_IF_VALUE=""
-					_IF_SETVAR=""
-					_IF_OP=""
-				else
-					_IF_SETVAR=${STR}
-				fi
-			else
-			if [ -z "${_IF_OP}" ]; then
-				_IF_OP="${STR}"
-				check_ifop ${_IF_OP}
-			else
-			if [ "${STR}" = ";" ]; then
-				# bool
+		elif [ -z "${_IF_SETVAR}" ]; then
+			if [ "${STR}" = "{" ]; then
 				if [ "${_IF_BOOL}" = 1 ]; then
-					SCRIPT="`echo -n \"${SCRIPT}
-if [\"`"
+					SCRIPT="`printf \"${SCRIPT}\nif [\"`"
 				else
-					SCRIPT="`echo -n \"${SCRIPT}
-if [ !\"`"
+					SCRIPT="`printf \"${SCRIPT}\nif [ !\"`"
 				fi
-				SCRIPT="`echo \"${SCRIPT} \\\"${S}${_IF_VAR}\\\" = \\\"${_IF_VALUE}\\\" ]; then\"`"
-
-				# set
-				# TODO create a new function that concats SCRIPT checking IF_OP
-				case ${_IF_OP} in
-				"=") SCRIPT="${SCRIPT} ${_IF_SETVAR}=\"${_IF_SETVAL}\" ; fi ;"
-					;;
-				"+=") SCRIPT="${SCRIPT} ${_IF_SETVAR}=\"${S}{${_IF_SETVAR}} ${_IF_SETVAL}\" ; fi ;"
-					;;
-				"?=") SCRIPT="${SCRIPT} if [ -z \"${S}${_IF_SETVAR}\" ]; then ${_IF_SETVAR}=\"${_IF_SETVAL}\"; fi ; fi ;"
-					;;
-				"<-") SCRIPT="${SCRIPT} ${_IF_SETVAR}=\"\`eval 'echo \$${_IF_SETVAL}'\`\"; fi"
-					echo "$word | The '<-' keyword is deprecated. Use $VAR instead" >&2
-					;;
-				esac
-				# reset
-				_IFEQ=0
+				SCRIPT="`printf \"${SCRIPT} \\\"${S}${_IF_VAR}\\\" = \\\"${_IF_VALUE}\\\" ]; then\"`"
+				NKEYS=$(($NKEYS+1))
 				MODE=""
-				_IF_OP=""
-				_IF_VALUE=""
-				_IF_VAR=""
-				_IF_SETVAR=""
-				_IF_SETVAL=""
 				_IF_VALUE_EOF=0
+				reset_vars
 			else
-				if [ -z "${_IF_SETVAL}" ]; then
-					_IF_SETVAL="${STR}"
-				else
-					_IF_SETVAL="${_IF_SETVAL} ${STR}"
-				fi
+				_IF_SETVAR=${STR}
 			fi
+		elif [ -z "${_IF_OP}" ]; then
+			_IF_OP="${STR}"
+			check_ifop ${_IF_OP}
+		elif [ "${STR}" = ";" ]; then
+			# bool
+			if [ "${_IF_BOOL}" = 1 ]; then
+				SCRIPT="`echo -n \"${SCRIPT}
+if [ \"`"
+			else
+				SCRIPT="`echo -n \"${SCRIPT}
+if [ ! \"`"
+			fi
+			SCRIPT="`echo \"${SCRIPT} \\\"${S}${_IF_VAR}\\\" = \\\"${_IF_VALUE}\\\" ]; then\"`"
 
-			fi
-			fi
-		fi
+			# set
+			# TODO create a new function that concats SCRIPT checking IF_OP
+			case ${_IF_OP} in
+			"=") SCRIPT="${SCRIPT} ${_IF_SETVAR}=\"${_IF_SETVAL}\" ; fi ;"
+				;;
+			"+=") SCRIPT="${SCRIPT} ${_IF_SETVAR}=\"${S}{${_IF_SETVAR}} ${_IF_SETVAL}\" ; fi ;"
+				;;
+			"?=") SCRIPT="${SCRIPT} if [ -z \"${S}${_IF_SETVAR}\" ]; then ${_IF_SETVAR}=\"${_IF_SETVAL}\"; fi ; fi ;"
+				;;
+			"<-") SCRIPT="${SCRIPT} ${_IF_SETVAR}=\"\`eval 'echo \$${_IF_SETVAL}'\`\"; fi"
+				echo "`word` | The '<-' keyword is deprecated. Use $VAR instead" >&2
+				;;
+			esac
+			reset_vars
+			_IFEQ=0
+			_IF_VALUE_EOF=0
+		elif [ -z "${_IF_SETVAL}" ]; then
+			_IF_SETVAL="${STR}"
+		else
+			_IF_SETVAL="${_IF_SETVAL} ${STR}"
 		fi
 		;;
 	"ifand")
 		IS_KEYWORD=0
-	if [ -z "${_IF_VAR}" ]; then
+		if [ -z "${_IF_VAR}" ]; then
 			_IF_VAR=${STR}
 			is_envword "${STR}"
-	else
-		if [ -z "${_IF_VAR2}" ]; then
+		elif [ -z "${_IF_VAR2}" ]; then
 			_IF_VAR2="${STR}"
 			is_envword "${STR}"
-		else
-		if [ -z "${_IF_SETVAR}" ]; then
+		elif [ -z "${_IF_SETVAR}" ]; then
 			if [ "${STR}" = "{" ]; then
 				NKEYS=$(($NKEYS+1))
-
-				if [ "${_IF_BOOL}" = 1 ]; then
-				OGLE="11" ; else OGLE="00" ; fi
-
+				[ "${_IF_BOOL}" = 1 ] && OGLE=11 || OGLE=00
 				SCRIPT="${SCRIPT}
 if [ ${OGLE} = \"${S}${_IF_VAR}${S}${_IF_VAR2}\" ]; then
 "
 				_IF_VALUE_EOF=0
-				MODE=""
-				_IF_VAR2=""
-				_IF_VAR=""
-				_IF_VALUE=""
-				_IF_SETVAR=""
-				_IF_OP=""
+				reset_vars
 			else
-			_IF_SETVAR=${STR}
-			is_envword ${STR}
-		fi
-	else
-		if [ -z "${_IF_OP}" ]; then
+				_IF_SETVAR=${STR}
+				is_envword ${STR}
+			fi
+		elif [ -z "${_IF_OP}" ]; then
 			_IF_OP="${STR}"
 			check_ifop ${_IF_OP}
-		else
-			if [ ! "${STR}" = ";" ]; then
-				if [ -z "${_IF_SETVAL}" ]; then
+		elif [ ! "${STR}" = ";" ]; then
+			if [ -z "${_IF_SETVAL}" ]; then
 				_IF_SETVAL="${STR}"
-				else
-				_IF_SETVAL="${_IF_SETVAL} ${STR}"
-				fi
 			else
-				if [ "${_IF_BOOL}" = 1 ]; then
-				OGLE=1 ; else OGLE=0 ; fi
+				_IF_SETVAL="${_IF_SETVAL} ${STR}"
+			fi
+		else
+			[ "${_IF_BOOL}" = 1 ] && OGLE=1 || OGLE=0
 
-				case ${_IF_OP} in
-					"=") STR="${_IF_SETVAR}=\"${_IF_SETVAL}\""
-						;;
-					"+=")	STR="${_IF_SETVAR}=\"${S}{${_IF_SETVAR}} ${_IF_SETVAL}\""
-						;;
-					"?=") STR="if [ -z \"${S}${_IF_SETVAR}\" ]; then ${_IF_SETVAR}=\"${_IF_SETVAL}\"; fi"
-						;;
-					"<-") SCRIPT="${SCRIPT} ${_IF_SETVAR}=\"\`eval 'echo \$${_IF_SETVAL}'\`\"; fi"
-						echo "$word | The '<-' keyword is deprecated. Use $VAR instead" >&2
-						;;
-				esac
-				SCRIPT="${SCRIPT}
+			case ${_IF_OP} in
+			"=") STR="${_IF_SETVAR}=\"${_IF_SETVAL}\""
+				;;
+			"+=") STR="${_IF_SETVAR}=\"${S}{${_IF_SETVAR}} ${_IF_SETVAL}\""
+				;;
+			"?=") STR="if [ -z \"${S}${_IF_SETVAR}\" ]; then ${_IF_SETVAR}=\"${_IF_SETVAL}\"; fi"
+				;;
+			"<-") SCRIPT="${SCRIPT} ${_IF_SETVAR}=\"\`eval 'echo \$${_IF_SETVAL}'\`\"; fi"
+				echo "`word` | The '<-' keyword is deprecated. Use $VAR instead" >&2
+				;;
+			esac
+			SCRIPT="${SCRIPT}
 if [ ${OGLE} = \"${S}${_IF_VAR}\" ]; then
 if [ ${OGLE} = \"${S}${_IF_VALUE}\" ]; then
 ${STR} ; fi ; fi"
 ## TODO XXX this must be other command (IFEQVAR..or something similar
 #if [ ${OGLE}"${S}${_IF_VAR}" = "${S}${_IF_VALUE}" ]; then ${_IF_SETVAR}="${STR}" ; fi ;
-				MODE=""
-				_IF_VALUE=""
-				_IF_VAR=""
-				_IF_OP=""
-				_IF_SETVAR=""
-				_IF_SETVAL=""
-			fi
-		fi
-		fi
-		fi
+			reset_vars
 		fi
 		;;
 	"ifor")
@@ -2481,122 +2411,99 @@ ${STR} ; fi ; fi"
 		if [ -z "${_IF_VAR}" ]; then
 			_IF_VAR=${STR}
 			is_envword "${STR}"
-		else
-			if [ -z "${_IF_VAR2}" ]; then
-				_IF_VAR2="${STR}"
-				is_envword "${STR}"
-			else
-				if [ -z "${_IF_SETVAR}" ]; then
-					if [ "${STR}" = "{" ]; then
-						NKEYS=$(($NKEYS+1))
+		elif [ -z "${_IF_VAR2}" ]; then
+			_IF_VAR2="${STR}"
+			is_envword "${STR}"
+		elif [ -z "${_IF_SETVAR}" ]; then
+			if [ "${STR}" = "{" ]; then
+				NKEYS=$(($NKEYS+1))
 
-						SCRIPT="${SCRIPT}
+				SCRIPT="${SCRIPT}
 if [ ${_IF_BOOL} = \"${S}${_IF_VAR}\" ] || [ ${_IF_BOOL} = \"${S}${_IF_VAR2}\" ]; then
 "
-						_IF_VALUE_EOF=0
-						MODE=""
-						_IF_VAR=""
-						_IF_VAR2=""
-						_IF_VALUE=""
-						_IF_SETVAR=""
-						_IF_OP=""
-					else
-						_IF_SETVAR=${STR}
-						is_envword ${STR}
-					fi
-				else
-					if [ -z "${_IF_OP}" ]; then
-						_IF_OP="${STR}"
-						check_ifop ${_IF_OP}
-					else
-						if [ ! "${STR}" = ";" ]; then
-							if [ -z "${_IF_SETVAL}" ]; then
-							_IF_SETVAL="${STR}"
-							else
-							_IF_SETVAL="${_IF_SETVAL} ${STR}"
-							fi
-						else
-							if [ "${_IF_BOOL}" = 1 ]; then
-							OGLE=1 ; else OGLE=0 ; fi
+				_IF_VALUE_EOF=0
+				reset_vars
+			else
+				_IF_SETVAR=${STR}
+				is_envword ${STR}
+			fi
+		elif [ -z "${_IF_OP}" ]; then
+			_IF_OP="${STR}"
+			check_ifop ${_IF_OP}
+		elif [ ! "${STR}" = ";" ]; then
+			if [ -z "${_IF_SETVAL}" ]; then
+				_IF_SETVAL="${STR}"
+			else
+				_IF_SETVAL="${_IF_SETVAL} ${STR}"
+			fi
+		else
+			[ "${_IF_BOOL}" = 1 ] && OGLE=1 || OGLE=0
 
-							case ${_IF_OP} in
-								"=")  STR="${_IF_SETVAR}=\"${_IF_SETVAL}\""
-									;;
-								"+=") STR="${_IF_SETVAR}=\"${S}{${_IF_SETVAR}} ${_IF_SETVAL}\""
-									;;
-								"?=") STR="if [ -z \"${S}${_IF_SETVAR}\" ]; then ${_IF_SETVAR}=\"${_IF_SETVAL}\"; fi"
-									;;
-								"<-") SCRIPT="${SCRIPT} ${_IF_SETVAR}=\"\`eval 'echo \$${_IF_SETVAL}'\`\"; fi"
-									echo "$word | The '<-' keyword is deprecated. Use $VAR instead" >&2
-									;;
-							esac
-							SCRIPT="${SCRIPT}
+			case ${_IF_OP} in
+			"=")  STR="${_IF_SETVAR}=\"${_IF_SETVAL}\""
+				;;
+			"+=") STR="${_IF_SETVAR}=\"${S}{${_IF_SETVAR}} ${_IF_SETVAL}\""
+				;;
+			"?=") STR="if [ -z \"${S}${_IF_SETVAR}\" ]; then ${_IF_SETVAR}=\"${_IF_SETVAL}\"; fi"
+				;;
+			"<-") SCRIPT="${SCRIPT} ${_IF_SETVAR}=\"\`eval 'echo \$${_IF_SETVAL}'\`\"; fi"
+				echo "`word` | The '<-' keyword is deprecated. Use $VAR instead" >&2
+				;;
+			esac
+			SCRIPT="${SCRIPT}
 if [ ${_IF_BOOL} = \"${S}${_IF_VAR}$\" ] || [ ${_IF_BOOL} = \"${S}${_IF_VAR2}\" ]; then
 ${STR} ; fi"
-
-							MODE=""
-							_IF_VALUE=""
-							_IF_VAR=""
-							_IF_VAR2=""
-							_IF_OP=""
-							_IF_SETVAR=""
-							_IF_SETVAL=""
-						fi
-					fi
-				fi
-			fi
+			reset_vars
 		fi
 		;;
 	"pkgconfig")
 		IS_KEYWORD=0
 		if [ -z "${_PC_CFLAGS}" ]; then
 			_PC_CFLAGS="${STR}"
+		elif [ -z "${_PC_LDFLAGS}" ]; then
+			_PC_LDFLAGS="${STR}"
 		else
-			if [ -z "${_PC_LDFLAGS}" ]; then
-				_PC_LDFLAGS="${STR}"
-			else
-				add_envword ${_PC_CFLAGS}
-				add_envword ${_PC_LDFLAGS}
-				TMP_VAR="HAVE_PKGCFG_`echo ${STR}| sed -e 's,\.,_,g' -e 's,-,_,g' -e 's,\+,,g' | tr '[a-z]' '[A-Z]'`"
-				add_envword ${TMP_VAR}
-				# TODO: Use EOF or F="$F B"
-				REPORT_PKGCFG="${REPORT_PKGCFG} ${STR}"
-				SCRIPT="`printf \"${SCRIPT}\nprintf 'checking pkg-config flags for ${STR}... '\"`"
-				## - flags - ##
-				SCRIPT="`printf \"${SCRIPT}\ntmp=\\\`pkg-config --cflags ${STR} 2>/dev/null\\\`\"`"
-				SCRIPT="`printf \"${SCRIPT}\nif [ ${S}? = 1 ]; then echo no ; ${TMP_VAR}=0; \"`"
-				if [ "${_REQUIRED}" = 1 ]; then
-				SCRIPT="`printf \"${SCRIPT}\necho 'This package is required'\nexit 1\"`"
-				fi
-				SCRIPT="`printf \"${SCRIPT}\nelse \"`"
-				if [ "${_PKGCONFIG_PLUS}" = 1 ]; then
-				SCRIPT="`printf \"${SCRIPT}\n${_PC_CFLAGS}=\\\"${S}${_PC_CFLAGS} ${S}tmp\\\"; \"`"
-				else
-				SCRIPT="`printf \"${SCRIPT}\n${_PC_CFLAGS}=${S}tmp; \"`"
-				fi
-				## - libs - ##
-				SCRIPT="`printf \"${SCRIPT}\ntmp=\\\`pkg-config --libs ${STR} 2>/dev/null\\\`\"`"
-				SCRIPT="`printf \"${SCRIPT}\nif [ ! ${S}? = 1 ]; then \"`"
-				SCRIPT="`printf \"${SCRIPT}\necho yes; ${TMP_VAR}=1; \";`"
-				if [ "${_PKGCONFIG_PLUS}" = 1 ]; then
-				SCRIPT="`printf \"${SCRIPT}\n${_PC_LDFLAGS}=\\\"${S}${_PC_LDFLAGS} ${S}tmp\\\"; fi; fi\"`"
-				else
-				SCRIPT="`printf \"${SCRIPT}\n${_PC_LDFLAGS}=${S}tmp; fi; fi\"`"
-				fi
-				## -eof- ##
-				_PC_CFLAGS=""
-				_PC_LDFLAGS=""
-				_REQUIRED=0
-				MODE=""
+			add_envword ${_PC_CFLAGS}
+			add_envword ${_PC_LDFLAGS}
+			TMP_VAR="HAVE_PKGCFG_`echo ${STR}| sed -e 's,\.,_,g' -e 's,-,_,g' -e 's,\+,,g' | tr '[a-z]' '[A-Z]'`"
+			add_envword ${TMP_VAR}
+			# TODO: Use EOF or F="$F B"
+			REPORT_PKGCFG="${REPORT_PKGCFG} ${STR}"
+			SCRIPT="`printf \"${SCRIPT}\nprintf 'checking pkg-config flags for ${STR}... '\"`"
+			## - flags - ##
+			SCRIPT="`printf \"${SCRIPT}\ntmp=\\\`pkg-config --cflags ${STR} 2>/dev/null\\\`\"`"
+			SCRIPT="`printf \"${SCRIPT}\nif [ ${S}? = 1 ]; then echo no ; ${TMP_VAR}=0; \"`"
+			if [ "${_REQUIRED}" = 1 ]; then
+			SCRIPT="`printf \"${SCRIPT}\necho 'This package is required'\nexit 1\"`"
 			fi
+			SCRIPT="`printf \"${SCRIPT}\nelse \"`"
+			if [ "${_PKGCONFIG_PLUS}" = 1 ]; then
+			SCRIPT="`printf \"${SCRIPT}\n${_PC_CFLAGS}=\\\"${S}${_PC_CFLAGS} ${S}tmp\\\"; \"`"
+			else
+			SCRIPT="`printf \"${SCRIPT}\n${_PC_CFLAGS}=${S}tmp; \"`"
+			fi
+			## - libs - ##
+			SCRIPT="`printf \"${SCRIPT}\ntmp=\\\`pkg-config --libs ${STR} 2>/dev/null\\\`\"`"
+			SCRIPT="`printf \"${SCRIPT}\nif [ ! ${S}? = 1 ]; then \"`"
+			SCRIPT="`printf \"${SCRIPT}\necho yes; ${TMP_VAR}=1; \";`"
+			if [ "${_PKGCONFIG_PLUS}" = 1 ]; then
+			SCRIPT="`printf \"${SCRIPT}\n${_PC_LDFLAGS}=\\\"${S}${_PC_LDFLAGS} ${S}tmp\\\"; fi; fi\"`"
+			else
+			SCRIPT="`printf \"${SCRIPT}\n${_PC_LDFLAGS}=${S}tmp; fi; fi\"`"
+			fi
+			## -eof- ##
+			_PC_CFLAGS=""
+			_PC_LDFLAGS=""
+			_REQUIRED=0
+			MODE=""
 		fi
 		;;
 	"report")
 		IS_KEYWORD=0
 		if [ "${STR}" = ";" ]; then 
-			MODE=""; 
+			MODE=""
 		else
-		REPORT="${REPORT} ${STR}"
+			REPORT="${REPORT} ${STR}"
 		fi
 		;;
 	"chkinc")
@@ -2615,14 +2522,11 @@ ${STR} ; fi"
 		;;
 	"subdirs")
 		IS_KEYWORD=0
-		if [ "${STR}" = ";" ]; then
-			MODE=""
-		else
-			if [ "${STR}" = "%" ]; then
-			SD_FILES="%" ; else
-			SD_FILES="${SD_FILES}${STR} "
-			fi
-		fi
+		case "${STR}" in
+		";") MODE="" ; ;;
+		#"%") SD_FILES="%" ; ;; ## WTF
+		*) SD_FILES="${SD_FILES}${STR} " ; ;;
+		esac
 		;;
 	"chkprg")
 		IS_KEYWORD=0
@@ -2671,12 +2575,11 @@ ${STR} ; fi"
 			if [ -z "${ARG_NAME}" ]; then
 				ARG_NAME=`echo ${STR} | cut -d = -f 1`
 				ARG_VALUE=`echo ${STR} | awk -F = '{ print $2 }'`
-			else
-			if [ -z "${ARG_FLAG}" ]; then
+			elif [ -z "${ARG_FLAG}" ]; then
 				ARG_FLAG=${STR}
 			else
-			ARG_DESC="${ARG_DESC}${STR} "
-			fi ; fi
+				ARG_DESC="${ARG_DESC}${STR} "
+			fi
 		fi
 		IS_KEYWORD=0
 		;;
@@ -2685,8 +2588,7 @@ ${STR} ; fi"
 		if [ "${STR}" = ";" ]; then
 			for A in 1 2 3 4 ; do
 				if [ "${A}" = "${EQUAL}" ]; then
-				word=`get_word_number`
-				echo "$word | There's a null body assignation to variable ${SET_VAR}. Please type \"\" or ''" >&2
+				echo "`word` | There's a null body assignation to variable ${SET_VAR}. Please type \"\" or ''" >&2
 				exit 1
 				IS_KEYWORD=0
 				fi
@@ -2736,8 +2638,7 @@ ${EQUAL}\""
 		;;
 	"version")
 		if [ "${PKGNAME}" = "this package" ]; then
-			word=`get_word_number`
-			echo "$word | PKGNAME must be defined before VERSION" >&2
+			echo "`word` | PKGNAME must be defined before VERSION" >&2
 			exit 1
 		fi
 		add_envword "VERSION"
@@ -2775,8 +2676,7 @@ ${EQUAL}\""
 		MODE=""
 		_OK="`echo ${STR} ${ACR_VERSION} | awk '{ if ($1 <= $2) {print "ok";} }'`"
 		if [ -z "${_OK}" ]; then
-			word=`get_word_number`
-			echo "$word | Invalid ACR version. You need at least v${STR}" >&2
+			echo "`word` | Invalid ACR version. You need at least v${STR}" >&2
 			exit 1
 		fi
 		;;
@@ -2817,10 +2717,10 @@ ${EQUAL}\""
 
 	if [ "${IS_KEYWORD}" = 0 ]; then
 		if [ "${DEBUG}" = 1 ]; then
-		if [ ! "${STR}" = ";" ]; then
-			printf "%04d |$spaces " $WORDS_N >&2
-			echo "${STR}" >&2
-		fi
+			if [ ! "${STR}" = ";" ]; then
+				printf "%04d |$spaces " $WORDS_N >&2
+				echo "${STR}" >&2
+			fi
 		fi
 		continue
 	fi
@@ -2829,8 +2729,8 @@ ${EQUAL}\""
 
 	if [ "${DEBUG}" = 1 ]; then
 		if [ ! "${WORDS_N}" = "${WORDS_T}" ]; then 
-		printf "%04d |$spaces " $WORDS_N >&2
-		echo "${STR}" >&2
+			printf "%04d |$spaces " $WORDS_N >&2
+			echo "${STR}" >&2
 		fi
 	fi
 	## }}}
@@ -2842,9 +2742,10 @@ ${EQUAL}\""
 		"+=") EQUAL=2 ;;
 		"?=") EQUAL=3 _EQUAL_3=1 ;;
 		"<-") EQUAL=4 
-			echo "$word | The '<-' keyword is deprecated. Use $VAR instead" >&2
+			echo "`word` | The '<-' keyword is deprecated. Use $VAR instead" >&2
 ;; ### XXX deprecated!!
-		*)    check_ifop $STR
+		*)
+			check_ifop $STR
 			EQUAL=1 ;; ## will crash in check_ifop :)
 		esac
 		continue
@@ -2853,16 +2754,14 @@ ${EQUAL}\""
 	# clear required flag
 	_REQUIRED=0
 
-	case $STR in
-					#------------ token keywords
+	case $STR in #------------ keyword tokens
 	";")
-		word=`get_word_number`
-		echo "$word < found ';' character out of context." >&2
+		echo "`word` < found ';' character out of context." >&2
 		exit 1
 		;;
 	"}{"|"}ELSE{")
 		if [ $NKEYS -le 0 ]; then
-			echo "$word < '}{' unmatching ELSE key." >&2
+			echo "`word` < '}{' unmatching ELSE key." >&2
 			exit 1
 		fi
 		SCRIPT="${SCRIPT}
@@ -2870,7 +2769,7 @@ else"
 		;;
 	"}")
 		if [ $NKEYS -lt 0 ]; then
-			echo "$word < unmatching '}' key." >&2
+			echo "`word` < unmatching '}' key." >&2
 			exit 1
 		fi
 
@@ -2931,62 +2830,59 @@ else"
 	"PKGNAME")	MODE="pkgname" ; ;;
 	"VERSION")	MODE="version" ; ;;
 	"CONTACT")	MODE="contact" _CONTACT=1 ; ;;
-	"INCLUDE")   if [ "${INSIDE_INCLUDE}" = 1 ]; then
-			echo "ERROR: Cannot nest includes."  >&2; exit 1; fi
-			MODE="include" ; ;;
+	"INCLUDE")
+		if [ "${INSIDE_INCLUDE}" = 1 ]; then
+			echo "ERROR: Cannot nest includes." >&2
+			exit 1
+		fi
+		MODE="include"
+		;;
 	"REQUIRE_ACR_VERSION") MODE="requireacrversion" ; ;;
 	"CHECK_INCLUDE"|"CHECK_INCLUDE!"|"CHKINC"|"CHKINC!")
 		if [ -z "${LANG_C}${LANG_CXX}" ]; then
-			word=`get_word_number`
-			echo "$word | Define LANG_C or LANG_CXX before use CHECK_INC" >&2
+			echo "`word` | Define LANG_C or LANG_CXX before use CHECK_INC" >&2
 			exit 1
 		fi
 		enter_mode "chkinc" ${STR}
 		;;
 	"CHK_CP"|"CHK_CP!"|"CHECK_CLASSPATH"|"CHECK_CLASSPATH!")
 		if [ -z "${LANG_JAVA}" ]; then
-			word=`get_word_number`
-			echo "$word | Define LANG_JAVA before use CHECK_CLASSPATH" >&2
+			echo "`word` | Define LANG_JAVA before use CHECK_CLASSPATH" >&2
 			exit 1
 		fi
 		enter_mode "chkcp" ${STR}
 		;;
 	"CHKFNC"|"CHKFNC!"|"CHECK_FUNCTION"|"CHECK_FUNCTION!")
 		if [ -z "${LANG_C}" ]; then
-			word=`get_word_number`
-			echo "$word | Define LANG_C before use CHECK_FUNC" >&2
+			echo "`word` | Define LANG_C before use CHECK_FUNC" >&2
 			exit 1
 		fi
 		enter_mode "chkfunc" ${STR}
 		;;
 	"CHK_PY"|"CHK_PY!"|"CHECK_PYTHON_MODULE"|"CHECK_PYTHON_MODULE!")
 		if [ -z "${LANG_PYTHON}" ]; then
-			word=`get_word_number`
-			echo "$word | Define LANG_PYTHON before CHECK_PYTHON_MODULE." >&2
+			echo "`word` | Define LANG_PYTHON before CHECK_PYTHON_MODULE." >&2
 			exit 1
 		fi
 		enter_mode "chkpy" ${STR}
 		;;
 	"CHK_RU"|"CHK_RU!"|"CHECK_RUBY_EXTENSION"|"CHECK_RUBY_EXTENSION")
 		if [ -z "${LANG_RUBY}" ]; then
-			word=`get_word_number`
-			echo "$word | Define LANG_RUBY before CHECK_RUBY_EXTENSION." >&2
+			echo "`word` | Define LANG_RUBY before CHECK_RUBY_EXTENSION." >&2
 			exit 1
 		fi
 		enter_mode "chkru" ${STR}
 		;;
 	"CHK_PM"|"CHK_PM!"|"CHECK_PERL_MODULE"|"CHECK_PERL_MODULE!")
 		if [ -z "${LANG_PERL}" ]; then
-			word=`get_word_number`
-			echo "$word | Define LANG_PERL before using CHK_PM directive" >&2
+			echo "`word` | Define LANG_PERL before using CHK_PM directive" >&2
 			exit 1
 		fi
 		enter_mode "chkpm" ${STR}
 		;;
 	"CHKLIB"|"CHKLIB!"|"CHECK_LIBRARY"|"CHECK_LIBRARY!") 
 		if [ -z "${LANG_C}${LANG_CXX}" ]; then
-			word=`get_word_number`
-			echo "$word | Define LANG_C or LANG_CXX before use CHECK_LIB" >&2
+			echo "`word` | Define LANG_C or LANG_CXX before use CHECK_LIB" >&2
 			exit 1
 		fi
 		enter_mode "chklib" ${STR}
@@ -3002,16 +2898,14 @@ else"
 		;;
 	"ENDIAN"|"CHECK_ENDIAN")
 		if [ -z "${LANG_C}${LANG_CXX}" ]; then
-			word=`get_word_number`
-			echo "$word | Define LANG_C or LANG_CXX before use CHECK_ENDIAN" >&2
+			echo "`word` | Define LANG_C or LANG_CXX before use CHECK_ENDIAN" >&2
 			exit 1
 		fi
 		check_endian
 		;;
 	"SIZEOF")
 		if [ -z "${LANG_C}${LANG_CXX}" ]; then
-			word=`get_word_number`
-			echo "$word | Define LANG_C or LANG_CXX before use SIZEOF" >&2
+			echo "`word` | Define LANG_C or LANG_CXX before use SIZEOF" >&2
 			exit 1
 		fi
 		enter_mode "sizeof" ${STR}
@@ -3031,8 +2925,7 @@ else"
 		;;
 	"USE_LIBTOOL"|"USE_LIBTOOL!")
 		if [ -z "${LANG_C}${LANG_CXX}" ]; then
-			word=`get_word_number`
-			echo "$word | USE_LIBTOOL requires LANG_C or LANG_CXX." >&2
+			echo "`word` | USE_LIBTOOL requires LANG_C or LANG_CXX." >&2
 			exit 1
 		fi
 		# TODO: Use mode for libtool
@@ -3045,8 +2938,7 @@ else"
 		;;
 	"USE_PTHREAD"|"USE_PTHREAD!")
 		if [ -z "${LANG_C}${LANG_CXX}" ]; then
-			word=`get_word_number`
-			echo "$word | USE_PTHREAD requires LANG_C or LANG_CXX." >&2
+			echo "`word` | USE_PTHREAD requires LANG_C or LANG_CXX." >&2
 			exit 1
 		fi
 		if [ "`echo ${STR}| grep '!'`" ]; then 
@@ -3057,7 +2949,7 @@ else"
 		use_pthread
 		;;
 	"USE_BACKUP")
-		echo "$word | USE_BACKUP is deprecated. It may not work on further version." >&2
+		echo "`word` | USE_BACKUP is deprecated. It may not work on further version." >&2
 		USE_BACKUP=1
 		;;
 	"REPORT_DEFINED"|"RD")
@@ -3065,8 +2957,7 @@ else"
 		;;
 	"USE_JNI")
 		if [ -z "${LANG_C}${LANG_CXX}${LANG_JAVA}" ]; then
-			word=`get_word_number`
-			echo "$word | USE_JNI requires LANG_C or LANG_CXX and LANG_JAVA" >&2
+			echo "`word` | USE_JNI requires LANG_C or LANG_CXX and LANG_JAVA" >&2
 			exit 1
 		fi
 		use_jni
@@ -3077,7 +2968,7 @@ else"
 	"SUBCONF")   MODE="subconf" ;;
 	"SUBDIRS")   MODE="subdirs" ;;
 	"EXPORT")
-		echo "$word | EXPORT keyword is deprecated. No need to use." >&2
+		echo "`word` | EXPORT keyword is deprecated. No need to use." >&2
 		MODE="export" ;;
 	"SUBST"|"SUBST_FILES")
 		MODE="substfiles" ;;
@@ -3140,10 +3031,9 @@ else"
 	"USE_DL")
 		if [ "${_USE_DL_USED}" = 0 ]; then
 			MODE="usedl"
-			_USE_DL_USED=`get_word_number`
+			_USE_DL_USED=`word`
 		else
-			word=`get_word_number`
-			echo "$word | ignored twice USE_DL found at ${_USE_DL_USED}." >&2
+			echo "`word` | ignored twice USE_DL found at ${_USE_DL_USED}." >&2
 		fi ;;
 	"EXEC")
 		MODE="exec" ;;
@@ -3177,14 +3067,12 @@ done # inner loop
 done
 
 if [ "${IS_KEYWORD}" = 1 ]; then
-	word=`get_word_number`
-	echo "$word | Unexpected end of file." >&2
+	echo "`word` | Unexpected end of file." >&2
 	exit 1
 fi
 
 if [ "${COMMENT}" = 1 ]; then
-	word=`get_word_number`
-	echo "$word | Comment tag not closed." >&2
+	echo "`word` | Comment tag not closed." >&2
 	exit 1
 fi
 
@@ -3205,7 +3093,7 @@ if [ "${PKGNAME}" = "this package" ]; then
 fi
 
 if [ $NKEYS -lt 0 ]; then
-	echo "$word < unexpected eof: unmatching final '}' key." >&2
+	echo "`word` < unexpected eof: unmatching final '}' key." >&2
 	exit 1
 fi
 
@@ -3324,7 +3212,7 @@ else
 	create_script
 	
 	if [ $NKEYS -lt 0 ]; then
-		echo "$word < unexpected eof: unmatching '}' key." >&2
+		echo "`word` < unexpected eof: unmatching '}' key." >&2
 		exit 1
 	fi
 	show_report
