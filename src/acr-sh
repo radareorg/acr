@@ -1391,8 +1391,8 @@ if [ -e "${S}{VPATH}/config.guess" ]; then
 	sh ${S}{VPATH}/config.guess
 	return
 fi
-CPU="\`uname -m|sed -e 's, ,,g'\`"
-OS="\`uname -s|tr '[A-Z]' '[a-z]'\`"
+CPU="\`uname -m|sed -e 's, ,,g'|cut -d - -f 1\`"
+OS="\`uname -s|tr A-Z a-z\`"
 GNU="\`uname --help 2>&1 | grep gnu\`"
 [ "${S}{GNU}" ] && OS="${S}{OS}-gnu"
 [ "${S}{CPU}" = ppc ] && CPU="powerpc"

@@ -7,9 +7,9 @@
 #   $ acr-install -d dir1 dir2 dir3
 #   $ acr-install -P PLIST -D /usr/local -x dir/* bin/
 #
-# install -program : -c -s -o root -g root -m 555 
-# install -library : -c -o root -g root -m 555 
-# install -data    : -o root -g root -m 755
+# acr-install -program : -c -s -o root -g root -m 555 
+# acr-install -library : -c -o root -g root -m 555 
+# acr-install -data    : -o root -g root -m 755
 #
 # -c         : ignored
 # -d DIR     : create directories
