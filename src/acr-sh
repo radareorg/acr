@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# Copyright (C) 2005-2011
+# Copyright (C) 2005-2012
 #       pancake <@youterm.com>
 #
 # acr is free software; you can redistribute it and/or modify
@@ -739,7 +739,7 @@ if [ "${S}{CROSSBUILD}" = 1 ]; then
  if [ ${S}? = 0 ]; then CC="${S}{HOST}-${S}{CC}"; fi
 fi
 echo "main(){}" > test.c
- (exec ${S}{CC} ${S}{CFLAGS} ${S}{LDFLAGS} test.c >/dev/null 2>&1)
+ (exec ${S}{CC} ${S}{CFLAGS} ${S}{CPPFLAGS} ${S}{LDFLAGS} test.c >/dev/null 2>&1)
 if [ ${S}? = 0 ]; then echo ${S}{CC}; else
  echo no ; HAVE_LANG_C=0
 _EOF_
@@ -770,13 +770,14 @@ env_c() {
 	[ -n "${LANG_C_ENV}" ] && return
 	LANG=1
 	LANG_C=1
-	LANG_C_ENV="CC CFLAGS LDFLAGS HAVE_LANG_C"
+	LANG_C_ENV="CC CFLAGS CPPFLAGS LDFLAGS HAVE_LANG_C"
 	ACR_RMFILES="${ACR_RMFILES} test.c a.out a.exe"
 	REPORT_LANGS="${REPORT_LANGS} c"
 	add_lang_envwords "C"
 	ENVHELP="${ENVHELP}
   CC          C compiler command
   CFLAGS      C compiler flags
+  CPPFLAGS    C preprocessor flags
   LDFLAGS     linker flags, e.g. -L<lib dir> if you have libraries in a
               nonstandard directory <lib dir>"
 	env_cpp
@@ -892,7 +893,7 @@ echo \"#include <${A}>\" >>test.c"
 	SCRIPT=`cat <<EOF
 ${SCRIPT}
 echo "main(){}" >>test.c
-eval \\\\${S}${S}{COMPILER} ${S}{CFLAGS} ${S}{CXXFLAGS} test.c >/dev/null 2>&1
+eval \\\\${S}${S}{COMPILER} ${S}{CFLAGS} ${S}{CPPFLAGS} ${S}{CXXFLAGS} test.c >/dev/null 2>&1
 if [ ${S}? = 0 ]; then
 	eval ${S}{VAR}=1
 	echo yes
@@ -962,7 +963,7 @@ _CHKLIB_NAME=${S}2
 _CHKLIB_LIBS=${S}(echo \"-l${S}{_CHKLIB_NAME}\" | sed 's,\\+, -l,g')
 printf \"checking for lib${S}{_CHKLIB_NAME} ... \"
 echo \"main(){ }\" > test.c
-eval ${S}{S}${S}{COMPILER} ${S}{CFLAGS} ${S}{CXXFLAGS} ${S}{LDFLAGS} ${S}{_CHKLIB_LIBS} test.c >/dev/null 2>&1
+eval ${S}{S}${S}{COMPILER} ${S}{CFLAGS} ${S}{CPPFLAGS} ${S}{CXXFLAGS} ${S}{LDFLAGS} ${S}{_CHKLIB_LIBS} test.c >/dev/null 2>&1
 if [ ${S}? = 0 ]; then
 	eval ${S}{VAR}=1
 	echo yes
@@ -1001,7 +1002,7 @@ check_func() {
 ${SCRIPT}
 printf "checking function ${_CHKFUNC_NAME}() in ${_CHKFUNC_LIB}... "
 echo "main(){ ${_CHKFUNC_NAME}(0); }" > test.c
-${S}{${COMPILER}} ${S}{CFLAGS} ${S}{LDFLAGS} -l${_CHKFUNC_LIB} test.c >/dev/null 2>&1
+${S}{${COMPILER}} ${S}{CFLAGS} ${S}{CPPFLAGS} ${S}{LDFLAGS} -l${_CHKFUNC_LIB} test.c >/dev/null 2>&1
 if [ ${S}? = 0 ]; then
 	echo yes ; ${VAR}=1
 else
@@ -1032,7 +1033,7 @@ ${SCRIPT}
 printf 'checking size of $1... '
 echo '#include <stdio.h>' > test.c
 echo 'main(){printf(\"##d##\",sizeof($1));}' >>test.c
-eval \\\\${S}${S}{COMPILER} ${S}{CFLAGS} ${S}{CXXFLAGS} -o a.out test.c >/dev/null 2>&1
+eval \\\\${S}${S}{COMPILER} ${S}{CFLAGS} ${S}{CPPFLAGS} ${S}{CXXFLAGS} -o a.out test.c >/dev/null 2>&1
 if [ 0 = ${S}? ]; then 
  ${VAR}=${S}(./a.out)
  echo ${S}{${VAR}}
@@ -1170,14 +1171,14 @@ use_x11() {
 	SCRIPT=`cat <<_EOF_
 ${SCRIPT}
 printf "checking for X11... "
-CFLAGS="${S}CFLAGS -I${S}{X11BASE}/include"
+CFLAGS="${S}CFLAGS ${S}CPPFLAGS -I${S}{X11BASE}/include"
 LDFLAGS="${S}LDFLAGS -L${S}{X11BASE}/lib"
 if [ "${X_INCLUDES}" ]; then CFLAGS="${CFLAGS} -I${X_INCLUDES}"; fi
 if [ "${X_LIBRARIES}" ]; then CFLAGS="${CFLAGS} -L${X_LIBRARIES}"; fi
 if [ "${S}{HAVE_X11}" = 1 ]; then
 echo "#include <X11/Xlib.h>" > test.c
 echo "main(){XrmInitialize();}" >> test.c
-${S}{CC} ${S}{CFLAGS} ${S}{LDFLAGS} test.c -lX11 2> /dev/null
+${S}{CC} ${S}{CFLAGS} ${S}{CPPFLAGS} ${S}{LDFLAGS} test.c -lX11 2> /dev/null
 if [ 0 = ${S}? ]; then
   echo ok ; HAVE_X11=1
 else
@@ -1529,6 +1530,12 @@ flag=\`echo \$1| cut -d = -f 1\`
 value=\`echo \$1| awk 'BEGIN{FS="=";}{print \$2}'\`
 flag2=\`echo \$flag|cut -f2- -d -| sed -e 's,-,_,g' -e 's,^_,,g'|tr '[a-z]' '[A-Z]'\`
 
+if [ "\${TARGET_OS}" = "darwin" ]; then
+	LIBPATH=-Wl,-install_name,
+else
+	LIBPATH=-Wl,-R
+fi
+
 case \$flag in
 "-h"|"--help"|"--hel"|"--h"|"--he"|"-help")
 	show_usage ; ;;
@@ -1590,7 +1597,7 @@ cat <<EOF
 "--localstatedir")
 	LOCALSTATEDIR="\$value"; ;;
 "--libdir")
-	LIBDIR="\$value"; LDFLAGS="\${LDFLAGS} -L\$value -Wl,-R\$value"; ;;
+	LIBDIR="\$value"; LDFLAGS="\${LDFLAGS} -L\$value \${LIBPATH}\$value"; ;;
 "--includedir")
 	INCLUDEDIR="\$value"; CFLAGS="\${CFLAGS} -I\$value"; ;;
 "--infodir")
@@ -2072,7 +2079,7 @@ for HOST_OS in solaris linux netbsd ; do
 done
 if [ "${HAVE_LIB_ICONV}" = 0 ]; then
 	echo 'main(){iconv_open}' > test.c
-	${S}{CC} ${S}{CFLAGS} ${S}{LDFLAGS} test.c 2> /dev/null
+	${S}{CC} ${S}{CFLAGS} ${S}{CPPFLAGS} ${S}{LDFLAGS} test.c 2> /dev/null
 	if [ ${S}? = 0 ]; then
 		echo yes
 		HAVE_LIB_ICONV=1
@@ -3121,6 +3128,7 @@ fi
 cat >> Makefile.acr <<EOF
 CC=@CC@
 CFLAGS=@CFLAGS@
+CPPFLAGS=@CPPFLAGS@
 EOF
 
 [ "${LANG_CXX}" = 1 ] &&\
