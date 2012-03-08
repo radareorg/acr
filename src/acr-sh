@@ -1962,6 +1962,7 @@ exit 1
 	"check")
 		IS_KEYWORD=0
 		if [ -z "${CHECK_VAR}" ]; then	
+			TMP_VAR=""
 			SET_VAR=""
 			CHECK_VAR=${STR};
 		elif [ -z "${CHECK_EOF}" ]; then
@@ -1971,7 +1972,7 @@ SCRIPT=`cat <<EOF
 ${SCRIPT}
 printf "checking for ${CHECK_VAR}... "
 ${TMP_VAR} 
-if [ "${S}${CHECK_VAR}" = 1 ]; then
+if [ "${S}${CHECK_VAR}" = 0 ]; then
 	echo yes
 else
 	${CHECK_VAR}=0
@@ -1987,9 +1988,9 @@ EOF
 			TMP_VAR=""
 		else
 			if [ "${STR}" = "\\" ]; then
-				TMP_VAR="${CHECK_STR} ; "
+				TMP_VAR="${TMP_VAR} ; "
 			else
-				TMP_VAR="${CHECK_STR}${STR} "
+				TMP_VAR="${TMP_VAR}${STR} "
 			fi
 		fi
 		;;

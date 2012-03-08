@@ -1,3 +1,9 @@
+BUGS
+====
+- CHKFNC not working for c++
+- CHECK_SCRIPT ¿¿ ./foo
+
+
 Missing languages
 =================
 - Go
