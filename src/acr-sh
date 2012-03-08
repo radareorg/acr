@@ -1973,6 +1973,7 @@ ${SCRIPT}
 printf "checking for ${CHECK_VAR}... "
 ${TMP_VAR} 
 if [ "${S}${CHECK_VAR}" = 0 ]; then
+	${CHECK_VAR}=1
 	echo yes
 else
 	${CHECK_VAR}=0
