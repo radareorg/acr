@@ -3287,15 +3287,43 @@ if [ "${MAKEDIST}" = 1 ]; then
 	make clean 2>&1 | ${AWK} '{ printf "."; }' >&2
 	echo  >&2
 	echo "[4/4] Disting project into a tarball." >&2
-	cd ..
-	mv $PKGNAME $PKGNAME-$VERSION
-	tar czvf $PKGNAME-$VERSION.tar.gz $PKGNAME-$VERSION 2>&1 | ${AWK} '{ printf "."; }' >&2
-	if [ ! $? = 0 ]; then
+	P=${PKGNAME}-${VERSION}
+	if [ -d .hg ]; then
+		rm -rf .tmp >&2
+		mkdir -p .tmp >&2
+		hg clone . .tmp/${P} >&2
+		rm -rf .tmp/${P}/.hg
+		cd .tmp/
+		tar czvf ../${P}.tar.gz ${P} >&2
+		rm -rf .tmp
+	elif [ -d .git]; then
+		rm -rf .tmp >&2
+		mkdir -p .tmp >&2
+		git clone . .tmp/${P} >&2
+		rm -rf .tmp/${P}/.git
+		cd .tmp/
+		tar czvf ../${P}.tar.gz ${P} >&2
+		rm -rf .tmp
+	elif [ -d .svn ]; then
+		URL=$(svn info| grep URL|cut -d : -f 2-)
+		rm -rf .tmp >&2
+		mkdir -p .tmp >&2
+		cd .tmp
+		svn co ${URL} ${P}
+		rm -rf ${P}/.svn
+		tar czvf ../${P}.tar.gz ${P} >&2
+		rm -rf .tmp
+	else
+		cd ..
+		mv $PKGNAME $PKGNAME-$VERSION
+		tar czvf $PKGNAME-$VERSION.tar.gz $PKGNAME-$VERSION 2>&1 | ${AWK} '{ printf "."; }' >&2
+		if [ ! $? = 0 ]; then
+			mv $PKGNAME-$VERSION $PKGNAME
+			makedist_failed "Cannot create ../$PKGNAME-$VERSION" 
+		fi
 		mv $PKGNAME-$VERSION $PKGNAME
-		makedist_failed "Cannot create ../$PKGNAME-$VERSION" 
+		cd -
 	fi
-	mv $PKGNAME-$VERSION $PKGNAME
-	cd -
 	echo >&2
 	echo "Tarball created successfully at ../$PKGNAME-$VERSION.tar.gz"  >&2
 fi
