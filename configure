@@ -52,8 +52,8 @@ if [ -e "${VPATH}/config.guess" ]; then
 	sh ${VPATH}/config.guess
 	return
 fi
-CPU="`uname -m|sed -e 's, ,,g'`"
-OS="`uname -s|tr '[A-Z]' '[a-z]'`"
+CPU="`uname -m|sed -e 's, ,,g'|cut -d - -f 1`"
+OS="`uname -s|tr A-Z a-z`"
 GNU="`uname --help 2>&1 | grep gnu`"
 [ "${GNU}" ] && OS="${OS}-gnu"
 [ "${CPU}" = ppc ] && CPU="powerpc"
@@ -92,12 +92,12 @@ done
 : ${INSTALL_PROGRAM:=${INSTALL} -m 755 -s}
 : ${INSTALL_MAN:=${INSTALL} -m 444}
 : ${INSTALL_LIB:=${INSTALL} -c}
- PKGNAME='acr' ; VERSION='0.8.8' ; CONTACT_MAIL="@nopcode.org" ; CONTACT_NAME="pancake" ; CONTACT="pancake <@nopcode.org>" ;
+ PKGNAME='acr' ; VERSION='0.8.9' ; CONTACT_MAIL="@nopcode.org" ; CONTACT_NAME="pancake" ; CONTACT="pancake <@nopcode.org>" ;
 }
                 
 show_usage() {
 cat <<EOF2
-'configure' configures acr-0.8.8 to adapt to many kinds of systems.
+'configure' configures acr-0.8.9 to adapt to many kinds of systems.
 
 Usage: ./configure [OPTION]... [VAR=VALUE]...
 
@@ -147,7 +147,7 @@ take_environ() {
 }
 
 show_version() {
-echo "acr-0.8.8 configuration script done with acr v0.8.8.
+echo "acr-0.8.9 configuration script done with acr v0.8.8.
 The 'Free Software Foundation' message is only for autodetection.
 Originally written by pancake <youterm.com>."
 exit 0
@@ -171,7 +171,7 @@ case $flag in
 	show_version ; ;;
 "-r"|"--r"|"--report")
 echo "PKGNAME:   acr"
-echo "VERSION:   0.8.8"
+echo "VERSION:   0.8.9"
 	exit 0
 	;;
 "--cache-file") 
@@ -317,7 +317,7 @@ echo " - ${A} = ${VAL}"
 done
 #ACR# (( package information ))
 #ACR# PKGNAME acr
-#ACR# VERSION 0.8.8
+#ACR# VERSION 0.8.9
 #ACR# CONTACT pancake ; @nopcode.org
 #ACR# 
 #ACR# (( needed programs ))
