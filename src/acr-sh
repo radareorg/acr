@@ -3294,7 +3294,7 @@ if [ "${MAKEDIST}" = 1 ]; then
 		hg clone . .tmp/${P} >&2
 		rm -rf .tmp/${P}/.hg
 		cd .tmp/
-		tar czvf ../${P}.tar.gz ${P} >&2
+		tar czvf ../${P}.tar.gz $P 2>&1 | ${AWK} '{ printf "."; }' >&2
 		rm -rf .tmp
 	elif [ -d .git]; then
 		rm -rf .tmp >&2
@@ -3302,7 +3302,7 @@ if [ "${MAKEDIST}" = 1 ]; then
 		git clone . .tmp/${P} >&2
 		rm -rf .tmp/${P}/.git
 		cd .tmp/
-		tar czvf ../${P}.tar.gz ${P} >&2
+		tar czvf ../${P}.tar.gz $P 2>&1 | ${AWK} '{ printf "."; }' >&2
 		rm -rf .tmp
 	elif [ -d .svn ]; then
 		URL=$(svn info| grep URL|cut -d : -f 2-)
@@ -3311,7 +3311,7 @@ if [ "${MAKEDIST}" = 1 ]; then
 		cd .tmp
 		svn co ${URL} ${P}
 		rm -rf ${P}/.svn
-		tar czvf ../${P}.tar.gz ${P} >&2
+		tar czvf ../${P}.tar.gz $P 2>&1 | ${AWK} '{ printf "."; }' >&2
 		rm -rf .tmp
 	else
 		cd ..
@@ -3323,9 +3323,10 @@ if [ "${MAKEDIST}" = 1 ]; then
 		fi
 		mv $PKGNAME-$VERSION $PKGNAME
 		cd -
+		mv ../$PKGNAME-$VERSION.tar.gz .
 	fi
 	echo >&2
-	echo "Tarball created successfully at ../$PKGNAME-$VERSION.tar.gz"  >&2
+	echo "Tarball created successfully at $PKGNAME-$VERSION.tar.gz"  >&2
 fi
 
 # vim:set foldmethod=marker
