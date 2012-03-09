@@ -1,7 +1,11 @@
+TODO
+====
+- config.log with full output
+
+
 BUGS
 ====
 - CHKFNC not working for c++
-- CHECK_SCRIPT ¿¿ ./foo
 
 
 Missing languages
@@ -10,10 +14,12 @@ Missing languages
 - LANG_CXX in USE_LIBTOOL (must be tested)
 - CPP is never used/checked
 - mono/dotgnu/msc (semi-done as a module)
-- elisp/clisp/guile/chicken
+- elisp/clisp/guile/chicken/newlisp
+- luvit ??
 - icon
 
-** 0.5 series
+
+Random issues
 =============
 - SUBCONF IS BROKEN CONCEPT ?!?!!
 - IF XX FOO += BAR ; is also broken!! works with IF XX { ... } ; next change!!
@@ -21,10 +27,6 @@ Missing languages
 - make something generic to create HAVE_BLABL variables
 - add yacc/lex/bison/flex support USE_LEX_AND_YACC
 - cdeps in AMR is nosense ? amr must be redefined from the ground!
-
-
-0.6:
-====
 - add LICENSE keyword. Store a pool of licenses.
 - finish the "optimized by a single functin call" (not only for CHKINC and CHKLIB)
 - allow to run commands without {} keys in conditionals: IF FOO BAR DIENOW bla ;
