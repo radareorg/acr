@@ -7,3 +7,8 @@ ${JAVAC} -source 1.5 temp.java >/dev/null 2>&1 \
 JAVA5=$? \
 rm -f temp.java
 <<EOF
+
+CHECK_EXEC TRUE true ;
+CHECK_EXEC FALSE false ;
+
+REPORT TRUE FALSE ;

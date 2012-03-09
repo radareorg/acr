@@ -18,7 +18,7 @@ syn keyword acrKeyword CHKINC CHECK_INCLUDE
 syn keyword acrKeyword CHKFNC CHECK_FUNCTION
 syn keyword acrKeyword ENDIAN CHECK_ENDIAN SIZEOF
 syn keyword acrKeyword INCLUDE
-syn keyword acrKeyword CHECK
+syn keyword acrKeyword CHECK CHECK_EXEC
 syn keyword acrKeyword CHK_PM CHECK_PERL_MODULE
 syn keyword acrKeyword CHK_PY CHECK_PYTHON_MODULE
 syn keyword acrKeyword CHK_RU CHECK_RUBY_MODULE

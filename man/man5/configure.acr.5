@@ -181,6 +181,8 @@ Uses JAVA_HOME to check and define the JCFLAGS for building java native interfac
 Checks if acr version is greater or equal than the given version.
 .It CHECK varname <<EOF <..src..> <<EOF
 Executes the <..code..> delimited by the <eof> keyword and marks varname as the target variable to be defined by the script. (see examples/check.acr fmi)
+.It CHECK_EXEC varname program\ ;
+Execute program and set varname = !!!$?
 .It CHECK_PROGRAM,CHKPRG[!] varname program
 Finds the program in ${PATH} and sets variable environment to the properly path. Since 0.5 CHKPRG exports HAVE_varname variable and checks first if VARNAME is a valid executable file.
 .It CHECK_INCLUDE,CHKINC[!] include.h[+include2.h[+include3.h]]

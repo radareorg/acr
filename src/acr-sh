@@ -576,7 +576,6 @@ env_python() {
 	LANG_PYTHON_ENV="PYTHON HAVE_LANG_PYTHON"
 	add_lang_envwords "PYTHON"
 	REPORT_LANGS="${REPORT_LANGS} python"
-
 	lang_python
 }
 ## }}}
@@ -647,7 +646,6 @@ env_lua() {
 	REPORT_LANGS="${REPORT_LANGS} lua"
 	ENVHELP="${ENVHELP}
   LUA         path to lua interpreter"
-
 	lang_lua
 }
 ## }}}
@@ -699,7 +697,6 @@ env_perl() {
 	ACR_RMFILES="${ACR_RMFILES} test.pl"
 	add_lang_envwords "PERL"
 	REPORT_LANGS="${REPORT_LANGS} perl"
-
 	lang_perl
 }
 ## }}}
@@ -1959,6 +1956,34 @@ exit 1
 		check_pm ${STR}
 		MODE=""
 		;;
+	"check_exec")
+		IS_KEYWORD=0
+		if [ -z "${_IF_VAR}" ]; then	
+			_IF_VAR=${STR};
+		elif [ "${STR}" = ";" ]; then
+SCRIPT=`cat <<EOF
+${SCRIPT}
+printf "running ${_IF_VALUE}... "
+${_IF_VALUE}
+${_IF_VAR}=${S}?
+if [ "${S}${_IF_VAR}" = 0 ]; then
+	${_IF_VAR}=1
+	echo yes
+else
+	${_IF_VAR}=0
+	echo no
+fi
+EOF
+`
+			reset_vars
+		else
+			if [ -z "${_IF_VALUE}" ]; then
+				_IF_VALUE="${STR}"
+			else
+				_IF_VALUE="${_IF_VALUE} ${STR}"
+			fi
+		fi
+		;;
 	"check")
 		IS_KEYWORD=0
 		if [ -z "${CHECK_VAR}" ]; then	
@@ -3060,6 +3085,7 @@ else"
 	"ARG_DISABLE")
 		MODE="argument"
 		ARGUMENT=disable ;;
+	"CHECK_EXEC") MODE="check_exec"; ;;
 	"CHECK") MODE="check"; ;;
 	"="|"+="|"?="|"<-")
 		echo "The *old* format <op> <var> <value> is deprecated."  >&2
