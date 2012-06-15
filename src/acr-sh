@@ -119,8 +119,8 @@ REPORT_FLAGS=""      REPORT_LANGS=""     REPORT_TOOLS=""
 # Environment
 ENVWORDS="MANDIR INFODIR LIBDIR INCLUDEDIR LOCALSTATEDIR SYSCONFDIR DATADIR"
 ENVWORDS="${ENVWORDS} LIBEXECDIR SBINDIR BINDIR EPREFIX PREFIX SPREFIX"
-ENVWORDS="${ENVWORDS} TARGET HOST BUILD INSTALL INSTALL_LIB INSTALL_MAN"
-ENVWORDS="${ENVWORDS} INSTALL_PROGRAM INSTALL_DIR INSTALL_SCRIPT INSTALL_DATA"
+ENVWORDS="${ENVWORDS} TARGET HOST BUILD INSTALL INSTALL_LIB INSTALL_MAN INSTALL_PROGRAM"
+ENVWORDS="${ENVWORDS} INSTALL_PROGRAM_STRIP INSTALL_DIR INSTALL_SCRIPT INSTALL_DATA"
 ENVWORDS="${ENVWORDS} HOST_OS HOST_CPU BUILD_OS BUILD_CPU TARGET_OS TARGET_CPU"
 ENVHELP=""
 # Checks
@@ -259,13 +259,9 @@ reset_vars() {
 
 get_current_compiler() {
 	case "${CURRENT_LANG}" in
-	"c")
-		COMPILER="CC" ;;
-	"c++")
-		COMPILER="CXX" ;;
-	*)
-		echo "No current compiler selected." >&2
-		exit 1
+	"c")   COMPILER="CC" ; ;;
+	"c++") COMPILER="CXX" ; ;;
+	*) echo "No current compiler selected." >&2 ; exit 1 ; ;;
 	esac
 }
 
@@ -273,9 +269,7 @@ concat() {
 	OLD="$1"
 	NEW="$2"
 
-	if [ "${NEW}" = "\;" ]; then
-		NEW=";"
-	fi
+	[ "${NEW}" = "\;" ] && NEW=";"
 
 	if [ -z "${OLD}" ]; then
 		printf -- "${NEW}"
@@ -313,31 +307,31 @@ check_prg() {
 ${SCRIPT}
 printf "checking for ${_CHKPRG_NAME}... "
 if [ -x "${S}{${_CHKPRG_VAR}}" ]; then
-FIND=${S}{${_CHKPRG_VAR}}
+	FIND=${S}{${_CHKPRG_VAR}}
 else
-FIND=""
-for A in \\\`echo ${S}{PATH} | sed -e 's,:, ,g'\\\`; do
-if [ -x "${S}{A}/${_CHKPRG_NAME}" ]; then
-        FIND="${S}{A}/${_CHKPRG_NAME}"
-        break;
-fi
-done
+	FIND=""
+	for A in \\\`echo ${S}{PATH} | sed -e 's,:, ,g'\\\`; do
+		if [ -x "${S}{A}/${_CHKPRG_NAME}" ]; then
+			FIND="${S}{A}/${_CHKPRG_NAME}"
+			break;
+		fi
+	done
 fi
 if [ -n "${S}{FIND}" ]; then 
- echo ${S}{FIND}; 
- HAVE_${_CHKPRG_VAR}=1
- ${_CHKPRG_VAR}=${S}{FIND}
+	echo ${S}{FIND}; 
+HAVE_${_CHKPRG_VAR}=1
+	${_CHKPRG_VAR}=${S}{FIND}
 else
- HAVE_${_CHKPRG_VAR}=0
- ${_CHKPRG_VAR}=${_CHKPRG_NAME}
- echo no
+	HAVE_${_CHKPRG_VAR}=0
+	${_CHKPRG_VAR}=${_CHKPRG_NAME}
+echo no
 EOF
 `
 	if [ "${_CHKPRG_REQUIRED}" = 1 ]; then
 	SCRIPT=`cat <<EOF
 ${SCRIPT}
-  echo "error: This program is required." >&2
-  exit 1
+	echo "error: This program is required." >&2
+	exit 1
 EOF
 `
 	fi
@@ -1131,15 +1125,9 @@ use_libtool() {
 	_USE_LIBTOOL=1
 	check_prg "LIBTOOL" "libtool" ${_REQUIRED}
 	case "${CURRENT_LANG}" in
-	"c")
-		add_envword "LIBTOOL_CC"
-		;;
-	"c++")
-		add_envword "LIBTOOL_CXX"
-		;;
-	*)
-		echo "Libtool depends on c or c++" >&2
-		exit 1
+	"c") add_envword "LIBTOOL_CC" ; ;;
+	"c++") add_envword "LIBTOOL_CXX" ; ;;
+	*) echo "Libtool depends on c or c++" >&2 ; exit 1 ; ;;
 	esac
 
 	add_envword "LIBTOOL_SHARED"
@@ -1170,19 +1158,19 @@ ${SCRIPT}
 printf "checking for X11... "
 CFLAGS="${S}CFLAGS ${S}CPPFLAGS -I${S}{X11BASE}/include"
 LDFLAGS="${S}LDFLAGS -L${S}{X11BASE}/lib"
-if [ "${X_INCLUDES}" ]; then CFLAGS="${CFLAGS} -I${X_INCLUDES}"; fi
-if [ "${X_LIBRARIES}" ]; then CFLAGS="${CFLAGS} -L${X_LIBRARIES}"; fi
+[ "${X_INCLUDES}" ] && CFLAGS="${CFLAGS} -I${X_INCLUDES}"
+[ "${X_LIBRARIES}" ] && CFLAGS="${CFLAGS} -L${X_LIBRARIES}"
 if [ "${S}{HAVE_X11}" = 1 ]; then
-echo "#include <X11/Xlib.h>" > test.c
-echo "main(){XrmInitialize();}" >> test.c
-${S}{CC} ${S}{CFLAGS} ${S}{CPPFLAGS} ${S}{LDFLAGS} test.c -lX11 2> /dev/null
-if [ 0 = ${S}? ]; then
-  echo ok ; HAVE_X11=1
+	echo "#include <X11/Xlib.h>" > test.c
+	echo "main(){XrmInitialize();}" >> test.c
+	${S}{CC} ${S}{CFLAGS} ${S}{CPPFLAGS} ${S}{LDFLAGS} test.c -lX11 2> /dev/null
+	if [ 0 = ${S}? ]; then
+		echo ok ; HAVE_X11=1
+	else
+		HAVE_X11=0 ; echo "not found" >&2
+	fi
 else
-  HAVE_X11=0 ; echo "not found" >&2
-fi
-else
-  HAVE_X11=0 ; echo "disabled" >&2
+	HAVE_X11=0 ; echo "disabled" >&2
 fi
 _EOF_
 `
@@ -1426,7 +1414,8 @@ done
 : ${S}{INSTALL_DIR:=${S}{INSTALL} -d}
 : ${S}{INSTALL_DATA:=${S}{INSTALL} -m 644}
 : ${S}{INSTALL_SCRIPT:=${S}{INSTALL} -m 755}
-: ${S}{INSTALL_PROGRAM:=${S}{INSTALL} -m 755 -s}
+: ${S}{INSTALL_PROGRAM:=${S}{INSTALL} -m 755}
+: ${S}{INSTALL_PROGRAM_STRIP:=${S}{INSTALL} -m 755 -s}
 : ${S}{INSTALL_MAN:=${S}{INSTALL} -m 444}
 : ${S}{INSTALL_LIB:=${S}{INSTALL} -c}
 ${INIVARS}
@@ -1648,10 +1637,8 @@ EOF
 }
 
 ## - script output generation - ##
-
 create_script() {
 	create_body
-
 	# checks
 	check_os
 	check_path
@@ -1727,9 +1714,8 @@ EOF
 
 is_buggy() {
 	WORD=$1
-	if [ ! "${MODE}" = "check" ] && [ ! "${WORD}" = ";" ] && [ -n "`echo $1 | grep ';'`" ]; then
+	[ ! "${MODE}" = "check" ] && [ ! "${WORD}" = ";" ] && [ -n "`echo $1 | grep ';'`" ] && \
 		echo "`word` | Warning: keyword '$1' contains a ';'. Is this fine?" >&2
-	fi
 }
 
 LAST_DOT=0
@@ -1886,7 +1872,7 @@ for STR2 in ${WORDS} NOP ; do
 	if [ -n "${MODE}" ]; then
 
 	if [ "${MODE}" = "string" ]; then
-		if [ "${STR}" = "NOP" ]; then STR=";" ; fi
+		[ "${STR}" = "NOP" ] && STR=";"
 		if [ "${STR}" = ";" ] ; then
 			[ "${DEBUG}" = 1 ] && \
 			echo "     |     $spaces\"${STRING}\"" >&2
@@ -3142,6 +3128,7 @@ echo "PKGNAME=@""PKGNAME@" >> Makefile.acr
 echo "VERSION=@""VERSION@" >> Makefile.acr
 echo "INSTALL_DATA=@""INSTALL_DATA@" >> Makefile.acr
 echo "INSTALL_PROGRAM=@""INSTALL_PROGRAM@" >> Makefile.acr
+echo "INSTALL_PROGRAM_STRIP=@""INSTALL_PROGRAM_STRIP@" >> Makefile.acr
 
 if [ "${LANG_JAVA}" = 1 ]; then
 cat >> Makefile.acr <<EOF
