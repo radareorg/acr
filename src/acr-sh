@@ -1714,7 +1714,7 @@ EOF
 
 is_buggy() {
 	WORD=$1
-	[ ! "${MODE}" = "check" ] && [ ! "${WORD}" = ";" ] && [ -n "`echo $1 | grep ';'`" ] && \
+	[ "${MODE}" != "check" ] && [ "${WORD}" != ";" ] && [ -n "`echo $1 | grep ';'`" ] && \
 		echo "`word` | Warning: keyword '$1' contains a ';'. Is this fine?" >&2
 }
 
@@ -1817,7 +1817,7 @@ for STR2 in ${WORDS} NOP ; do
 	is_buggy ${STR}
 
 	# XXX <- is deprecated! remove in 0.6
-	if [ ! "${STR}" = "<-" ]; then
+	if [ "${STR}" != "<-" ]; then
 		if [ "`echo ${STR}| cut -c -2`" = "<-" ]; then
 			VAR="`echo ${STR} | cut -c 3-`"
 			TMP="${S}${VAR}"
