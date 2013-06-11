@@ -310,12 +310,14 @@ if [ -x "${S}{${_CHKPRG_VAR}}" ]; then
 	FIND=${S}{${_CHKPRG_VAR}}
 else
 	FIND=""
-	for A in \\\`echo ${S}{PATH} | sed -e 's,:, ,g'\\\`; do
+	set IFS=:
+	for A in ${S}{PATH} ; do
 		if [ -x "${S}{A}/${_CHKPRG_NAME}" ]; then
 			FIND="${S}{A}/${_CHKPRG_NAME}"
 			break;
 		fi
 	done
+	unset IFS=:
 fi
 if [ -n "${S}{FIND}" ]; then 
 	echo ${S}{FIND}; 
