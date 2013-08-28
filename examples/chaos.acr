@@ -8,7 +8,7 @@ LANG_PERL
 
 PKGNAME jalo
 VERSION 1.0
-CONTACT pancake ; pancake@phreaker.net
+CONTACT pancake ; pancake@nopcode.org
 
 USE_X11
 USE_GMAKE

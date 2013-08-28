@@ -2,7 +2,7 @@
 #
 # syntax highlighting for acr files in vim.
 #
-# author: pancake <pancake@phreaker.net>
+# author: pancake <pancake@nopcode.org>
 #
 
 DATADIR=@DATADIR@

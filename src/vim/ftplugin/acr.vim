@@ -1,5 +1,5 @@
 " acr syntax plugin for vim
 "
-" @author: pancake <pancake@phreaker.net>
+" @author: pancake <pancake@nopcode.org>
 
 source ~/.vim/syntax/acr.vim

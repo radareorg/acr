@@ -1,6 +1,6 @@
 " acr syntax plugin for vim
 "
-" @author: pancake <pancake@phreaker.net>
+" @author: pancake <pancake@nopcode.org>
 
 if exists("b:current_syntax")
 	finish
