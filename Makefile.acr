@@ -35,28 +35,28 @@ install:
 	#${INSTALL_MAN} ${VPATH}/man/man1/install-acr.1 ${MANDIR}/man1/
 	${INSTALL_MAN} man/man5/configure.acr.5 ${MANDIR}/man5/
 	${INSTALL_MAN} man/man5/configure.amr.5 ${MANDIR}/man5/
-	mkdir -p ${DATADIR}/acr/examples
+	mkdir -p ${DATADIR}/doc/acr/examples
 	for A in `find examples -maxdepth 1 -type f`; do \
-	${INSTALL_DATA} $${A} ${DATADIR}/acr/examples ; done
+	${INSTALL_DATA} $${A} ${DATADIR}/doc/acr/examples ; done
 	mkdir -p ${DATADIR}/doc/acr/developers
 	for A in `find doc -maxdepth 1 -type f`; do \
 	${INSTALL_DATA} $${A} ${DATADIR}/doc/acr ; done
 	for A in `find doc/developers -maxdepth 1 -type f`; do \
 	${INSTALL_DATA} $${A} ${DATADIR}/doc/acr/developers ; done
-	mkdir -p ${DATADIR}/acr/vim/
-	mkdir -p ${DATADIR}/acr/vim/ftplugin
-	mkdir -p ${DATADIR}/acr/vim/syntax
-	${INSTALL_SCRIPT} src/vim/install.sh ${DATADIR}/acr/vim/install.sh
-	${INSTALL_DATA} src/vim/ftplugin/acr.vim ${DATADIR}/acr/vim/ftplugin/acr.vim
-	${INSTALL_DATA} src/vim/syntax/acr.vim ${DATADIR}/acr/vim/syntax/acr.vim
-	${INSTALL_DATA} src/vim/vimrc ${DATADIR}/acr/vim/vimrc
+	mkdir -p ${DATADIR}/doc/acr/vim/
+	mkdir -p ${DATADIR}/doc/acr/vim/ftplugin
+	mkdir -p ${DATADIR}/doc/acr/vim/syntax
+	${INSTALL_SCRIPT} src/vim/install.sh ${DATADIR}/doc/acr/vim/install.sh
+	${INSTALL_DATA} src/vim/ftplugin/acr.vim ${DATADIR}/doc/acr/vim/ftplugin/acr.vim
+	${INSTALL_DATA} src/vim/syntax/acr.vim ${DATADIR}/doc/acr/vim/syntax/acr.vim
+	${INSTALL_DATA} src/vim/vimrc ${DATADIR}/doc/acr/vim/vimrc
 	mkdir -p ${DATADIR}/acr/modules/
 	-${INSTALL_DATA} modules/* ${DATADIR}/acr/modules/
 
 deinstall:
 	-rm -f ${BINDIR}/acr-sh ${BINDIR}/acr
 	-rm -f ${MANDIR}/man1/acr.1 ${MANDIR}/man5/configure.acr.5
-	-rm -rf ${DATADIR}/doc/examples/acr ${DATADIR}/doc/acr
+	-rm -rf ${DATADIR}/doc/acr/examples ${DATADIR}/doc/acr
 
 dist:
 	rm -rf acr-${VERSION}
