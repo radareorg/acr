@@ -60,8 +60,8 @@ deinstall:
 
 dist:
 	rm -rf acr-${VERSION}
-	hg clone . acr-${VERSION}
-	rm -rf acr-${VERSION}/.hg
+	git clone . acr-${VERSION}
+	rm -rf acr-${VERSION}/.git
 	tar czvf acr-${VERSION}.tar.gz acr-${VERSION}
 
 clean:
