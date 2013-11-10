@@ -317,7 +317,7 @@ else
 			break;
 		fi
 	done
-	unset IFS=:
+	unset IFS
 fi
 if [ -n "${S}{FIND}" ]; then 
 	echo ${S}{FIND}; 
