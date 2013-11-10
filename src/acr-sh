@@ -804,7 +804,7 @@ if [ \"${S}{CROSSBUILD}\" = 1 ]; then
 if [ \"${S}?\" = 0 ]; then CXX=\"${S}{HOST}-${S}{CXX}\"; fi
 fi
 echo \"#include <iostream>\" > test.cxx
-echo \"main(){ std::cout << 1; }\" >> test.cxx
+echo \"int main(){ std::cout << 1; return 0;}\" >> test.cxx
 (exec ${S}{CXX} ${S}{CXXFLAGS} ${S}{LDFLAGS} test.cxx -lstdc++ >/dev/null 2>&1)
 if [ \$? = 0 ]; then echo ${S}{CXX}; else
 HAVE_LANG_CXX=0
