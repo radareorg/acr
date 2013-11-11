@@ -1350,7 +1350,11 @@ while : ; do
 ENVWORDS="${S}{ENVWORDS} ${S}1_CPU ${S}1_OS"
 STR=\`eval "echo ${S}{S}${S}1"\`
 SPLIT_CPU="\`echo "${S}STR" | cut -d - -f 1\`"
-SPLIT_OS="\`echo "${S}STR" | awk -F - '{print ${S}(NF-1)}'\`"
+#SPLIT_OS="\`echo "${S}STR" | awk -F - '{print ${S}(NF-1)}'\`"
+SPLIT_OS="\`echo "${S}STR" | awk -F - '{
+        if(${S}1="unknown"){ if (NF<3) { print ${S}2; } else { print ${S}3; }
+        } else { print ${S}(NF-1); }
+}'\`"
 eval "${S}1_CPU=\"${S}SPLIT_CPU\""
 eval "${S}1_OS=\"${S}SPLIT_OS\""
 shift
