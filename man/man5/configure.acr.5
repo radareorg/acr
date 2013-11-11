@@ -1,4 +1,4 @@
-.Dd Apr 13, 2011
+.Dd Nov 11, 2013
 .Dt CONFIGURE.ACR 5
 .Os
 .Sh NAME
@@ -39,7 +39,7 @@ The configure.acr file is a word-based configuration file for ACR.
 This means that each word must be separated with space, tab or new-lines.
 The ';' separator to terminate strings must be also a separated word.
 .Pp
-.Bl -bold -tag -width indent
+.Bl -tag -width indent
 Each word is called "keyword", there are these types:
 .It Miscelaneous-Keys:
 { } ;
@@ -84,11 +84,11 @@ everything in this file is word-based.
 You are allowed to use one-word-comments, it's simple. Just prefix the
 desired word with a hash '#' sign. for example: #FOO PKGNAME FOO
 .Pp
-Some keyword commands allows to be appended by '!'. This tells ACR to stop
+Some keyword commands can be suffixed by '!'. This tells ACR to stop
 execution of the configure script when the condition fails, instead of
 adding one DIE for each check at the end of script.
 .Pp
-For more information read acr(1) about the use of the '-d' flag.
+For more information read acr(1) about the use of the '\-d' flag.
 .\"
 .Sh PACKAGE INFORMATION
 .Bl -tag -width indent
@@ -109,9 +109,9 @@ This directives are used internally by ACR to work in a different way.
 This command has been deprecated for design purposes (good programmers doesn't
 need to use this command) in acr 0.5, and will no longer exist in 0.6.
 
-The backup command (acr-0.3) allows you to ensure that no files will be lost
-by calling the ./configure script or make clean. This option interacts with
-SUBST_FILES and Makefile generation with -m. Read doc/backup for more info.
+The backup command allows you to ensure that no files will be lost by calling
+the ./configure script or make clean. This option interacts with SUBST_FILES
+and Makefile generation with \-m. Read doc/backup for more info.
 .It EXPORT_DEFINED|ED
 Tells ACR to only export defined variables. This causes OUTPUT_H to export
 only the variables with value != "" and != "0". And OUTPUT_SH to export the
@@ -139,12 +139,12 @@ Adds C++ support and sets CXX environ.
 Tell acr to look for a bash on the target system.
 .It LANG_TCL[!]
 Looks for tcl version and libraries. Exports TCL_VERSION, TCL_CFLAGS and
-TCL_LDFLAGS to the environment. This will also adds the --with-tcl-basedir
+TCL_LDFLAGS to the environment. This will also adds the \-\-with-tcl-basedir
 to allow end-user to set the basedir for the TCL installation.
 .It LANG_PERL[!]
 Looks for perl installed on current system
 .It LANG_JAVA[!]
-Looks for javac in the current system. Exports JAVAC environ and adds --with-jikes and --with-kjc flags.
+Looks for javac in the current system. Exports JAVAC environ and adds \-\-with-jikes and \-\-with-kjc flags.
 .It LANG_PYTHON[!]
 Finds a python executable on the current system. Exports PYTHON and HAVE_LANG_PYTHON.
 .It LANG_RUBY[!]
@@ -154,11 +154,11 @@ Finds a ruby executable on the current system. Exports RUBY, HAVE_LANG_RUBY and 
 .Sh EXTERNAL SOFTWARE
 .Bl -tag -width indent
 .It USE_DL
-Sets LIBS_DL to -ldl or "" depending on the target system.
+Sets LIBS_DL to \-ldl or "" depending on the target system.
 .It USE_LIBTOOL
 Checks for the libtool command and exports LIBTOOL_CC, LIBTOOL_CXX and some useful commands for your makefiles: LIBTOOL_SHARED, LIBTOOL_STATIC and LIBTOOL_INSTALL.
 .It USE_ICONV
-Sets LIBS_ICONV to -liconv or "" depending if iconv functions are implemented
+Sets LIBS_ICONV to \-liconv or "" depending if iconv functions are implemented
 into the LibC or not.
 .It USE_PTHREAD
 Checks for pthread on the current system and sets PTHREAD_LIBS to the proper
@@ -166,9 +166,9 @@ value.
 .It USE_PERL_THREADS
 Checks if the target system have perl build with threads support.
 .It USE_X11
-Adds --with-x11base and --without-x flags and sets X11BASE to the proper value.
+Adds \-\-with-x11base and \-\-without-x flags and sets X11BASE to the proper value.
 .It USE_TK
-Adds --with-tk-libdir flag and sets TK_CFLAGS, TK_VERSION
+Add \-\-with-tk-libdir flag and sets TK_CFLAGS, TK_VERSION
 .It USE_GMAKE
 Looks for a GNU make tool installed on the target system and sets MAKE properly.
 .It USE_JNI
@@ -263,16 +263,16 @@ Adds a with/without/enable/disable flag to the final configure script. For examp
 .Pp
 ARG_WITH  MPLAYER=/usr/bin/mplayer mplayer Sets path for the mplayer\ ; 
 .Pp
-If no =value given, ARG_* will act as a boolean variable (0 for WITH and ENABLE, and 1 for WITHOUT and DISABLE). If the =value is given ACR will allow the user to construct flags like --with-foo=bar.
+If no =value given, ARG_* will act as a boolean variable (0 for WITH and ENABLE, and 1 for WITHOUT and DISABLE). If the =value is given ACR will allow the user to construct flags like \-\-with-foo=bar.
 .Pp
 The 'value' argument must be:
 .Bl -bullet -compact
 .It
-"" (empty) - If you want to create a true/false flag (ex: --without-x, --enable-ssl)
+"" (empty) : if you want to create a true/false flag (ex: \-\-without-x, \-\-enable-ssl)
 .It
-"=" - If you want that the user adds his own value. (ex: --with-x11base=/usr/pkg/XFree86/ )
+"=" : if you want that the user adds his own value. (ex: \-\-with-x11base=/usr/pkg/XFree86/ )
 .It
-"something" - If you want to set the value to "something" when the flag is passed. (ex: --with-kjc -> sets JAVAC to kjc)
+"something" : if you want to set the value to "something" when the flag is passed. (ex: \-\-with-kjc \-> sets JAVAC to kjc)
 .El
 .El
 .\"
@@ -328,6 +328,6 @@ REPORT HAVE_PKGCFG_GTK_2_0 CFLAGS LDFLAGS ;
 .Xr acr-cat 1
 .Xr configure.amr 5
 .Sh AUTHOR
-Written by pancake <pancake@nopcode.org>
+pancake <pancake@nopcode.org>
 .Pp
 http://nopcode.org/wk.php/Acr
