@@ -310,7 +310,7 @@ if [ -x "${S}{${_CHKPRG_VAR}}" ]; then
 	FIND=${S}{${_CHKPRG_VAR}}
 else
 	FIND=""
-	set IFS=:
+	IFS=:
 	for A in ${S}{PATH} ; do
 		if [ -x "${S}{A}/${_CHKPRG_NAME}" ]; then
 			FIND="${S}{A}/${_CHKPRG_NAME}"
