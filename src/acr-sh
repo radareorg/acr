@@ -1458,6 +1458,7 @@ Fine tuning of the installation directories:
   --sharedstatedir=DIR   modifiable architecture-independent data [PREFIX/com]
   --localstatedir=DIR    modifiable single-machine data [PREFIX/var]
   --libdir=DIR           object code libraries [EPREFIX/lib]
+  --libpath=DIR          set rpath/libname-path to linker
   --includedir=DIR       C header files [PREFIX/include]
   --infodir=DIR          info documentation [DATADIR/info]
   --mandir=DIR           man documentation [DATADIR/man]
@@ -1529,11 +1530,11 @@ else
 fi
 
 case \$flag in
-"-h"|"--help"|"--hel"|"--h"|"--he"|"-help")
+-h|--help|--hel|--h|--he|-help)
 	show_usage ; ;;
-"-V"|"-version"|"--version")
+-V|-version|--version)
 	show_version ; ;;
-"-r"|"--r"|"--report")
+-r|--r|--report)
 EOF
 	if [ ! "${PKGNAME}" = "this package" ]; then
 		echo "echo \"PKGNAME:   ${PKGNAME}\""; fi
@@ -1558,43 +1559,45 @@ EOF
 cat <<EOF
 	exit 0
 	;;
-"--cache-file") 
+--cache-file) 
 	# ignored: acr have no cache
 	;;
-"--build")
+--build)
 	BUILD="\$value"; split_host BUILD ; ;;
-"--host")
+--host)
 	CROSSBUILD=1 # XXX
 	HOST="\$value"; split_host HOST ; ;;
-"--target")
+--target)
 	TARGET="\$value"; split_host TARGET ; ;;
-"--prefix")
+--prefix)
 	PREFIX="\$value"; ;;
-"--exec-prefix")
+--exec-prefix)
 	EPREFIX="\$value"; ;;
-"--sandbox"|"--sprefix")
+--sandbox|--sprefix)
 	SPREFIX="\$value"; ;;
-"--bindir")
+--bindir)
 	BINDIR="\$value"; ;;
-"--sbindir")
+--sbindir)
 	SBINDIR="\$value"; ;;
-"--libexecdir")
+--libexecdir)
 	LIBEXECDIR="\$value"; ;;
-"--datadir")
+--datadir)
 	DATADIR="\$value"; ;;
-"--sysconfdir")
+--sysconfdir)
 	SYSCONFDIR="\$value"; ;;
-"--sharedstatedir")
+--sharedstatedir)
 	SHAREDSTATEDIR="\$value"; ;;
-"--localstatedir")
+--localstatedir)
 	LOCALSTATEDIR="\$value"; ;;
-"--libdir")
-	LIBDIR="\$value"; LDFLAGS="\${LDFLAGS} -L\$value \${LIBPATH}\$value"; ;;
-"--includedir")
+--libdir)
+	LIBDIR="\$value"; ;;
+--libpath)
+	LDFLAGS="\${LDFLAGS} \${LIBPATH}\$value"; ;;
+--includedir)
 	INCLUDEDIR="\$value"; CFLAGS="\${CFLAGS} -I\$value"; ;;
-"--infodir")
+--infodir)
 	INFODIR="\$value"; ;;
-"--mandir")
+--mandir)
 	MANDIR="\$value"; ;;
 ${FLAGSCRIPT}
 *) if [ "\$value" ]; then eval "\`echo \$flag2=\$value\`" ; 
