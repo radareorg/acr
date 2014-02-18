@@ -731,7 +731,7 @@ if [ "${S}{CROSSBUILD}" = 1 ]; then
  (command -v ${S}{HOST}-${S}{CC} >/dev/null 2>&1)
  if [ ${S}? = 0 ]; then CC="${S}{HOST}-${S}{CC}"; fi
 fi
-echo "main(){}" > test.c
+echo "int main(int argc, char **argv){return 0;}" > test.c
  (exec ${S}{CC} ${S}{CFLAGS} ${S}{CPPFLAGS} ${S}{LDFLAGS} test.c >/dev/null 2>&1)
 if [ ${S}? = 0 ]; then echo ${S}{CC}; else
  echo no ; HAVE_LANG_C=0
@@ -786,7 +786,7 @@ lang_cpp() {
 	echo "(exec ${S}{HOST}-${S}{CPP} --help >/dev/null 2>&1)"
 	echo "[ ${S}? = 0 ] && CPP=\"${S}{HOST}-${S}{CPP}\""
 	echo "fi"
-	echo "(echo \"main(){}\" | ${S}{CPP} ${CPPFLAGS} >/dev/null 2>&1)"
+	echo "(echo \"int main(int ac, char **av){return 0;}\" | ${S}{CPP} ${CPPFLAGS} >/dev/null 2>&1)"
 	echo "if [ \$? = 0 ]; then echo ${S}{CPP}; else"
 	echo "echo \"ERROR: ${S}{CPP} cannot parse sources\"; fi"
 	echo ""
@@ -885,7 +885,7 @@ echo \"#include <${A}>\" >>test.c"
 	done
 	SCRIPT=`cat <<EOF
 ${SCRIPT}
-echo "main(){}" >>test.c
+echo "int main(int ac, char **av){return 0;}" >>test.c
 eval \\\\${S}${S}{COMPILER} ${S}{CFLAGS} ${S}{CPPFLAGS} ${S}{CXXFLAGS} test.c >/dev/null 2>&1
 if [ ${S}? = 0 ]; then
 	eval ${S}{VAR}=1
@@ -955,7 +955,7 @@ _REQUIRED=${S}3
 _CHKLIB_NAME=${S}2
 _CHKLIB_LIBS=${S}(echo \"-l${S}{_CHKLIB_NAME}\" | sed 's,\\+, -l,g')
 printf \"checking for lib${S}{_CHKLIB_NAME} ... \"
-echo \"main(){ }\" > test.c
+echo \"int main(int ac, char **av){return 0;}\" > test.c
 eval ${S}{S}${S}{COMPILER} ${S}{CFLAGS} ${S}{CPPFLAGS} ${S}{CXXFLAGS} ${S}{LDFLAGS} ${S}{_CHKLIB_LIBS} test.c >/dev/null 2>&1
 if [ ${S}? = 0 ]; then
 	eval ${S}{VAR}=1
@@ -994,7 +994,7 @@ check_func() {
 	SCRIPT=`cat <<EOF
 ${SCRIPT}
 printf "checking function ${_CHKFUNC_NAME}() in ${_CHKFUNC_LIB}... "
-echo "main(){ ${_CHKFUNC_NAME}(0); }" > test.c
+echo "int main(int ac, char **av){ ${_CHKFUNC_NAME}(0); return 0; }" > test.c
 ${S}{${COMPILER}} ${S}{CFLAGS} ${S}{CPPFLAGS} ${S}{LDFLAGS} -l${_CHKFUNC_LIB} test.c >/dev/null 2>&1
 if [ ${S}? = 0 ]; then
 	echo yes ; ${VAR}=1
@@ -1025,7 +1025,7 @@ check_sizeof() {
 ${SCRIPT}
 printf 'checking size of $1... '
 echo '#include <stdio.h>' > test.c
-echo 'main(){printf(\"##d##\",sizeof($1));}' >>test.c
+echo 'int main(int ac, char **av){printf(\"##d##\",sizeof($1));return 0;}' >>test.c
 eval \\\\${S}${S}{COMPILER} ${S}{CFLAGS} ${S}{CPPFLAGS} ${S}{CXXFLAGS} -o a.out test.c >/dev/null 2>&1
 if [ 0 = ${S}? ]; then 
  ${VAR}=${S}(./a.out)
