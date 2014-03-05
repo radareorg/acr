@@ -6,14 +6,21 @@ ENVWORDS="${ENVWORDS} $1_CPU $1_OS"
 STR=`eval "echo ${S}$1"`
 SPLIT_CPU="`echo "$STR" | cut -d - -f 1`"
 SPLIT_OS="`echo "$STR" | awk -F - '{
-	if($1="unknown"){
+	if ($2=="unknown"){
 		if (NF<3) {
 			print $2;
 		} else {
 			print $3;
 		}
 	} else {
-		print $(NF-1);
+		if ($2=="linux") {
+			print $2;
+		} else
+		if (NF<3) {
+			print $2;
+		} else {
+			print $3;
+		}
 	}
 }'`"
 eval "$1_CPU=\"$SPLIT_CPU\""
@@ -22,7 +29,6 @@ shift
 [ -z "$1" ] && break
 done
 }
-
 
 test () {
 	HOST="$1"
@@ -39,6 +45,8 @@ test () {
 	fi
 }
 
+# TRIPLETS ARE #
+
 UNAME=`uname | tr '[A-Z]' '[a-z]'`
 test i386-unknown-openbsd openbsd i386
 test amd64-unknown-openbsd openbsd amd64
@@ -52,3 +60,4 @@ test alpha-netbsd netbsd alpha
 test i686-pc-mingw32 mingw32 i686
 test m68k-apple-macos macos m68k
 test x86_64-w64-mingw32 mingw32 x86_64
+test arm-linux-gnueabihf linux arm

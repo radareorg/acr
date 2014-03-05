@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# Copyright (C) 2005-2013
+# Copyright (C) 2005-2014
 #       pancake <pancake@nopcode.org>
 #
 # acr is free software; you can redistribute it and/or modify
@@ -1350,10 +1350,13 @@ while : ; do
 ENVWORDS="${S}{ENVWORDS} ${S}1_CPU ${S}1_OS"
 STR=\`eval "echo ${S}{S}${S}1"\`
 SPLIT_CPU="\`echo "${S}STR" | cut -d - -f 1\`"
-#SPLIT_OS="\`echo "${S}STR" | awk -F - '{print ${S}(NF-1)}'\`"
 SPLIT_OS="\`echo "${S}STR" | awk -F - '{
-        if(${S}1="unknown"){ if (NF<3) { print ${S}2; } else { print ${S}3; }
-        } else { print ${S}(NF-1); }
+	if (${S}2=="unknown"){
+		if (NF<3) { print ${S}2; } else { print ${S}3; }
+	} else {
+		if (${S}2=="linux") { print ${S}2; } else
+		if (NF<3) { print ${S}2; } else { print ${S}3; }
+	}
 }'\`"
 eval "${S}1_CPU=\"${S}SPLIT_CPU\""
 eval "${S}1_OS=\"${S}SPLIT_OS\""
