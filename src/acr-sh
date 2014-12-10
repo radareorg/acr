@@ -3366,7 +3366,7 @@ if [ "${MAKEDIST}" = 1 ]; then
 		cd .tmp/
 		tar czvf ../${P}.tar.gz $P 2>&1 | ${AWK} '{ printf "."; }' >&2
 		rm -rf .tmp
-	elif [ -d .git]; then
+	elif [ -d .git ]; then
 		rm -rf .tmp >&2
 		mkdir -p .tmp >&2
 		git clone . .tmp/${P} >&2
