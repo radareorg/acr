@@ -2529,6 +2529,26 @@ ${STR} ; fi"
 			reset_vars
 		fi
 		;;
+	"valapkg")
+		IS_KEYWORD=0
+		TMP_VAR="HAVE_PKGCFG_`echo ${STR}| sed -e 's,\.,_,g' -e 's,-,_,g' -e 's,\+,,g' | tr '[a-z]' '[A-Z]'`"
+		add_envword ${TMP_VAR}
+		# TODO: Use EOF or F="$F B"
+		REPORT_PKGCFG="${REPORT_PKGCFG} ${STR}"
+		SCRIPT="`printf \"${SCRIPT}\nprintf 'checking valac --pkg ${STR}... '\"`"
+		## - flags - ##
+		SCRIPT="`printf \"${SCRIPT}\ntmp=\\\`echo 'void main(){}'>.test.vala ; ${S}{VALAC} --pkg ${STR} .test.vala 2>/dev/null\\\`\"`"
+		SCRIPT="`printf \"${SCRIPT}\nif [ '!' ${S}? = 0 ]; then echo no ; ${TMP_VAR}=0; \"`"
+		if [ "${_REQUIRED}" = 1 ]; then
+		SCRIPT="`printf \"${SCRIPT}\necho 'This vala package is required'\nexit 1\"`"
+		fi
+		SCRIPT="`printf \"${SCRIPT}\nelse \"`"
+		SCRIPT="`printf \"${SCRIPT}\necho yes; ${TMP_VAR}=1; \";`"
+		SCRIPT="`printf \"${SCRIPT}\nfi;rm -f .test.vala\"`"
+		## -eof- ##
+		_REQUIRED=0
+		MODE=""
+		;;
 	"pkgconfig")
 		IS_KEYWORD=0
 		if [ -z "${_PC_CFLAGS}" ]; then
@@ -2993,6 +3013,14 @@ else"
 	"PKGCONFIG"|"PKGCFG")
 		MODE="pkgconfig"
 		_PKGCONFIG_PLUS=0
+		;;
+	"VALAPKG")
+		MODE="valapkg"
+		_REQUIRED=0
+		;;
+	"VALAPKG!")
+		MODE="valapkg"
+		_REQUIRED=1
 		;;
 	"PKGCONFIG+"|"PKGCFG+")
 		MODE="pkgconfig"

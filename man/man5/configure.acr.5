@@ -225,6 +225,8 @@ Sets variable to the output (stdout) of the desired command to be executed.
 Checks if pkgname (software package registered into pkg-config database) is <= version. And crashes execution if it fails. It exports the HAVE_(pkgname)_VERSION_(version) variable to 0 or 1.
 .It PKGCFG,PKGCONFIG[+] cflags_var ldflags_var pkg-config-name
 Use pkg-config to get the CFLAGS and LDFLAGS. If the '+' character is at the end of the command then ACR will concatenate the value of cflags_var and ldflags_var instead of overwrite the old value. This keyword exports also a variable called HAVE_PKGFG_{pkg-config-name|filtered} with 0 or 1 values.
+.It VALAPKG[!] pkgname
+Checks if a Vala package is available for VALAC
 .El
 .\"
 .Sh CONDITIONALS

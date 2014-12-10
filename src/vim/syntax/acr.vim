@@ -12,7 +12,7 @@ syn keyword acrContact PKGNAME VERSION CONTACT
 syn keyword acrDirective EXPORT_DEFINED NOP
 syn keyword acrDirective REQUIRE_ACR_VERSION
 syn keyword acrLanguage LANG_LUA LANG_C LANG_CC LANG_OBJC LANG_CXX LANG_BASH LANG_TCL LANG_PERL
-syn keyword acrLanguage LANG_JAVA LANG_PYTHON LANG_RUBY
+syn keyword acrLanguage LANG_JAVA LANG_PYTHON LANG_RUBY LANG_VALA
 syn keyword acrKeyword CHKPRG CHECK_PROGRAM 
 syn keyword acrKeyword CHKINC CHECK_INCLUDE
 syn keyword acrKeyword CHKFNC CHECK_FUNCTION
