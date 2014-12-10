@@ -345,12 +345,15 @@ EOF
 ## }}}
 ## {{{ Vala
 lang_vala() {
+	LANG=1
+	LANG_VALA=1
+	LANG_VALA_ENV="VALA VAVAC HAVE_LANG_VALA"
 	SCRIPT=`cat <<_EOF_
 ${SCRIPT}
 printf "checking vala compiler... "
 HAVA_LANG_VALA=1
-echo "void main(){}" > test.vala
-${S}{VALAC} test.vala 2>&1 >/dev/null
+echo "void main(){}" > .test.vala
+${S}{VALAC} .test.vala 2>&1 >/dev/null
 if [ ${S}? = 0 ]; then echo ${S}{VALAC}; else
 	echo no ; HAVE_LANG_VALA=0
 _EOF_
@@ -360,6 +363,44 @@ SCRIPT="
 ${SCRIPT}
 echo \"ERROR: ${S}{VALAC} cannot create C code\"; exit 1"
 	fi
+	SCRIPT="${SCRIPT} ; fi"
+}
+env_vala() {
+	[ -n "${LANG_JAVA_ENV}" ] && return
+	ACR_RMFILES="${ACR_RMFILES} .test.vala .test"
+	add_lang_envwords "VALA"
+	REPORT_LANGS="${REPORT_LANGS} vala"
+	ENVHELP=`cat <<EOF
+${ENVHELP}
+  VALAC       Vala compiler to be used.
+EOF
+`
+	add_flag with VALAC valac "valac"  "Manually assign the valac program"
+
+	lang_vala
+}
+## }}}
+## {{{ Java
+lang_java() {
+	SCRIPT=`cat <<_EOF_
+${SCRIPT}
+printf "checking java compiler... "
+HAVA_LANG_JAVA=1
+echo "class test{public static void main(){}}" > test.java
+if [ "${S}{JAVAC}" = "javac" ]; then if [ "${S}{JAVA_HOME}" ]; then
+	JAVAC="${S}{JAVA_HOME}/bin/javac"
+fi;fi
+${S}{JAVAC} test.java 2>&1 >/dev/null
+if [ ${S}? = 0 ]; then echo ${S}{JAVAC}; else
+	echo no ; HAVE_LANG_JAVA=0
+_EOF_
+`
+	if [ "${LANG_JAVA_REQUIRED}" = 1 ]; then
+SCRIPT="
+${SCRIPT}
+echo \"ERROR: ${S}{JAVAC} cannot create bytecode\"; exit 1"
+	fi
+
 	SCRIPT="${SCRIPT} ; fi"
 }
 env_java() {
@@ -405,47 +446,6 @@ else
 fi
 EOF
 `
-}
-## }}}
-## {{{ Java
-lang_java() {
-	SCRIPT=`cat <<_EOF_
-${SCRIPT}
-printf "checking java compiler... "
-HAVA_LANG_JAVA=1
-echo "class test{public static void main(){}}" > test.java
-if [ "${S}{JAVAC}" = "javac" ]; then if [ "${S}{JAVA_HOME}" ]; then
-	JAVAC="${S}{JAVA_HOME}/bin/javac"
-fi;fi
-${S}{JAVAC} test.java 2>&1 >/dev/null
-if [ ${S}? = 0 ]; then echo ${S}{JAVAC}; else
-	echo no ; HAVE_LANG_JAVA=0
-_EOF_
-`
-	if [ "${LANG_JAVA_REQUIRED}" = 1 ]; then
-SCRIPT="
-${SCRIPT}
-echo \"ERROR: ${S}{JAVAC} cannot create bytecode\"; exit 1"
-	fi
-
-	SCRIPT="${SCRIPT} ; fi"
-}
-env_vala() {
-	[ -n "${LANG_JAVA_ENV}" ] && return
-	LANG=1
-	LANG_VALA=1
-	LANG_VALA_ENV="VALA VALAC HAVE_LANG_VALA"
-	ACR_RMFILES="${ACR_RMFILES} test.vala test"
-	add_lang_envwords "VALA"
-	REPORT_LANGS="${REPORT_LANGS} vala"
-	ENVHELP=`cat <<EOF
-${ENVHELP}
-  VALAC       Vala compiler to be used.
-EOF
-`
-	add_flag with VALAC valac "valac"  "Manually assign the valac program"
-
-	lang_vala
 }
 ## }}}
 ## {{{ Flag parsing (--enable-xxx)
