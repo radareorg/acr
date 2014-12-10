@@ -2531,7 +2531,7 @@ ${STR} ; fi"
 		;;
 	"valapkg")
 		IS_KEYWORD=0
-		TMP_VAR="HAVE_PKGCFG_`echo ${STR}| sed -e 's,\.,_,g' -e 's,-,_,g' -e 's,\+,,g' | tr '[a-z]' '[A-Z]'`"
+		TMP_VAR="HAVE_VALAPKG_`echo ${STR}| sed -e 's,\.,_,g' -e 's,-,_,g' -e 's,\+,,g' | tr '[a-z]' '[A-Z]'`"
 		add_envword ${TMP_VAR}
 		# TODO: Use EOF or F="$F B"
 		REPORT_PKGCFG="${REPORT_PKGCFG} ${STR}"
