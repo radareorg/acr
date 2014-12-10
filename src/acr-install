@@ -43,7 +43,7 @@ acr-install wrapper for standard install program.
 
 [ press intro ]
 EOF
-read
+read nil
 }
 
 for A in $@ ; do
