@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# Copyright (C) 2005-2012
+# Copyright (C) 2005-2014
 #       pancake <pancake@nopcode.org>
 #
 # acr is free software; you can redistribute it and/or modify
@@ -22,8 +22,8 @@
 # ACR: AutoConf Replacement
 #
 # @license:  GPLv2
-# @author:   pancake <pancake@youterm.com>
-# @homepage: http://hg.youterm.com/acr
+# @author:   pancake <pancake@nopcode.org>
+# @homepage: http://github.com/radare/acr
 # @version:  @VERSION@
 #
 # acr:
