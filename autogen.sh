@@ -5,6 +5,8 @@
 PATH=./.bin/bin:${PATH}
 rm -rf .bin
 mkdir .bin
+src/acr-sh > configure
+chmod +x configure
 ./configure --prefix=/ $@
 chmod +x ./src/acr ./src/acr-sh ./src/acr-cat ./src/acr-install
 make install DESTDIR=$PWD/.bin
