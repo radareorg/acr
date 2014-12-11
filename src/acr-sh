@@ -1485,7 +1485,7 @@ done
 : ${S}{INSTALL_PROGRAM:=${S}{INSTALL} -m 755}
 : ${S}{INSTALL_PROGRAM_STRIP:=${S}{INSTALL} -m 755 -s}
 : ${S}{INSTALL_MAN:=${S}{INSTALL} -m 444}
-: ${S}{INSTALL_LIB:=${S}{INSTALL} -c}
+: ${S}{INSTALL_LIB:=${S}{INSTALL} -m 755 -c}
 ${INIVARS}
 }
                 
