@@ -5,7 +5,6 @@
 .Nm configure.acr
 .Nd configuration script for ACR
 .Sh DESCRIPTION
-.Pp
 configure.acr is the target file to be parsed by ACR to generate the final
 "configure" script for end-users.
 .Pp
@@ -101,13 +100,12 @@ export CONTANT_NAME and CONTACT_MAIL variables.
 .El
 .\"
 .Sh ACR DIRECTIVES
-.Pp
 This directives are used internally by ACR to work in a different way.
 .Bl -tag -width indent
 .It USE_BACKUP
 This command has been deprecated for design purposes (good programmers doesn't
 need to use this command) in acr 0.5, and will no longer exist in 0.6.
-
+.Pp
 The backup command allows you to ensure that no files will be lost by calling
 the ./configure script or make clean. This option interacts with SUBST_FILES
 and Makefile generation with \-m. Read doc/backup for more info.
@@ -124,7 +122,6 @@ used internally by ACR. This command does nothing.
 .El
 .\"
 .Sh LANGUAGES
-.Pp
 All language keywords exports a HAVE_LANG_xxx variable with value 0 or 1. You
 can append '!' to the language keyword to specify that the target language
 is required, and script must die when the desired language is not supported
@@ -230,7 +227,6 @@ Checks if a Vala package is available for VALAC
 .El
 .\"
 .Sh CONDITIONALS
-.Pp
 All conditionals require an 'op'(operation) argument that defines how to set
 the setvarname. Valid operations are: '=' '+=' '?='.
 .Pp
@@ -262,9 +258,9 @@ If the value of variable is equal to 1(DIE) or 0(DIENOT) then stop processing th
 .Sh FLAGS
 .Bl -tag -width indent
 .It ARG_[WITH|WITHOUT|ENABLE|DISABLE] varname[=value] flagname description\ ;
-Adds a with/without/enable/disable flag to the final configure script. For example: 
+Adds a with/without/enable/disable flag to the final configure script. For example:
 .Pp
-ARG_WITH  MPLAYER=/usr/bin/mplayer mplayer Sets path for the mplayer\ ; 
+ARG_WITH  MPLAYER=/usr/bin/mplayer mplayer Sets path for the mplayer\ ;
 .Pp
 If no =value given, ARG_* will act as a boolean variable (0 for WITH and ENABLE, and 1 for WITHOUT and DISABLE). If the =value is given ACR will allow the user to construct flags like \-\-with-foo=bar.
 .Pp
@@ -297,10 +293,9 @@ Calls recursively other ./configure scripts found in dir1, dir2 passing the root
 Shows the varname and varvalue of the desired variables at the end of the final ./configure script. (useful for debugging)
 .El
 .Sh EXAMPLES
-.Pp
 .Bl -tag -width indent
 .It Simple example:
-
+.Bd -literal -offset indent
 PKGNAME helloworld
 
 CONTACT my real name ; my@email.com
@@ -310,8 +305,9 @@ VERSION 1.0
 LANG_C!
 
 SUBDIRS . src ;
+.Ed
 .It Some more checks
-
+.Bd -literal -offset indent
 PKGNAME gtkapp
 
 VERSION 1.0
@@ -323,6 +319,7 @@ PKGCFG+ CFLAGS LDFLAGS gtk+-2.0
 SUBDIRS . src ;
 
 REPORT HAVE_PKGCFG_GTK_2_0 CFLAGS LDFLAGS ;
+.Ed
 .El
 .\"
 .Sh SEE ALSO

@@ -5,10 +5,8 @@
 .Nm configure.amr
 .Nd configuration file for AMR
 .Sh DESCRIPTION
-.Pp
 This file is used by amr(1) to autogenerate the Makefile.acr files and/or
 configure.acr files.
-.Pp
 .Sh SYNTAX
 .Bl -tag -width indent
 .It CDIR path1 path2\ ;
@@ -16,6 +14,7 @@ configure.acr files.
 .It CINCLUDES include1 include2\ ;
 Include files used by the src files.
 .It CDEPS file1 file2 ;
+.El
 .Sh SEE ALSO
 .Xr acr 1
 .Xr amr 1
