@@ -351,19 +351,36 @@ lang_vala() {
 	SCRIPT=`cat <<_EOF_
 ${SCRIPT}
 printf "checking vala compiler... "
-HAVA_LANG_VALA=1
+HAVE_LANG_VALA=1
+HAVE_VALA=1
+HAVE_VALAC=1
+VALA_VERSION=""
 echo "void main(){}" > .test.vala
 ${S}{VALAC} .test.vala 2>&1 >/dev/null
-if [ ${S}? = 0 ]; then echo ${S}{VALAC}; else
-	echo no ; HAVE_LANG_VALA=0
+if [ ${S}? = 0 ]; then
+	echo ${S}{VALAC}; 
+	VALA_VERSION=${S}(${S}{VALAC} --version | cut -d " " -f 2 | cut -d . -f 1,2);
+	printf "checking vala... ";
+	${S}{VALA} .test.vala 2>&1 >/dev/null
+	if [ ${S}? = 0 ]; then
+		echo ${S}{VALA};
+	else
+		echo no ; HAVE_LANG_VALA=0 ; HAVE_VALA=0
+	fi
+else
+	echo no ; HAVE_LANG_VALA=0 ; HAVE_VALAC=0
+fi
 _EOF_
 `
 	if [ "${LANG_VALA_REQUIRED}" = 1 ]; then
-SCRIPT="
+		SCRIPT="
 ${SCRIPT}
-echo \"ERROR: ${S}{VALAC} cannot create C code\"; exit 1"
+if [ \"${S}{HAVE_LANG_VALA}\" = 0 ]; then
+	echo \"ERROR: ${S}{VALAC} cannot create C code\"; exit 1
+fi
+"
 	fi
-	SCRIPT="${SCRIPT} ; fi"
+	SCRIPT="${SCRIPT} ; rm -f .test.vala"
 }
 env_vala() {
 	[ -n "${LANG_JAVA_ENV}" ] && return
@@ -375,7 +392,8 @@ ${ENVHELP}
   VALAC       Vala compiler to be used.
 EOF
 `
-	add_flag with VALAC valac "valac"  "Manually assign the valac program"
+	add_flag with VALA vala "vala"  "Manually assign the vala program"
+	add_flag with VALAC valac "valac"  "Manually assign the valac compiler program"
 
 	lang_vala
 }
@@ -385,7 +403,7 @@ lang_java() {
 	SCRIPT=`cat <<_EOF_
 ${SCRIPT}
 printf "checking java compiler... "
-HAVA_LANG_JAVA=1
+HAVE_LANG_JAVA=1
 echo "class test{public static void main(){}}" > test.java
 if [ "${S}{JAVAC}" = "javac" ]; then if [ "${S}{JAVA_HOME}" ]; then
 	JAVAC="${S}{JAVA_HOME}/bin/javac"
