@@ -8,7 +8,7 @@ endif
 
 syn case ignore
 
-syn keyword acrContact PKGNAME VERSION CONTACT
+syn keyword acrContact PKGNAME VERSION CONTACT AUTHOR
 syn keyword acrDirective EXPORT_DEFINED NOP
 syn keyword acrDirective REQUIRE_ACR_VERSION
 syn keyword acrLanguage LANG_LUA LANG_C LANG_CC LANG_OBJC LANG_CXX LANG_BASH LANG_TCL LANG_PERL
@@ -24,11 +24,10 @@ syn keyword acrKeyword CHK_PY CHECK_PYTHON_MODULE
 syn keyword acrKeyword CHK_RU CHECK_RUBY_MODULE
 syn keyword acrKeyword CHK_CP CHECK_CLASSPATH
 syn keyword acrKeyword CHKVER CHECK_VERSION
-syn keyword acrKeyword PKGCFG PKGCONFIG
 syn keyword acrKeyword CHKLIB CHECK_LIB
 syn keyword acrKeyword USE_DL USE_ICONV USE_PTHREAD USE_LIBTOOL
 syn keyword acrKeyword USE_PERL_THREADS USE_X11 USE_TK USE_GMAKE USE_JNI
-syn keyword acrKeyword PKGCONFIG PKGCFG EXEC
+syn keyword acrKeyword PKGCONFIG PKGCFG VALAPKG EXEC
 syn keyword acrKeyword SUBDIRS SUBST_FILES
 syn keyword acrKeyword IF IFNOT IFAND IFNOTAND IFEQ IFNOTEQ IFEQVAL IFOR IFNOTOR IFNOTEQVAL
 syn keyword acrKeyword IFNULL IFNOTNULL DIE 

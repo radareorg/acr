@@ -49,7 +49,6 @@ Automake:
 TOTHINK:
 ========
 - absolute VPATH? (GNU doesn't)
-- use AUTHOR keyword to define a different person than CONTACT
 - add INSTALL_DATA_DIR INSTALL_MAN_DIR INSTALL_SCRIPT_DIR ... LIB ..
 - ensure acr is using acr-sh from the correct path. it could be autofixable
 - set -x for debugging (-dd ?) // too many debug!!

@@ -114,6 +114,9 @@ VERSION=""
 _CONTACT=0
 CONTACT_MAIL=""
 CONTACT_NAME=""
+_AUTHOR=0
+AUTHOR_MAIL=""
+AUTHOR_NAME=""
 # Report
 REPORT_REQUIRED=""   REPORT_PKGCFG=""    REPORT_OPTIONAL=""
 REPORT_FLAGS=""      REPORT_LANGS=""     REPORT_TOOLS=""
@@ -1537,6 +1540,9 @@ EOF
 [ "${ENVHELP}" ]  && \
 	echo "printf \"\nSome influential environment variables:${ENVHELP}\n\""
 
+[ "${AUTHOR_MAIL}" ] && \
+	echo "printf \"\nAuthor: ${AUTHOR_NAME} <${AUTHOR_MAIL}>\""
+
 [ "${CONTACT_MAIL}" ] && \
 	echo "printf \"\nReport bugs to: ${CONTACT_NAME} <${CONTACT_MAIL}>\""
 
@@ -2782,6 +2788,30 @@ ${EQUAL}\""
 			INIVARS="${INIVARS} CONTACT=\"${CONTACT_NAME} <${CONTACT_MAIL}>\" ;"
 		fi
 		;;
+	"author")
+		IS_KEYWORD=0
+		if [ "${_AUTHOR}" = 1 ]; then
+			if [ "${STR}" = ";" ]; then 
+				_AUTHOR=2
+			else
+				if [ -z "${AUTHOR_NAME}" ]; then 
+					AUTHOR_NAME="${STR}"
+				else
+					AUTHOR_NAME="${AUTHOR_NAME} ${STR}"
+				fi
+			fi
+		else
+			AUTHOR_MAIL=${STR};
+			MODE=""
+			_AUTHOR=0 ## XXX ugly hack
+			add_envword "AUTHOR"
+			add_envword "AUTHOR_NAME"
+			add_envword "AUTHOR_MAIL"
+			INIVARS="${INIVARS} AUTHOR_MAIL=\"${AUTHOR_MAIL}\" ;"
+			INIVARS="${INIVARS} AUTHOR_NAME=\"${AUTHOR_NAME}\" ;"
+			INIVARS="${INIVARS} AUTHOR=\"${AUTHOR_NAME} <${AUTHOR_MAIL}>\" ;"
+		fi
+		;;
 	"requireacrversion")
 		IS_KEYWORD=0
 		MODE=""
@@ -2943,6 +2973,7 @@ else"
 	"PKGNAME")	MODE="pkgname" ; ;;
 	"VERSION")	MODE="version" ; ;;
 	"CONTACT")	MODE="contact" _CONTACT=1 ; ;;
+	"AUTHOR")	MODE="author" _AUTHOR=1 ; ;;
 	"INCLUDE")
 		if [ "${INSIDE_INCLUDE}" = 1 ]; then
 			echo "ERROR: Cannot nest includes." >&2
