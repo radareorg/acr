@@ -25,8 +25,14 @@ PKGNAME <pkgname>
 VERSION <version>
 	Sets the version number for the package
 
+AUTHOR <name> ; <email>
+	Sets the Author string for --help. The author, is the person who starts the project
+	environment:
+	AUTHOR_MAIL: -> author email
+	AUTHOR_NAME: -> author name
+
 CONTACT <name> ; <email>
-	Sets the Contact string for --help
+	Sets the Contact string for --help, the address to contact for support
 	environment:
 	CONTACT_MAIL: -> contact email
 	CONTACT_NAME: -> contact name
@@ -60,6 +66,16 @@ LANG_JAVA[!]
 	Tells to use java
 	- adds --with-jikes and --with-kjc flags
 	- export JAVAC environ
+
+LANG_VALA[!]
+	checks for vala and valac programs and gets libvala version
+	environment:
+	VALA
+	VALAC
+	VALA_VERSION
+	HAVE_VALA
+	HAVE_VALAC
+	HAVE_LANG_VALA
 
 LANG_PERL
 	Looks for perl installed on current system
@@ -265,6 +281,9 @@ DIE    <varname> <word> <word> <word> ;
 DIENOT <varname> <word> <word> <word> ;
 	Configure script fails when <varname> = (DIE=1,DIENOT=0)
 	DIE will print the array of words after crash.
+
+VALAPKG <pkgname>
+	Check if the given Vala package name exists
 
 PKGCFG    <cflags-var> <ldflags-var> <pkg-config-name>
 PKGCONFIG
