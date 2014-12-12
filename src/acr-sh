@@ -383,7 +383,7 @@ if [ \"${S}{HAVE_LANG_VALA}\" = 0 ]; then
 fi
 "
 	fi
-	SCRIPT="${SCRIPT} ; rm -f .test.vala"
+	SCRIPT="${SCRIPT} rm -f .test.vala"
 }
 env_vala() {
 	[ -n "${LANG_JAVA_ENV}" ] && return
