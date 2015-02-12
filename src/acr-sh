@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# Copyright (C) 2005-2014
+# Copyright (C) 2005-2015
 #       pancake <pancake@nopcode.org>
 #
 # acr is free software; you can redistribute it and/or modify
@@ -2788,6 +2788,11 @@ ${EQUAL}\""
 			INIVARS="${INIVARS} CONTACT=\"${CONTACT_NAME} <${CONTACT_MAIL}>\" ;"
 		fi
 		;;
+	"arg_ignore")
+		FLAGSCRIPT=`printf "${FLAGSCRIPT}\n\"${STR}\") : ; ;;"`
+		IS_KEYWORD=0
+		MODE=""
+		;;
 	"author")
 		IS_KEYWORD=0
 		if [ "${_AUTHOR}" = 1 ]; then
@@ -2974,6 +2979,7 @@ else"
 	"VERSION")	MODE="version" ; ;;
 	"CONTACT")	MODE="contact" _CONTACT=1 ; ;;
 	"AUTHOR")	MODE="author" _AUTHOR=1 ; ;;
+	"ARG_IGNORE")  MODE="arg_ignore" ; ;;
 	"INCLUDE")
 		if [ "${INSIDE_INCLUDE}" = 1 ]; then
 			echo "ERROR: Cannot nest includes." >&2

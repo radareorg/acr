@@ -1,4 +1,4 @@
-.Dd Nov 11, 2013
+.Dd Feb 12, 2015
 .Dt CONFIGURE.ACR 5
 .Os
 .Sh NAME
@@ -257,6 +257,8 @@ If the value of variable is equal to 1(DIE) or 0(DIENOT) then stop processing th
 .\"
 .Sh FLAGS
 .Bl -tag -width indent
+.It ARG_IGNORE flagname
+Ignore specific configure arg (do nothing)
 .It ARG_[WITH|WITHOUT|ENABLE|DISABLE] varname[=value] flagname description\ ;
 Adds a with/without/enable/disable flag to the final configure script. For example:
 .Pp

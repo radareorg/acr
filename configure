@@ -99,7 +99,7 @@ done
 : ${INSTALL_PROGRAM:=${INSTALL} -m 755}
 : ${INSTALL_PROGRAM_STRIP:=${INSTALL} -m 755 -s}
 : ${INSTALL_MAN:=${INSTALL} -m 444}
-: ${INSTALL_LIB:=${INSTALL} -c}
+: ${INSTALL_LIB:=${INSTALL} -m 755 -c}
  PKGNAME='acr' ; VERSION='0.9.9' ; CONTACT_MAIL="@nopcode.org" ; CONTACT_NAME="pancake" ; CONTACT="pancake <@nopcode.org>" ;
 }
                 
