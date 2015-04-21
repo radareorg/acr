@@ -2133,7 +2133,7 @@ EOF
 ${SCRIPT}
 ${VAR}=0
 printf "checking version of library ${_CHKVER_LIB} >= ${STR}... "
-pkg-config --atleast-version=${STR} ${_CHKVER_LIB} >/dev/null 2>&1
+${S}{PKGCONFIG} --atleast-version=${STR} ${_CHKVER_LIB} >/dev/null 2>&1
 if [ ${S}? = 0 ]; then ${VAR}=1 ; echo ok; else
 echo "no"
 EOF
@@ -2586,9 +2586,10 @@ ${STR} ; fi"
 			add_envword ${TMP_VAR}
 			# TODO: Use EOF or F="$F B"
 			REPORT_PKGCFG="${REPORT_PKGCFG} ${STR}"
+			SCRIPT="`printf \"${SCRIPT}\nprintf 'Using pkg-config: ${S}{PKGCONFIG} '\"`"
 			SCRIPT="`printf \"${SCRIPT}\nprintf 'checking pkg-config flags for ${STR}... '\"`"
 			## - flags - ##
-			SCRIPT="`printf \"${SCRIPT}\ntmp=\\\`pkg-config --cflags ${STR} 2>/dev/null\\\`\"`"
+			SCRIPT="`printf \"${SCRIPT}\ntmp=\\\`${S}{PKGCONFIG} --cflags ${STR} 2>/dev/null\\\`\"`"
 			SCRIPT="`printf \"${SCRIPT}\nif [ ${S}? != 0 ]; then echo no ; ${TMP_VAR}=0; \"`"
 			if [ "${_REQUIRED}" = 1 ]; then
 			SCRIPT="`printf \"${SCRIPT}\necho 'This package is required'\nexit 1\"`"
@@ -2600,7 +2601,7 @@ ${STR} ; fi"
 			SCRIPT="`printf \"${SCRIPT}\n${_PC_CFLAGS}=${S}tmp; \"`"
 			fi
 			## - libs - ##
-			SCRIPT="`printf \"${SCRIPT}\ntmp=\\\`pkg-config --libs ${STR} 2>/dev/null\\\`\"`"
+			SCRIPT="`printf \"${SCRIPT}\ntmp=\\\`${S}{PKGCONFIG} --libs ${STR} 2>/dev/null\\\`\"`"
 			SCRIPT="`printf \"${SCRIPT}\nif [ ${S}? = 0 ]; then \"`"
 			SCRIPT="`printf \"${SCRIPT}\necho yes; ${TMP_VAR}=1; \";`"
 			if [ "${_PKGCONFIG_PLUS}" = 1 ]; then
