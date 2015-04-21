@@ -2586,7 +2586,8 @@ ${STR} ; fi"
 			add_envword ${TMP_VAR}
 			# TODO: Use EOF or F="$F B"
 			REPORT_PKGCFG="${REPORT_PKGCFG} ${STR}"
-			SCRIPT="`printf \"${SCRIPT}\nprintf 'Using pkg-config: ${S}{PKGCONFIG} '\"`"
+			SCRIPT="`printf \"${SCRIPT}\n[ -z \\\"${S}{PKGCONFIG}\\\" ] && PKGCONFIG=pkg-config\"`"
+			SCRIPT="`printf \"${SCRIPT}\necho 'Using PKGCONFIG: '${S}{PKGCONFIG}\"`"
 			SCRIPT="`printf \"${SCRIPT}\nprintf 'checking pkg-config flags for ${STR}... '\"`"
 			## - flags - ##
 			SCRIPT="`printf \"${SCRIPT}\ntmp=\\\`${S}{PKGCONFIG} --cflags ${STR} 2>/dev/null\\\`\"`"
