@@ -2562,7 +2562,7 @@ ${STR} ; fi"
 		SCRIPT="`printf \"${SCRIPT}\nprintf 'checking valac --pkg ${STR}... '\"`"
 		## - flags - ##
 		SCRIPT="`printf \"${SCRIPT}\ntmp=\\\`echo 'void main(){}'>.test.vala ; ${S}{VALAC} --pkg ${STR} .test.vala 2>/dev/null\\\`\"`"
-		SCRIPT="`printf \"${SCRIPT}\nif [ '!' ${S}? = 0 ]; then echo no ; ${TMP_VAR}=0; \"`"
+		SCRIPT="`printf \"${SCRIPT}\nif [ ${S}? != 0 ]; then echo no ; ${TMP_VAR}=0; \"`"
 		if [ "${_REQUIRED}" = 1 ]; then
 		SCRIPT="`printf \"${SCRIPT}\necho 'This vala package is required'\nexit 1\"`"
 		fi
@@ -2589,7 +2589,7 @@ ${STR} ; fi"
 			SCRIPT="`printf \"${SCRIPT}\nprintf 'checking pkg-config flags for ${STR}... '\"`"
 			## - flags - ##
 			SCRIPT="`printf \"${SCRIPT}\ntmp=\\\`pkg-config --cflags ${STR} 2>/dev/null\\\`\"`"
-			SCRIPT="`printf \"${SCRIPT}\nif [ '!' ${S}? = 0 ]; then echo no ; ${TMP_VAR}=0; \"`"
+			SCRIPT="`printf \"${SCRIPT}\nif [ ${S}? != 0 ]; then echo no ; ${TMP_VAR}=0; \"`"
 			if [ "${_REQUIRED}" = 1 ]; then
 			SCRIPT="`printf \"${SCRIPT}\necho 'This package is required'\nexit 1\"`"
 			fi
