@@ -980,7 +980,7 @@ check_endian() {
 	SCRIPT="
 ${SCRIPT}
 printf \"checking host endianness... \"
-LIL_ENDIAN=${S}(printf I|od -to2|awk '{print substr(${S}2,6,1);exit}')
+LIL_ENDIAN=${S}(printf I|hexdump -o|awk '{print substr(${S}2,6,1);exit}')
 if [ \"${S}{LIL_ENDIAN}\" = 1 ]; then
 	BYTEORDER=1234
 	BIG_ENDIAN=0
