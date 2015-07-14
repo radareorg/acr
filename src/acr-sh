@@ -981,7 +981,7 @@ check_endian() {
 ${SCRIPT}
 printf \"checking host endianness... \"
 LIL_ENDIAN=${S}(printf I|od|awk '{print substr(${S}2,6,1);exit}')
-if [ \"${S}{LIL_ENDIAN}\" = 1 ]; then
+if [ $? != 0 -o \"${S}{LIL_ENDIAN}\" = 1 ]; then
 	BYTEORDER=1234
 	BIG_ENDIAN=0
 	echo little
