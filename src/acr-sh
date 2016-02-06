@@ -323,8 +323,8 @@ else
 	done
 	unset IFS
 fi
-if [ -n "${S}{FIND}" ]; then 
-	echo ${S}{FIND}; 
+if [ -n "${S}{FIND}" ]; then
+	echo ${S}{FIND};
 HAVE_${_CHKPRG_VAR}=1
 	${_CHKPRG_VAR}=${S}{FIND}
 else
