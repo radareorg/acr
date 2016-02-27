@@ -52,7 +52,7 @@ install:
 	mkdir -p ${DATADIR}/acr/modules/
 	-${INSTALL_DATA} $(VPATH)/modules/* ${DATADIR}/acr/modules/
 
-deinstall:
+uninstall deinstall:
 	-rm -f ${BINDIR}/acr-sh ${BINDIR}/acr
 	-rm -f ${MANDIR}/man1/acr.1 ${MANDIR}/man5/configure.acr.5
 	-rm -rf ${DATADIR}/doc/acr/examples ${DATADIR}/doc/acr
