@@ -925,7 +925,7 @@ EOF
 _CHECK_INC=""
 check_inc() {
 	INC=$1
-	VAR=`echo "HAVE_$1" | sed -e 's,\.,_,g' -e 's,/,_,g' -e 's,\+,_,g' | tr "[a-z]" "[A-Z]"`
+	VAR=`echo "HAVE_$1" | sed -e 's,\.,_,g' -e 's,/,_,g' -e 's,+,_,g' | tr "[a-z]" "[A-Z]"`
 	add_envword "${VAR}"
 	get_current_compiler
 
@@ -999,7 +999,7 @@ check_lib() {
 	_CHKLIB_NAME=$1
 	HAVE_LIBS=1
 	#_CHKLIB_LIBS="`echo $1 | awk -F + '{ for(i=1;i<=NF;i++) { str=str "-l" $i " " } print str; }'`"
-	VAR=`echo "HAVE_LIB_$1" | sed -e 's,\+,_AND_,g' -e 's,\.,_,g' | awk '{ print toupper($0); }'`
+	VAR=`echo "HAVE_LIB_$1" | sed -e 's,+,_AND_,g' -e 's,\.,_,g' | awk '{ print toupper($0); }'`
 	add_envword "${VAR}"
 
 	get_current_compiler
@@ -1012,7 +1012,7 @@ VAR=${S}1
 S=\"$\"
 _REQUIRED=${S}3
 _CHKLIB_NAME=${S}2
-_CHKLIB_LIBS=${S}(echo \"-l${S}{_CHKLIB_NAME}\" | sed 's,\\+, -l,g')
+_CHKLIB_LIBS=${S}(echo \"-l${S}{_CHKLIB_NAME}\" | sed 's,+, -l,g')
 printf \"checking for lib${S}{_CHKLIB_NAME} ... \"
 echo \"int main(int ac, char **av){return 0;}\" > test.c
 eval ${S}{S}${S}{COMPILER} ${S}{CFLAGS} ${S}{CPPFLAGS} ${S}{CXXFLAGS} ${S}{LDFLAGS} ${S}{_CHKLIB_LIBS} test.c >/dev/null 2>&1
@@ -2555,7 +2555,7 @@ ${STR} ; fi"
 		;;
 	"valapkg")
 		IS_KEYWORD=0
-		TMP_VAR="HAVE_VALAPKG_`echo ${STR}| sed -e 's,\.,_,g' -e 's,-,_,g' -e 's,\+,,g' | tr '[a-z]' '[A-Z]'`"
+		TMP_VAR="HAVE_VALAPKG_`echo ${STR}| sed -e 's,\.,_,g' -e 's,-,_,g' -e 's,+,,g' | tr '[a-z]' '[A-Z]'`"
 		add_envword ${TMP_VAR}
 		# TODO: Use EOF or F="$F B"
 		REPORT_PKGCFG="${REPORT_PKGCFG} ${STR}"
@@ -2582,7 +2582,7 @@ ${STR} ; fi"
 		else
 			add_envword ${_PC_CFLAGS}
 			add_envword ${_PC_LDFLAGS}
-			TMP_VAR="HAVE_PKGCFG_`echo ${STR}| sed -e 's,\.,_,g' -e 's,-,_,g' -e 's,\+,,g' | tr '[a-z]' '[A-Z]'`"
+			TMP_VAR="HAVE_PKGCFG_`echo ${STR}| sed -e 's,\.,_,g' -e 's,-,_,g' -e 's,+,,g' | tr '[a-z]' '[A-Z]'`"
 			add_envword ${TMP_VAR}
 			# TODO: Use EOF or F="$F B"
 			REPORT_PKGCFG="${REPORT_PKGCFG} ${STR}"
