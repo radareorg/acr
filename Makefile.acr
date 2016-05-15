@@ -20,48 +20,48 @@ test:
 	cd tests/ && sh test.sh
 
 install:
-	mkdir -p ${BINDIR}
-	sed -e 's,@''VERSION@,${VERSION},g' $(VPATH)/src/acr > ${BINDIR}/acr
-	chmod +x ${BINDIR}/acr
-	sed -e 's,@''VERSION@,${VERSION},g' $(VPATH)/src/acr-sh > ${BINDIR}/acr-sh
-	chmod +x ${BINDIR}/acr-sh
-	${INSTALL_SCRIPT} $(VPATH)/src/amr ${BINDIR}/amr
-	${INSTALL_SCRIPT} $(VPATH)/src/acr-install ${BINDIR}/acr-install
-	${INSTALL_SCRIPT} $(VPATH)/src/acr-cat ${BINDIR}/acr-cat
-	mkdir -p ${MANDIR}/man1/ ${MANDIR}/man5/
-	${INSTALL_MAN} $(VPATH)/man/man1/acr.1 ${MANDIR}/man1/
-	${INSTALL_MAN} $(VPATH)/man/man1/amr.1 ${MANDIR}/man1/
-	${INSTALL_MAN} $(VPATH)/man/man1/acr-cat.1 ${MANDIR}/man1/
-	#${INSTALL_MAN} ${VPATH}/man/man1/install-acr.1 ${MANDIR}/man1/
-	${INSTALL_MAN} $(VPATH)/man/man5/configure.acr.5 ${MANDIR}/man5/
-	${INSTALL_MAN} $(VPATH)/man/man5/configure.amr.5 ${MANDIR}/man5/
-	mkdir -p ${DATADIR}/doc/acr/examples
-	for A in `find $(VPATH)/examples -maxdepth 1 -type f`; do \
-	${INSTALL_DATA} $${A} ${DATADIR}/doc/acr/examples ; done
-	mkdir -p ${DATADIR}/doc/acr/developers
-	for A in `find $(VPATH)/doc -maxdepth 1 -type f`; do \
-	${INSTALL_DATA} $${A} ${DATADIR}/doc/acr ; done
-	for A in `find $(VPATH)/doc/developers -maxdepth 1 -type f`; do \
-	${INSTALL_DATA} $${A} ${DATADIR}/doc/acr/developers ; done
-	mkdir -p ${DATADIR}/doc/acr/vim/ftplugin
-	mkdir -p ${DATADIR}/doc/acr/vim/syntax
-	${INSTALL_SCRIPT} src/vim/install.sh ${DATADIR}/doc/acr/vim/install.sh
-	${INSTALL_DATA} $(VPATH)/src/vim/ftplugin/acr.vim ${DATADIR}/doc/acr/vim/ftplugin/acr.vim
-	${INSTALL_DATA} $(VPATH)/src/vim/syntax/acr.vim ${DATADIR}/doc/acr/vim/syntax/acr.vim
-	${INSTALL_DATA} $(VPATH)/src/vim/vimrc ${DATADIR}/doc/acr/vim/vimrc
-	mkdir -p ${DATADIR}/acr/modules/
-	-${INSTALL_DATA} $(VPATH)/modules/* ${DATADIR}/acr/modules/
+	mkdir -p $(BINDIR)
+	sed -e 's,@''VERSION@,$(VERSION),g' "$(VPATH)/src/acr" > "$(BINDIR)/acr"
+	chmod +x $(BINDIR)/acr
+	sed -e 's,@''VERSION@,$(VERSION),g' "$(VPATH)/src/acr-sh" > "$(BINDIR)/acr-sh"
+	chmod +x "$(BINDIR)/acr-sh"
+	$(INSTALL_SCRIPT) "$(VPATH)/src/amr" "$(BINDIR)/amr"
+	$(INSTALL_SCRIPT) "$(VPATH)/src/acr-install" "$(BINDIR)/acr-install"
+	$(INSTALL_SCRIPT) "$(VPATH)/src/acr-cat" "$(BINDIR)/acr-cat"
+	mkdir -p "$(MANDIR)/man1/" "$(MANDIR)/man5/"
+	${INSTALL_MAN} "$(VPATH)/man/man1/acr.1" "$(MANDIR)/man1/"
+	${INSTALL_MAN} "$(VPATH)/man/man1/amr.1" "$(MANDIR)/man1/"
+	${INSTALL_MAN} "$(VPATH)/man/man1/acr-cat.1" "$(MANDIR)/man1/"
+	#${INSTALL_MAN} "${VPATH}/man/man1/install-acr.1 $(MANDIR)/man1/"
+	${INSTALL_MAN} "$(VPATH)/man/man5/configure.acr.5" "$(MANDIR)/man5/"
+	${INSTALL_MAN} "$(VPATH)/man/man5/configure.amr.5" "$(MANDIR)/man5/"
+	mkdir -p "$(DATADIR)/doc/acr/examples"
+	for A in `find "$(VPATH)/examples" -maxdepth 1 -type f`; do \
+		$(INSTALL_DATA) "$${A}" "$(DATADIR)/doc/acr/examples" ; done
+	mkdir -p "$(DATADIR)/doc/acr/developers"
+	for A in `find "$(VPATH)/doc" -maxdepth 1 -type f`; do \
+		$(INSTALL_DATA) "$${A}" "$(DATADIR)/doc/acr" ; done
+	for A in `find "$(VPATH)/doc/developers" -maxdepth 1 -type f`; do \
+		$(INSTALL_DATA) "$${A}" "$(DATADIR)/doc/acr/developers" ; done
+	mkdir -p "$(DATADIR)/doc/acr/vim/ftplugin"
+	mkdir -p "$(DATADIR)/doc/acr/vim/syntax"
+	$(INSTALL_SCRIPT) "$(VPATH)/src/vim/install.sh" "$(DATADIR)/doc/acr/vim/install.sh"
+	$(INSTALL_DATA) "$(VPATH)/src/vim/ftplugin/acr.vim" "$(DATADIR)/doc/acr/vim/ftplugin/acr.vim"
+	$(INSTALL_DATA) "$(VPATH)/src/vim/syntax/acr.vim" "$(DATADIR)/doc/acr/vim/syntax/acr.vim"
+	$(INSTALL_DATA) "$(VPATH)/src/vim/vimrc" "$(DATADIR)/doc/acr/vim/vimrc"
+	mkdir -p "$(DATADIR)/acr/modules/"
+	-$(INSTALL_DATA) "$(VPATH)/modules"/* "$(DATADIR)/acr/modules/"
 
 uninstall deinstall:
-	-rm -f ${BINDIR}/acr-sh ${BINDIR}/acr
-	-rm -f ${MANDIR}/man1/acr.1 ${MANDIR}/man5/configure.acr.5
-	-rm -rf ${DATADIR}/doc/acr/examples ${DATADIR}/doc/acr
+	-rm -f $(BINDIR)/acr-sh $(BINDIR)/acr
+	-rm -f $(MANDIR)/man1/acr.1 $(MANDIR)/man5/configure.acr.5
+	-rm -rf $(DATADIR)/doc/acr/examples $(DATADIR)/doc/acr
 
 dist:
-	rm -rf acr-${VERSION}
-	git clone . acr-${VERSION}
-	rm -rf acr-${VERSION}/.git
-	tar czvf acr-${VERSION}.tar.gz acr-${VERSION}
+	rm -rf acr-$(VERSION)
+	git clone . acr-$(VERSION)
+	rm -rf acr-$(VERSION)/.git
+	tar czvf acr-$(VERSION).tar.gz acr-$(VERSION)
 
 clean:
 	rm -f src/vim/install.sh
