@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# Copyright (C) 2005-2015
+# Copyright (C) 2005-2016
 #       pancake <pancake@nopcode.org>
 #
 # acr is free software; you can redistribute it and/or modify
@@ -1463,18 +1463,18 @@ TARGET="${S}{HOST}"
 SYSCONFDIR=""
 
 create_environ() {
-: ${S}{EPREFIX:=${S}{PREFIX}}
-: ${S}{SPREFIX:=${S}{PREFIX}}
-: ${S}{BINDIR:=${S}{SPREFIX}/bin}
-: ${S}{SBINDIR:=${S}{PREFIX}/sbin}
-: ${S}{SYSCONFDIR:=${S}{SPREFIX}/etc}
-: ${S}{LIBDIR:=${S}{SPREFIX}/lib}
-: ${S}{LIBEXECDIR:=${S}{SPREFIX}/libexec}
-: ${S}{INCLUDEDIR:=${S}{SPREFIX}/include}
-: ${S}{DATADIR:=${S}{SPREFIX}/share}
-: ${S}{INFODIR:=${S}{DATADIR}/info}
-: ${S}{MANDIR:=${S}{DATADIR}/man}
-: ${S}{LOCALSTATEDIR:=${S}{SPREFIX}/var}
+: ${S}{EPREFIX:="${S}{PREFIX}"}
+: ${S}{SPREFIX:="${S}{PREFIX}"}
+: ${S}{BINDIR:="${S}{SPREFIX}/bin"}
+: ${S}{SBINDIR:="${S}{PREFIX}/sbin"}
+: ${S}{SYSCONFDIR:="${S}{SPREFIX}/etc"}
+: ${S}{LIBDIR:="${S}{SPREFIX}/lib"}
+: ${S}{LIBEXECDIR:="${S}{SPREFIX}/libexec"}
+: ${S}{INCLUDEDIR:="${S}{SPREFIX}/include"}
+: ${S}{DATADIR:="${S}{SPREFIX}/share"}
+: ${S}{INFODIR:="${S}{DATADIR}/info"}
+: ${S}{MANDIR:="${S}{DATADIR}/man"}
+: ${S}{LOCALSTATEDIR:="${S}{SPREFIX}/var"}
 for A in \`echo ${S}{PATH} | sed -e 's,:, ,g'\` ; do
   [ -e ${S}A/ginstall ] && : ${S}{INSTALL:=${S}A/ginstall} && break
   [ -e ${S}A/install ] && : ${S}{INSTALL:=${S}A/install} && break
@@ -1681,7 +1681,7 @@ split_host BUILD HOST TARGET
 
 while : ; do
 [ -z "\$1" ] && break
-parse_options \$1
+parse_options "\$1"
 shift
 done
 

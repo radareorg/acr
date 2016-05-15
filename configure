@@ -77,18 +77,18 @@ TARGET="${HOST}"
 SYSCONFDIR=""
 
 create_environ() {
-: ${EPREFIX:=${PREFIX}}
-: ${SPREFIX:=${PREFIX}}
-: ${BINDIR:=${SPREFIX}/bin}
-: ${SBINDIR:=${PREFIX}/sbin}
-: ${SYSCONFDIR:=${SPREFIX}/etc}
-: ${LIBDIR:=${SPREFIX}/lib}
-: ${LIBEXECDIR:=${SPREFIX}/libexec}
-: ${INCLUDEDIR:=${SPREFIX}/include}
-: ${DATADIR:=${SPREFIX}/share}
-: ${INFODIR:=${DATADIR}/info}
-: ${MANDIR:=${DATADIR}/man}
-: ${LOCALSTATEDIR:=${SPREFIX}/var}
+: ${EPREFIX:="${PREFIX}"}
+: ${SPREFIX:="${PREFIX}"}
+: ${BINDIR:="${SPREFIX}/bin"}
+: ${SBINDIR:="${PREFIX}/sbin"}
+: ${SYSCONFDIR:="${SPREFIX}/etc"}
+: ${LIBDIR:="${SPREFIX}/lib"}
+: ${LIBEXECDIR:="${SPREFIX}/libexec"}
+: ${INCLUDEDIR:="${SPREFIX}/include"}
+: ${DATADIR:="${SPREFIX}/share"}
+: ${INFODIR:="${DATADIR}/info"}
+: ${MANDIR:="${DATADIR}/man"}
+: ${LOCALSTATEDIR:="${SPREFIX}/var"}
 for A in `echo ${PATH} | sed -e 's,:, ,g'` ; do
   [ -e $A/ginstall ] && : ${INSTALL:=$A/ginstall} && break
   [ -e $A/install ] && : ${INSTALL:=$A/install} && break
@@ -237,7 +237,7 @@ split_host BUILD HOST TARGET
 
 while : ; do
 [ -z "$1" ] && break
-parse_options $1
+parse_options "$1"
 shift
 done
 

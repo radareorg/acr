@@ -20,9 +20,9 @@ test:
 	cd tests/ && sh test.sh
 
 install:
-	mkdir -p $(BINDIR)
+	mkdir -p "$(BINDIR)"
 	sed -e 's,@''VERSION@,$(VERSION),g' "$(VPATH)/src/acr" > "$(BINDIR)/acr"
-	chmod +x $(BINDIR)/acr
+	chmod +x "$(BINDIR)/acr"
 	sed -e 's,@''VERSION@,$(VERSION),g' "$(VPATH)/src/acr-sh" > "$(BINDIR)/acr-sh"
 	chmod +x "$(BINDIR)/acr-sh"
 	$(INSTALL_SCRIPT) "$(VPATH)/src/amr" "$(BINDIR)/amr"
