@@ -143,7 +143,7 @@
 	- better documentation
 	- more debugging information
 	- possibility to get the value of the target variable
-	- enhaced java support
+	- enhanced java support
 	- add ruby language support
 	- adopt GNU like crosscompile
 	- add CHECK_ENDIAN
@@ -193,7 +193,7 @@
 	- conditional bugs fix
 	- update autogen.sh to do things well
 	- change --version message
-	- add doc for endiannes checks with ACR. (doc/endian)
+	- add doc for endianness checks with ACR. (doc/endian)
 	- fixes the use of '*' in SIZEOF kw
 	- crosspath+vpath+subst_files bug fixed. (read doc/crosspath-build FMI)
 	- add ENDIAN | CHECK_ENDIAN keywords

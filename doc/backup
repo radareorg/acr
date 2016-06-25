@@ -33,7 +33,7 @@ and .backup files. instead of using -rm ${FILE} you must use:
 
 $(call unsubst,${FILE})
 
-and the following funciton:
+and the following function:
 
 --------------------->8-----------------------
 define unsubst

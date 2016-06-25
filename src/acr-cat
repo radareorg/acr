@@ -63,7 +63,7 @@ if [ -z "`echo ${VERSION} | grep ACR`" ]; then
 fi
 
 CONFIGURE="$1"
-## TODO: if configure does not starts with / or ., add  ./ at begining
+## TODO: if configure does not starts with / or ., add  ./ at beginning
 
 
 # XXX: this grep is done twice, wtf

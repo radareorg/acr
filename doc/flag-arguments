@@ -37,7 +37,7 @@ ARG_ENABLE DEBUG debug  compiles the program with debugging features. ;
 --------->8-------------------
 
 This will add a --enable-debug flag in your ./configure script that sets
-DEBUG=0 at the beggining of the script. And sets DEBUG=1 when the user
+DEBUG=0 at the beginning of the script. And sets DEBUG=1 when the user
 uses the --enable-debug flag.
 
 

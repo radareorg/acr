@@ -63,7 +63,7 @@ TOTHINK:
   EXEC GCCTARGET gcc -dumpmachine ;
   IFNOTEQ GCCTARGET TARGET
 	{
-	DIE Crosscompiler missmatch
+	DIE Crosscompiler mismatch
 	}
  -- must be integrated with 
  -- drop -unknown- keyword in hosts
@@ -71,7 +71,7 @@ TOTHINK:
 - SUBDIRS => MAKEPATHS, MAKEFILEPATH, ...
 --x-includes \___ add these flags into USE_X11 (talk to sepharad)
 --x-libraries /
-- ==================================== -> this makes sandbox unuseful. (to think!)
+- ==================================== -> this makes sandbox useless. (to think!)
 - sandbox VS make install PREFIX=/usr/local/foo
 - support for multiline flag comments. (sed \n -> \t\t\t\t\n)?
 - add -q (quite ?)
@@ -86,7 +86,7 @@ TOTHINK:
 	System.out.println("this is mooed");
 	}
   EOF
--------- IMHO this is unuseful, we have CHECK command that does the same.
+-------- IMHO this is useless, we have CHECK command that does the same.
 - IFZERO ? instead of IFNOT ??
 - if SUBST_FILES is a directory just handle the entire contents of the directory.
 

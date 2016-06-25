@@ -8,7 +8,7 @@ are buggy).
 ** IMPORTANT **
 
 Crosspath building is a way to build sources in a clean way. And is also
-useful for crosscompiling and make paralel builds.
+useful for crosscompiling and make parallel builds.
 
 This feature is an internal 'make' tool tip. But must be enabled in all
 Makefiles and the ./configure must know that to allow it.

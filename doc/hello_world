@@ -80,7 +80,7 @@ That's the most easy tip of the tutorial =)
 Just type "acr" and ./configure script will be generated.
 
 $ acr 
-acr: ./configure script created succesfully.
+acr: ./configure script created successfully.
 $ ls
 configure  configure.acr hello.c
 $

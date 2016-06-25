@@ -208,7 +208,7 @@ Checks the existence of the target user or group on the system.
 .El
 .\"
 .Sh DEFINITIONS
-Sets are processed at the beggining of the configure script.
+Sets are processed at the beginning of the configure script.
 .Bl -tag -width indent
 .It = varname value\ ;
 Sets the value of varname to value.
@@ -239,7 +239,7 @@ If the value of varname is equal to null (IFNULL) or not (IFNOTNULL)' then ACR w
 .It IFEQ|IFNOTEQ varname value ; { ..code.. }
 If the content of varname is equal(IFEQ) or different(IFNOTEQ) to value then setvarname to the value setvalue.
 .It IFEQVAL|IFNOTEQVAL varname varname2 { ..code.. }
-DEPRECATED: This keyword has been deprecated in 0.5 and will dissapear in 0.6. Use IFEQ FOO $FOO ; instead.
+DEPRECATED: This keyword has been deprecated in 0.5 and will disappear in 0.6. Use IFEQ FOO $FOO ; instead.
 If the content of varname is equal(IFEQ) or different(IFNOTEQ) to the content of varname2 and finally sets setvarname to the value setvalue.
 .It IFAND|IFNOTAND var1 var2 { ..code.. }
 If var1 and var2 are equal to 1(IFAND) or 0(IFNOTAND) then setvar to setvalue.

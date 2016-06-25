@@ -13,7 +13,7 @@ Now acr will find for libtool and export the following environ:
  LIBTOOL_SHARED
  LIBTOOL_INSTALL
 
-Now you must edit the Makefile.acr and put someting like that:
+Now you must edit the Makefile.acr and put something like that:
 
 LIB_VERSION=@VERSION@
 LIBTOOL_CC=@LIBTOOL_CC@

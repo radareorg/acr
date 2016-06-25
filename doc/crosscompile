@@ -11,7 +11,7 @@ Running ./configure you'll see these three flags:
 --host   = where the program will run.
 
 The 'canadian cross' term is related to a build that target, build and host
-are differents between them.
+are different between them.
 
 --target flag is only used for compilers that will generate code for the
 target os/architecture. This must be used internally in your program.
