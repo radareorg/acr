@@ -1,14 +1,14 @@
 Makefiles suggestions
 =====================
 
-Allways get the environment variables from ACR:
+Always get the environment variables from ACR:
 
 CC=@CC@
 PREFIX=@PREFIX@
 VPATH=@VPATH@
 INSTALL_PROGRAM=@INSTALL_PROGRAM@
 
-Start writting the makefile from the template created with 'acr -m' may be
+Start writing the makefile from the template created with 'acr -m' may be
 a good idea.
 
 
@@ -29,7 +29,7 @@ LDFLAGS+=-lSDL_mixer
 .endif
 
 
-This is so tricky and system dependant...you can use ACR to fix this:
+This is so tricky and system dependent...you can use ACR to fix this:
 
 IF HAVE_SDL_MIXER LDFLAGS += -lSDL_mixer ;
 

@@ -36,10 +36,10 @@ show_help() {
 cat <<EOF
 acr-install wrapper for standard install program.
 
--program : sets permisions and flags to install a program.
--script  : sets permisions and flags to install an script.
--library : sets permisions and flags to install an library.
--data    : sets permisions and flags to install data stuff (share).
+-program : sets permissions and flags to install a program.
+-script  : sets permissions and flags to install an script.
+-library : sets permissions and flags to install an library.
+-data    : sets permissions and flags to install data stuff (share).
 
 [ press intro ]
 EOF

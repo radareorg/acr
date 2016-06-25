@@ -10,7 +10,7 @@ other ones are bytesexual or bi-endian like (ppc, arm, alpha, mips, pa-risc
 or ia64). And finally another ones are middle-endian (some VAXes for fp ops)
 also called PDP endian.
 
-The endiannes of an architecture defines how it stores and loads data from
+The endianness of an architecture defines how it stores and loads data from
 registers and memory:
 
 +-------+------------+---------------+---------------+

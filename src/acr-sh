@@ -2133,7 +2133,7 @@ EOF
 ${SCRIPT}
 ${VAR}=0
 printf "checking version of library ${_CHKVER_LIB} >= ${STR}... "
-${S}{PKGCONFIG} --atleast-version=${STR} ${_CHKVER_LIB} >/dev/null 2>&1
+${S}{PKGCONFIG} --at least-version=${STR} ${_CHKVER_LIB} >/dev/null 2>&1
 if [ ${S}? = 0 ]; then ${VAR}=1 ; echo ok; else
 echo "no"
 EOF
@@ -3368,7 +3368,7 @@ dist: mrproper
 	mv -f ${S}{PKGNAME}-${S}{VERSION} ${S}{PKGNAME} && \\
 	echo "dist done"
 EOF
-	echo "acr: Makefile.acr created succesfully." >&2
+	echo "acr: Makefile.acr created successfully." >&2
 else
 	if [ "${PBAR}" = 1 ]; then
 	echo >&2 ; fi
@@ -3380,7 +3380,7 @@ else
 	fi
 	show_report
 	if [ "${NOPE}" = 0 ]; then
-		echo "acr: ${CONFIGURE} script created succesfully." >&2
+		echo "acr: ${CONFIGURE} script created successfully." >&2
 	fi
 fi
 

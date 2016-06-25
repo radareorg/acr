@@ -29,7 +29,7 @@ but...isn't really needed.
 
 [ -d | --debug ]
 	Makes a trace of the configure.acr script. This flag is useful to find
-	syntax errors not catched by ACR.
+	syntax errors not caught by ACR.
 
 	>> for example:
 	~/acr-tests$ acr -d
@@ -42,7 +42,7 @@ but...isn't really needed.
 	|- REPORT
 	  `- LDFLAGS
 	  `- HAVE_LIB_DL
-	acr: ./configure script created succesfully.
+	acr: ./configure script created successfully.
 	~/acr-tests$ 
 
 [ -p | --progress-bar ]

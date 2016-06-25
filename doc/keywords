@@ -220,7 +220,7 @@ SUBST_FILES <file1> <file2> ;
 SUBDIRS <dir1> <dir2> ;
 	Finds in dirs for Makefile.acr files to generate the final Makefile
 	(acr>=0.4) if the target is a file plus '.acr' then will use this
-	file as incomming filtering.
+	file as incoming filtering.
 
 SUBCONF <dirname> <dirname> ;
 	Call recursively other ./configure scripts found in <dirname> passing the 
