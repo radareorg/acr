@@ -53,7 +53,7 @@ install:
 	-$(INSTALL_DATA) "$(VPATH)/modules"/* "$(DATADIR)/acr/modules/"
 
 uninstall deinstall:
-	-rm -f $(BINDIR)/acr-sh $(BINDIR)/acr
+	-rm -f $(BINDIR)/acr-sh $(BINDIR)/acr $(BINDIR)/amr
 	-rm -f $(BINDIR)/acr-cat $(BINDIR)/acr-install
 	-rm -f $(MANDIR)/man1/acr.1 $(MANDIR)/man5/configure.acr.5
 	-rm -f $(MANDIR)/man1/acr-cat.1 $(MANDIR)/man1/amr.1
