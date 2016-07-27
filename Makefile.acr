@@ -54,7 +54,10 @@ install:
 
 uninstall deinstall:
 	-rm -f $(BINDIR)/acr-sh $(BINDIR)/acr
+	-rm -f $(BINDIR)/acr-cat $(BINDIR)/acr-install
 	-rm -f $(MANDIR)/man1/acr.1 $(MANDIR)/man5/configure.acr.5
+	-rm -f $(MANDIR)/man1/acr-cat.1 $(MANDIR)/man5/amr.1
+	-rm -f $(MANDIR)/man5/configure.amr.5
 	-rm -rf $(DATADIR)/doc/acr/examples $(DATADIR)/doc/acr
 
 dist:
