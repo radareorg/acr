@@ -1476,8 +1476,8 @@ create_environ() {
 : ${S}{MANDIR:="${S}{DATADIR}/man"}
 : ${S}{LOCALSTATEDIR:="${S}{SPREFIX}/var"}
 for A in \`echo ${S}{PATH} | sed -e 's,:, ,g'\` ; do
-  [ -e ${S}A/ginstall ] && : ${S}{INSTALL:=${S}A/ginstall} && break
-  [ -e ${S}A/install ] && : ${S}{INSTALL:=${S}A/install} && break
+  [ -e "${S}A"/ginstall ] && : ${S}{INSTALL:="${S}A"/ginstall} && break
+  [ -e "${S}A"/install ] && : ${S}{INSTALL:="${S}A"/install} && break
 done
 : ${S}{INSTALL_DIR:=${S}{INSTALL} -d}
 : ${S}{INSTALL_DATA:=${S}{INSTALL} -m 644}
