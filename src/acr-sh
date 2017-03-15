@@ -1474,7 +1474,7 @@ create_environ() {
 : ${S}{DATADIR:="${S}{SPREFIX}/share"}
 : ${S}{INFODIR:="${S}{DATADIR}/info"}
 : ${S}{MANDIR:="${S}{DATADIR}/man"}
-: ${S}{DOCDIR:="${S}{DOCDIR}/man"}
+: ${S}{DOCDIR:="${S}{DATADIR}/doc"}
 : ${S}{LOCALSTATEDIR:="${S}{SPREFIX}/var"}
 for A in \`echo ${S}{PATH} | sed -e 's,:, ,g'\` ; do
   [ -e "${S}A"/ginstall ] && : ${S}{INSTALL:="${S}A"/ginstall} && break
@@ -1516,7 +1516,6 @@ Fine tuning of the installation directories:
   --bindir=DIR           user executables [EPREFIX/bin]
   --sbindir=DIR          system admin executables [EPREFIX/sbin]
   --libexecdir=DIR       program executables [EPREFIX/libexec]
-  --docdir=DIR           documentation directory [PREFIX/doc]
   --datadir=DIR          read-only architecture-independent data [PREFIX/share]
   --sysconfdir=DIR       read-only single-machine data [PREFIX/etc]
   --sharedstatedir=DIR   modifiable architecture-independent data [PREFIX/com]
@@ -1526,6 +1525,7 @@ Fine tuning of the installation directories:
   --includedir=DIR       C header files [PREFIX/include]
   --infodir=DIR          info documentation [DATADIR/info]
   --mandir=DIR           man documentation [DATADIR/man]
+  --docdir=DIR           documentation directory [DATADIR/doc]
 
 System types:
   --build=BUILD          configure for building on BUILD [guessed]
