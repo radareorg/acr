@@ -1504,28 +1504,28 @@ Defaults for the options are specified in brackets.
 
 Configuration:
   -h, --help              display this help and exit
-  -V, --version           display version information and exit
   -r, --report            show what libs/programs require to work
+  -V, --version           display version information and exit
 
 Installation directories:
-  --prefix=PREFIX        install arch-independent files in PREFIX [/usr/local]
   --exec-prefix=EPREFIX  install arch-dependent files in EPREFIX [PREFIX]
+  --prefix=PREFIX        install arch-independent files in PREFIX [/usr/local]
   --sandbox=SPREFIX      sandbox prefix directory: SPREFIX [PREFIX]
 
 Fine tuning of the installation directories:
   --bindir=DIR           user executables [EPREFIX/bin]
-  --sbindir=DIR          system admin executables [EPREFIX/sbin]
-  --libexecdir=DIR       program executables [EPREFIX/libexec]
   --datadir=DIR          read-only architecture-independent data [PREFIX/share]
-  --sysconfdir=DIR       read-only single-machine data [PREFIX/etc]
-  --sharedstatedir=DIR   modifiable architecture-independent data [PREFIX/com]
-  --localstatedir=DIR    modifiable single-machine data [PREFIX/var]
-  --libdir=DIR           object code libraries [EPREFIX/lib]
-  --libpath=DIR          set rpath/libname-path to linker
+  --docdir=DIR           documentation directory [DATADIR/doc/${PKGNAME}]
   --includedir=DIR       C header files [PREFIX/include]
   --infodir=DIR          info documentation [DATADIR/info]
+  --libexecdir=DIR       program executables [EPREFIX/libexec]
+  --libdir=DIR           object code libraries [EPREFIX/lib]
+  --libpath=DIR          set rpath/libname-path to linker
+  --localstatedir=DIR    modifiable single-machine data [PREFIX/var]
   --mandir=DIR           man documentation [DATADIR/man]
-  --docdir=DIR           documentation directory [DATADIR/doc/${PKGNAME}]
+  --sbindir=DIR          system admin executables [EPREFIX/sbin]
+  --sysconfdir=DIR       read-only single-machine data [PREFIX/etc]
+  --sharedstatedir=DIR   modifiable architecture-independent data [PREFIX/com]
 
 System types:
   --build=BUILD          configure for building on BUILD [guessed]
