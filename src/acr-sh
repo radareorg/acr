@@ -2591,8 +2591,11 @@ ${STR} ; fi"
 			# TODO: Use EOF or F="$F B"
 			REPORT_PKGCFG="${REPORT_PKGCFG} ${STR}"
 			SCRIPT="`printf \"${SCRIPT}\n[ -z \\\"${S}{PKGCONFIG}\\\" ] && PKGCONFIG=pkg-config\"`"
-			SCRIPT="`printf \"${SCRIPT}\ntype ${S}{PKGCONFIG} > /dev/null 2>&1 || echo \\\"ERROR: Cannot find PKGCONFIG ${S}{PKGCONFIG}\\\"\"`"
-			# SCRIPT="`printf \"${SCRIPT}\necho 'Using PKGCONFIG: '${S}{PKGCONFIG}\"`"
+			if [ -z "${ONCE_PKGCONFIG}" ]; then
+				SCRIPT="`printf \"${SCRIPT}\ntype ${S}{PKGCONFIG} > /dev/null 2>&1 || echo \\\"ERROR: Cannot find PKGCONFIG ${S}{PKGCONFIG}\\\"\"`"
+				SCRIPT="`printf \"${SCRIPT}\necho 'Using PKGCONFIG: '${S}{PKGCONFIG}\"`"
+				ONCE_PKGCONFIG=1
+			fi
 			SCRIPT="`printf \"${SCRIPT}\nprintf 'checking pkg-config flags for ${STR}... '\"`"
 			## - flags - ##
 			SCRIPT="`printf \"${SCRIPT}\ntmp=\\\`${S}{PKGCONFIG} --cflags ${STR} 2>/dev/null\\\`\"`"
