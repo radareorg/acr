@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# Copyright (C) 2005-2016
+# Copyright (C) 2005-2017
 #       pancake <pancake@nopcode.org>
 #
 # acr is free software; you can redistribute it and/or modify
@@ -361,7 +361,7 @@ VALA_VERSION=""
 echo "void main(){}" > .test.vala
 ${S}{VALAC} .test.vala 2>&1 >/dev/null
 if [ ${S}? = 0 ]; then
-	echo ${S}{VALAC}; 
+	echo ${S}{VALAC};
 	VALA_VERSION=${S}(${S}{VALAC} --version | cut -d " " -f 2 | cut -d . -f 1,2);
 	printf "checking vala... ";
 	${S}{VALA} .test.vala 2>&1 >/dev/null
@@ -506,7 +506,7 @@ lang_bash() {
 ${SCRIPT}
 printf "checking for bash... "
 type bash 2>&1 >/dev/null
-if [ ${S}? = 0 ]; then echo yes ; 
+if [ ${S}? = 0 ]; then echo yes ;
 SH=\`sh -c "command -v bash 2>/dev/null"\`
 else echo no ; fi
 _EOF_
@@ -540,7 +540,7 @@ printf "checking for ruby... "
 HAVE_LANG_RUBY=0
 for A in \\\`echo ${S}{PATH} | sed -e 's,:, ,g'\\\`; do
 RUBY=\\\`ls ${S}{A}/ruby* 2>/dev/null\\\`
- if [ "${S}{RUBY}" ]; then 
+ if [ "${S}{RUBY}" ]; then
    RUBY=\\\`echo ${S}{RUBY} | cut -d\  -f 1\\\`
    RUBY_VERSION=\\\`echo ${S}{RUBY} ${S}{A} | ${AWK} '{ print substr(${S}1,length(${S}2)+6) }'\\\`
    echo ${S}{RUBY} ; HAVE_LANG_RUBY=1 ; break
@@ -1086,7 +1086,7 @@ printf 'checking size of $1... '
 echo '#include <stdio.h>' > test.c
 echo 'int main(int ac, char **av){printf(\"##d##\",sizeof($1));return 0;}' >>test.c
 eval \\\\${S}${S}{COMPILER} ${S}{CFLAGS} ${S}{CPPFLAGS} ${S}{CXXFLAGS} -o a.out test.c >/dev/null 2>&1
-if [ 0 = ${S}? ]; then 
+if [ 0 = ${S}? ]; then
  ${VAR}=${S}(./a.out)
  echo ${S}{${VAR}}
  HAVE_${VAR}=1
@@ -1425,7 +1425,7 @@ done
 }
 
 VPATH=\`dirname ${S}{0}\`
-if [ "${S}{VPATH}" = "." ]; then 
+if [ "${S}{VPATH}" = "." ]; then
 	WODIS=current
 else
 	if [ "${S}{VPATH}" = "${S}{PWD}" ]; then
@@ -1489,7 +1489,7 @@ done
 : ${S}{INSTALL_LIB:=${S}{INSTALL} -m 755 -c}
 ${INIVARS}
 }
-                
+
 show_usage() {
 `cat <<EOF1
 cat <<EOF2
@@ -1629,7 +1629,7 @@ EOF
 cat <<EOF
 	exit 0
 	;;
---cache-file) 
+--cache-file)
 	# ignored: acr have no cache
 	;;
 --build)
@@ -1672,7 +1672,7 @@ cat <<EOF
 --mandir)
 	MANDIR="\$value"; ;;
 ${FLAGSCRIPT}
-*) if [ "\$value" ]; then eval "\`echo \$flag2=\$value\`" ; 
+*) if [ "\$value" ]; then eval "\`echo \$flag2=\$value\`" ;
 else echo ; echo "WARNING: Unknown flag '\$flag'." >&2 ; echo ; fi ;;
 esac
 }
@@ -1744,7 +1744,7 @@ SEDFLAGS="${SEDFLAGS} -e '"
 COUNT=0
 for A in ${S}{ENVWORDS} ; do
 	[ "${S}{A}" = VPATH ] && continue
-	[ "${S}{A}" = srcdir ] && continue 
+	[ "${S}{A}" = srcdir ] && continue
 	eval "VAR=\\${S}${S}{A}"
 	VAR="\`echo ${S}{VAR} | sed -e 's/\,/\\\\\,/g'\`"
 	[ ${S}COUNT = 10 ] && COUNT=0 && SEDFLAGS="${S}{SEDFLAGS}' -e '"
@@ -1838,7 +1838,7 @@ alias leave_string_mode='STRING=""'
 enter_mode() {
 	MODE=$1
 	STR=$2
-	_REQUIRED=0 
+	_REQUIRED=0
 	case "${STR}" in
 	*!) _REQUIRED=1  ; ;;
 	esac
@@ -2063,7 +2063,7 @@ EOF
 SCRIPT=`cat <<EOF
 ${SCRIPT}
 printf "checking for ${CHECK_VAR}... "
-${TMP_VAR} 
+${TMP_VAR}
 if [ "${S}${CHECK_VAR}" = 0 ]; then
 	${CHECK_VAR}=1
 	echo yes
@@ -2196,7 +2196,7 @@ EOF
 		SCRIPT=`cat <<EOF
 ${SCRIPT}
 printf "checking exec ${STRING}... "
-${_EXEC_VAR}="\\\`${STRING} 2>/dev/null\\\`" 
+${_EXEC_VAR}="\\\`${STRING} 2>/dev/null\\\`"
 if [ ${S}? = 0 ]; then
 	echo "ok"
 else
@@ -2627,7 +2627,7 @@ ${STR} ; fi"
 		;;
 	"report")
 		IS_KEYWORD=0
-		if [ "${STR}" = ";" ]; then 
+		if [ "${STR}" = ";" ]; then
 			MODE=""
 		else
 			REPORT="${REPORT} ${STR}"
@@ -2689,7 +2689,7 @@ ${STR} ; fi"
 		;;
 	"argument")
 		if [ "${STR}" = ";" ]; then
-			# enable DEBUG debug "=" 
+			# enable DEBUG debug "="
 			add_flag ${ARGUMENT} ${ARG_NAME} \
 				${ARG_FLAG} "${ARG_VALUE}" "${ARG_DESC}"
 			MODE=""
@@ -2777,10 +2777,10 @@ ${EQUAL}\""
 	"contact")
 		IS_KEYWORD=0
 		if [ "${_CONTACT}" = 1 ]; then
-			if [ "${STR}" = ";" ]; then 
+			if [ "${STR}" = ";" ]; then
 				_CONTACT=2
 			else
-				if [ -z "${CONTACT_NAME}" ]; then 
+				if [ -z "${CONTACT_NAME}" ]; then
 					CONTACT_NAME="${STR}"
 				else
 					CONTACT_NAME="${CONTACT_NAME} ${STR}"
@@ -2806,10 +2806,10 @@ ${EQUAL}\""
 	"author")
 		IS_KEYWORD=0
 		if [ "${_AUTHOR}" = 1 ]; then
-			if [ "${STR}" = ";" ]; then 
+			if [ "${STR}" = ";" ]; then
 				_AUTHOR=2
 			else
-				if [ -z "${AUTHOR_NAME}" ]; then 
+				if [ -z "${AUTHOR_NAME}" ]; then
 					AUTHOR_NAME="${STR}"
 				else
 					AUTHOR_NAME="${AUTHOR_NAME} ${STR}"
@@ -2865,7 +2865,7 @@ ${EQUAL}\""
 	fi
 
 	##KEYWORDS##
-	## debug output {{{ 
+	## debug output {{{
 	if [ "${DEBUG}" = 1 ]; then
 		spaces="`echo $NKEYS | awk '{ str=""; for(i=0;i<$1;i++) { str=str"  "; } print str; }'`"
 		[ -n "${MODE}" ] && spaces=", ${spaces}"
@@ -2884,7 +2884,7 @@ ${EQUAL}\""
 	WORDS_K=$WORDS_N
 
 	if [ "${DEBUG}" = 1 ]; then
-		if [ ! "${WORDS_N}" = "${WORDS_T}" ]; then 
+		if [ ! "${WORDS_N}" = "${WORDS_T}" ]; then
 			printf "%04d |$spaces " $WORDS_N >&2
 			echo "${STR}" >&2
 		fi
@@ -2897,7 +2897,7 @@ ${EQUAL}\""
 		"=")  EQUAL=1 ;;
 		"+=") EQUAL=2 ;;
 		"?=") EQUAL=3 _EQUAL_3=1 ;;
-		"<-") EQUAL=4 
+		"<-") EQUAL=4
 			echo "`word` | The '<-' keyword is deprecated. Use $VAR instead" >&2
 ;; ### XXX deprecated!!
 		*)
@@ -2933,10 +2933,10 @@ else"
 		SCRIPT="${SCRIPT}; fi"
 		;;
 					#------------- segmentation keywords
-	"LOCAL:") 
+	"LOCAL:")
 		echo "LOCAL: deprecated keyword."  >&2
 		;;
-	"GLOBAL:") 
+	"GLOBAL:")
 		echo "GLOBAL: deprecated keyword."  >&2
 		;;
 					#------------- command keywords
@@ -2967,14 +2967,14 @@ else"
 	"USE_PERL_THREADS!")	_REQUIRED=1 env_perl_threads ; ;;
 	"LANG_RUBY")		env_ruby ; ;;
 	"LANG_RUBY!")		LANG_RUBY_REQUIRED=1 ; env_ruby ; ;;
-	"USE_TK") 
+	"USE_TK")
 		add_envword "TK_VERSION"
 		add_envword "HAVE_TK"
 		add_envword "TK_LIBS"
 		add_envword "TK_LDFLAGS"
 		add_flag with TK_BASEDIR tk-basedir "/usr/" "Sets the TK basedir to find [/usr]/lib/tkConfig.sh"
 		USE_TK=1 ; ;;
-	"USE_X11")   
+	"USE_X11")
 		REPORT_OPTIONAL="${REPORT_OPTIONAL} X11"
 		add_envword "HAVE_X11"
 		add_envword "X11BASE"
@@ -3040,7 +3040,7 @@ else"
 		fi
 		enter_mode "chkpm" ${STR}
 		;;
-	"CHKLIB"|"CHKLIB!"|"CHECK_LIBRARY"|"CHECK_LIBRARY!") 
+	"CHKLIB"|"CHKLIB!"|"CHECK_LIBRARY"|"CHECK_LIBRARY!")
 		if [ -z "${LANG_C}${LANG_CXX}" ]; then
 			echo "`word` | Define LANG_C or LANG_CXX before use CHECK_LIB" >&2
 			exit 1
@@ -3097,7 +3097,7 @@ else"
 			exit 1
 		fi
 		# TODO: Use mode for libtool
-		if [ "`echo ${STR}| grep '!'`" ]; then 
+		if [ "`echo ${STR}| grep '!'`" ]; then
 			_REQUIRED=1
 		else
 			_REQUIRED=0
@@ -3109,7 +3109,7 @@ else"
 			echo "`word` | USE_PTHREAD requires LANG_C or LANG_CXX." >&2
 			exit 1
 		fi
-		if [ "`echo ${STR}| grep '!'`" ]; then 
+		if [ "`echo ${STR}| grep '!'`" ]; then
 			_REQUIRED=1
 		else
 			_REQUIRED=0
@@ -3454,7 +3454,7 @@ if [ "${MAKEDIST}" = 1 ]; then
 		tar czvf $PKGNAME-$VERSION.tar.gz $PKGNAME-$VERSION 2>&1 | ${AWK} '{ printf "."; }' >&2
 		if [ ! $? = 0 ]; then
 			mv $PKGNAME-$VERSION $PKGNAME
-			makedist_failed "Cannot create ../$PKGNAME-$VERSION" 
+			makedist_failed "Cannot create ../$PKGNAME-$VERSION"
 		fi
 		mv $PKGNAME-$VERSION $PKGNAME
 		cd -
