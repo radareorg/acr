@@ -39,7 +39,7 @@ done
 }
 
 VPATH=`dirname ${0}`
-if [ "${VPATH}" = "." ]; then 
+if [ "${VPATH}" = "." ]; then
 	WODIS=current
 else
 	if [ "${VPATH}" = "${PWD}" ]; then
@@ -103,7 +103,7 @@ done
 : ${INSTALL_LIB:=${INSTALL} -m 755 -c}
  PKGNAME='acr' ; VERSION='1.3' ; CONTACT_MAIL="@nopcode.org" ; CONTACT_NAME="pancake" ; CONTACT="pancake <@nopcode.org>" ;
 }
-                
+
 show_usage() {
 cat <<EOF2
 'configure' configures acr-1.3 to adapt to many kinds of systems.
@@ -185,7 +185,7 @@ echo "PKGNAME:   acr"
 echo "VERSION:   1.3"
 	exit 0
 	;;
---cache-file) 
+--cache-file)
 	# ignored: acr have no cache
 	;;
 --build)
@@ -228,7 +228,7 @@ echo "VERSION:   1.3"
 --mandir)
 	MANDIR="$value"; ;;
 
-*) if [ "$value" ]; then eval "`echo $flag2=$value`" ; 
+*) if [ "$value" ]; then eval "`echo $flag2=$value`" ;
 else echo ; echo "WARNING: Unknown flag '$flag'." >&2 ; echo ; fi ;;
 esac
 }
@@ -259,7 +259,7 @@ echo "checking target system type... ${TARGET}"
 echo "checking for working directories... ${WODIS}"
 echo "using prefix '${PREFIX}'"
 ACR_RMFILES=""
-: 
+
 printf "checking for install... "
 if [ -x "${INSTALL}" ]; then
 	FIND=${INSTALL}
@@ -286,7 +286,7 @@ SEDFLAGS=" -e '"
 COUNT=0
 for A in ${ENVWORDS} ; do
 	[ "${A}" = VPATH ] && continue
-	[ "${A}" = srcdir ] && continue 
+	[ "${A}" = srcdir ] && continue
 	eval "VAR=\$${A}"
 	VAR="`echo ${VAR} | sed -e 's/\,/\\\,/g'`"
 	[ $COUNT = 10 ] && COUNT=0 && SEDFLAGS="${SEDFLAGS}' -e '"
