@@ -91,7 +91,7 @@ STRING=""
 H_FILES=""
 SH_FILES=""
 MODE=""
-SCRIPT=": " # The user code script buffer
+SCRIPT="" # The user code script buffer
 
 # Utilities
 S="$" # hacky stuff
@@ -480,7 +480,7 @@ add_flag() {
 	REPORT_FLAGS="${REPORT_FLAGS} --${1}-${3}"
 	add_envword ${2}
 	_TMP_=""
-	TABS="`echo \"--${1}-${3}\" | ${AWK} '{ len=23-length($1); if (len<1) { print ""; len=25 } ; for (i=0;i<len;i++) { printf " "; } }'`"
+	TABS="`echo \"--${1}-${3}\" | ${AWK} '{ len=22-length($1); if (len<1) { print ""; len=25 } ; for (i=0;i<len;i++) { printf " "; } }'`"
 	if [ -z "${4}" ]; then
 		case $1 in
 			"enable"|"with") value=1; echo "${2}=0"; ;;
@@ -1041,7 +1041,7 @@ EOF
 fi
 
 	SCRIPT="${SCRIPT}
-check_library ${VAR} ${_CHKLIB_NAME} ${_REQUIRED} "
+check_library ${VAR} ${_CHKLIB_NAME} ${_REQUIRED}"
 }
 ## }}}
 ## {{{ | Check Functions
@@ -2081,9 +2081,9 @@ EOF
 			TMP_VAR=""
 		else
 			if [ "${STR}" = "\\" ]; then
-				TMP_VAR="${TMP_VAR} ; "
+				TMP_VAR="${TMP_VAR} ;"
 			else
-				TMP_VAR="${TMP_VAR}${STR} "
+				TMP_VAR="${TMP_VAR}${STR}"
 			fi
 		fi
 		;;
@@ -2365,7 +2365,7 @@ if ["
 				SCRIPT="${SCRIPT}
 if [ !"
 			fi
-			SCRIPT="${SCRIPT} \"${S}${_IF_VAR}\" = \"${S}${_IF_VAR2}\" ]; then "
+			SCRIPT="${SCRIPT} \"${S}${_IF_VAR}\" = \"${S}${_IF_VAR2}\" ]; then"
 
 			# TODO this must be in a external function
 			case ${_IF_OP} in
@@ -2705,7 +2705,7 @@ ${STR} ; fi"
 			elif [ -z "${ARG_FLAG}" ]; then
 				ARG_FLAG=${STR}
 			else
-				ARG_DESC="${ARG_DESC}${STR} "
+				ARG_DESC="${ARG_DESC} ${STR}"
 			fi
 		fi
 		IS_KEYWORD=0
