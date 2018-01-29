@@ -2599,20 +2599,20 @@ ${STR} ; fi"
 			SCRIPT="`printf \"${SCRIPT}\nprintf 'checking pkg-config flags for ${STR}... '\"`"
 			## - flags - ##
 			SCRIPT="`printf \"${SCRIPT}\ntmp=\\\`${S}{PKGCONFIG} --cflags ${STR} 2>/dev/null\\\`\"`"
-			SCRIPT="`printf \"${SCRIPT}\nif [ ${S}? != 0 ]; then echo no ; ${TMP_VAR}=0; \"`"
+			SCRIPT="`printf \"${SCRIPT}\nif [ ${S}? != 0 ]; then echo no ; ${TMP_VAR}=0;\"`"
 			if [ "${_REQUIRED}" = 1 ]; then
 			SCRIPT="`printf \"${SCRIPT}\necho 'This package is required'\nexit 1\"`"
 			fi
-			SCRIPT="`printf \"${SCRIPT}\nelse \"`"
+			SCRIPT="`printf \"${SCRIPT}\nelse\"`"
 			if [ "${_PKGCONFIG_PLUS}" = 1 ]; then
-			SCRIPT="`printf \"${SCRIPT}\n${_PC_CFLAGS}=\\\"${S}${_PC_CFLAGS} ${S}tmp\\\"; \"`"
+			SCRIPT="`printf \"${SCRIPT}\n${_PC_CFLAGS}=\\\"${S}${_PC_CFLAGS} ${S}tmp\\\";\"`"
 			else
-			SCRIPT="`printf \"${SCRIPT}\n${_PC_CFLAGS}=${S}tmp; \"`"
+			SCRIPT="`printf \"${SCRIPT}\n${_PC_CFLAGS}=${S}tmp;\"`"
 			fi
 			## - libs - ##
 			SCRIPT="`printf \"${SCRIPT}\ntmp=\\\`${S}{PKGCONFIG} --libs ${STR} 2>/dev/null\\\`\"`"
-			SCRIPT="`printf \"${SCRIPT}\nif [ ${S}? = 0 ]; then \"`"
-			SCRIPT="`printf \"${SCRIPT}\necho yes; ${TMP_VAR}=1; \";`"
+			SCRIPT="`printf \"${SCRIPT}\nif [ ${S}? = 0 ]; then\"`"
+			SCRIPT="`printf \"${SCRIPT}\necho yes; ${TMP_VAR}=1;\";`"
 			if [ "${_PKGCONFIG_PLUS}" = 1 ]; then
 			SCRIPT="`printf \"${SCRIPT}\n${_PC_LDFLAGS}=\\\"${S}${_PC_LDFLAGS} ${S}tmp\\\"; fi; fi\"`"
 			else
