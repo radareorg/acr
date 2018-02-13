@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# Copyright (C) 2005-2017
+# Copyright (C) 2005-2018
 #       pancake <pancake@nopcode.org>
 #
 # acr is free software; you can redistribute it and/or modify
@@ -208,6 +208,7 @@ cat <<_EOF_
 # @url:    http://www.nopcode.org
 # @repo:   git clone https://github.com/radare/acr
 
+[ -z "${S}{AWK}" ] && AWK=awk
 do_remove() {
 if [ "${S}{ACR_RMFILES}" ]; then
   printf "cleaning temporally files... "
@@ -980,7 +981,7 @@ check_endian() {
 	SCRIPT="
 ${SCRIPT}
 printf \"checking host endianness... \"
-LIL_ENDIAN=${S}(printf I|od|awk '{print substr(${S}2,6,1);exit}')
+LIL_ENDIAN=${S}(printf I|od|${S}{AWK}'{print substr(${S}2,6,1);exit}')
 if [ $? != 0 -o \"${S}{LIL_ENDIAN}\" = 1 ]; then
 	BYTEORDER=1234
 	BIG_ENDIAN=0
@@ -998,7 +999,6 @@ fi
 check_lib() {
 	_CHKLIB_NAME=$1
 	HAVE_LIBS=1
-	#_CHKLIB_LIBS="`echo $1 | awk -F + '{ for(i=1;i<=NF;i++) { str=str "-l" $i " " } print str; }'`"
 	VAR=`echo "HAVE_LIB_$1" | sed -e 's,+,_AND_,g' -e 's,\.,_,g' | awk '{ print toupper($0); }'`
 	add_envword "${VAR}"
 
@@ -1388,7 +1388,7 @@ if [ \"${S}VALUE\" = 0 ]; then ## FALSE
  MARK=\"##${S}{A}##\"
 if [ -n \"\`grep \\\"${S}{MARK}\\\" ${S}{SD_TARGET}.tmp\`\" ]; then
  mv ${S}{SD_TARGET}.tmp ${S}{SD_TARGET}.tmp2
- cat ${S}{SD_TARGET}.tmp2 | MARK=${S}MARK awk 'BEGIN{a=0;}{if(${S}1==ENVIRON[\"MARK\"]){if(a)a=0;else a=1}else{if(!a)print;}}' > ${S}{SD_TARGET}.tmp
+ cat ${S}{SD_TARGET}.tmp2 | MARK=${S}MARK ${S}AWK 'BEGIN{a=0;}{if(${S}1==ENVIRON[\"MARK\"]){if(a)a=0;else a=1}else{if(!a)print;}}' > ${S}{SD_TARGET}.tmp
  fi
 fi
 done
@@ -1409,7 +1409,7 @@ while : ; do
 ENVWORDS="${S}{ENVWORDS} ${S}1_CPU ${S}1_OS"
 STR=\`eval "echo ${S}{S}${S}1"\`
 SPLIT_CPU="\`echo "${S}STR" | cut -d - -f 1\`"
-SPLIT_OS="\`echo "${S}STR" | awk -F - '{
+SPLIT_OS="\`echo "${S}STR" | ${S}AWK -F - '{
 	if (${S}2=="unknown"){
 		if (NF<3) { print ${S}2; } else { print ${S}3; }
 	} else {
@@ -1590,7 +1590,7 @@ exit 0
 
 parse_options() {
 flag=\`echo \$1| cut -d = -f 1\`
-value=\`echo \$1| awk 'BEGIN{FS="=";}{print \$2}'\`
+value=\`echo \$1| ${S}AWK 'BEGIN{FS="=";}{print \$2}'\`
 flag2=\`echo \$flag|cut -f2- -d -| sed -e 's,-,_,g' -e 's,^_,,g'|tr '[a-z]' '[A-Z]'\`
 
 if [ "\${TARGET_OS}" = "darwin" ]; then
