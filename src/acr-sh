@@ -953,19 +953,15 @@ if [ ${S}? = 0 ]; then
 else
 	eval ${S}{VAR}=0
 	echo no
-EOF
-`
-	if [ 1 = "${_REQUIRED}" ]; then
-	SCRIPT=`cat <<EOF
-${SCRIPT}
-echo "ERROR: required include not found." >&2
-do_remove
-exit 1
-EOF
-`
+	if [ 1 = \"${_REQUIRED}\" ]; then
+		echo 'ERROR: required include not found.' >&2
+		do_remove
+		exit 1
 	fi
-
-	SCRIPT="${SCRIPT} ; fi }"
+fi
+}
+EOF
+`
 	_CHECK_INC=included
 fi
 	SCRIPT="${SCRIPT}
@@ -1021,24 +1017,22 @@ if [ ${S}? = 0 ]; then
 	echo yes
 else
 	eval ${S}{VAR}=0
-	echo no "
-
+	echo no
+	if [ \"${S}{_REQUIRED}\" = 1 ]; then
+	  echo \"this library is required.\"
+	  do_remove
+	  exit 1
+	fi
+fi
+}
+"
+fi
 	if [ "${_REQUIRED}" = 1 ]; then
-	SCRIPT=`cat <<EOF
-${SCRIPT}
-  echo "this library is required."
-  do_remove
-  exit 1
-EOF
-`
 		REPORT_REQUIRED="${REPORT_REQUIRED} lib${_CHKLIB_NAME}"
 	else
 		REPORT_OPTIONAL="${REPORT_OPTIONAL} lib${_CHKLIB_NAME}"
 	fi
-
-	SCRIPT="${SCRIPT} ; fi }"
 	_CHECK_LIB=included
-fi
 
 	SCRIPT="${SCRIPT}
 check_library ${VAR} ${_CHKLIB_NAME} ${_REQUIRED}"
