@@ -938,14 +938,15 @@ VAR=${S}1
 INC=${S}2
 _REQUIRED=${S}3
 printf \"checking for ${S}2... \"
-echo > test.c"
+echo > test.c
+"
 	for A in `echo ${S}{INC} | sed -e 's,+, ,g'`; do
 		SCRIPT="${SCRIPT}
 echo \"#include <${A}>\" >>test.c"
 	done
-	SCRIPT=`cat <<EOF
+SCRIPT="
 ${SCRIPT}
-echo "int main(int ac, char **av){return 0;}" >>test.c
+echo 'int main(int ac, char **av){return 0;}' >>test.c
 eval \\\\${S}${S}{COMPILER} ${S}{CFLAGS} ${S}{CPPFLAGS} ${S}{CXXFLAGS} test.c >/dev/null 2>&1
 if [ ${S}? = 0 ]; then
 	eval ${S}{VAR}=1
@@ -960,8 +961,7 @@ else
 	fi
 fi
 }
-EOF
-`
+"
 	_CHECK_INC=included
 fi
 	SCRIPT="${SCRIPT}
