@@ -1049,10 +1049,10 @@ check_decl() {
 	get_current_compiler
 	SCRIPT=`cat <<EOF
 ${SCRIPT}
-printf "checking declaration ${_CHKDECL_NAME}() in ${_CHKDECL_INC}... "
+printf "checking declaration of ${_CHKDECL_NAME} in ${_CHKDECL_INC}... "
 echo "#include <${_CHKDECL_INC}>" > test.c
-echo "int main(int ac, char **av){ void *a = ${_CHKDECL_NAME}(0); return 0; }" >> test.c
-${S}{${COMPILER}} ${S}{CFLAGS} ${S}{CPPFLAGS} ${S}{LDFLAGS} -l${_CHKDECL_INC} test.c >/dev/null 2>&1
+echo "int main(int ac, char **av){ void *a = ${_CHKDECL_NAME}; return 0; }" >> test.c
+${S}{${COMPILER}} ${S}{CFLAGS} ${S}{CPPFLAGS} ${S}{LDFLAGS} test.c >/dev/null 2>&1
 if [ ${S}? = 0 ]; then
 	echo yes ; ${VAR}=1
 else
