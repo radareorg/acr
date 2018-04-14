@@ -174,6 +174,9 @@ _CHKLIB_NAME=""
 _CHKFUNC=0
 _CHKFUNC_NAME=""
 _CHKFUNC_LIB=""
+_CHKDECL=0
+_CHKDECL_NAME=""
+_CHKDECL_INC=""
 _CHKPRG_VAR=""
 _CHKPRG_NAME=""
 CHECK_VAR=""
@@ -1036,6 +1039,35 @@ fi
 
 	SCRIPT="${SCRIPT}
 check_library ${VAR} ${_CHKLIB_NAME} ${_REQUIRED}"
+}
+## }}}
+## {{{ | Check Declarations
+check_decl() {
+	HAVE_DECL=1
+	VAR=`echo "HAVE_DECL_$1" | tr '[a-z]' '[A-Z]'`
+	add_envword "${VAR}"
+	get_current_compiler
+	SCRIPT=`cat <<EOF
+${SCRIPT}
+printf "checking declaration ${_CHKDECL_NAME}() in ${_CHKDECL_INC}... "
+echo "int main(int ac, char **av){ void *a = ${_CHKDECL_NAME}(0); return 0; }" > test.c
+${S}{${COMPILER}} ${S}{CFLAGS} ${S}{CPPFLAGS} ${S}{LDFLAGS} -l${_CHKDECL_INC} test.c >/dev/null 2>&1
+if [ ${S}? = 0 ]; then
+	echo yes ; ${VAR}=1
+else
+	${VAR}=0 ; echo no
+EOF
+`
+	if [ 1 = "${_REQUIRED}" ]; then
+	SCRIPT=`cat <<EOF
+${SCRIPT}
+echo "this function is required." >&2
+do_remove
+exit 1
+EOF
+`
+	fi
+	SCRIPT="${SCRIPT} ; fi"
 }
 ## }}}
 ## {{{ | Check Functions
@@ -1959,6 +1991,19 @@ for STR2 in ${WORDS} NOP ; do
 	fi
 
 	case "${MODE}" in
+	"chkdecl")
+		IS_KEYWORD=0
+		if [ -z "${_CHKDECL_INC}" ]; then
+			_CHKDECL_INC="${STR}"
+		else
+			MODE=""
+			_CHKDECL_NAME=${STR}
+			check_decl $_CHKDECL_INC ${_CHKDECL_NAME}
+			_CHKDECL=0
+			_CHKDECL_INC=""
+			_CHKDECL_NAME=""
+		fi
+		;;
 	"chkfunc")
 		IS_KEYWORD=0
 		if [ -z "${_CHKFUNC_LIB}" ]; then
@@ -3005,6 +3050,13 @@ else"
 			exit 1
 		fi
 		enter_mode "chkcp" ${STR}
+		;;
+	"CHKDECL"|"CHKDECL!"|"CHKDEC"|"CHKDEC!"|"CHECK_DECLARATION"|"CHECK_DECLARATION!")
+		if [ -z "${LANG_C}" ]; then
+			echo "`word` | Define LANG_C before use CHECK_FUNC" >&2
+			exit 1
+		fi
+		enter_mode "chkdecl" ${STR}
 		;;
 	"CHKFNC"|"CHKFNC!"|"CHECK_FUNCTION"|"CHECK_FUNCTION!")
 		if [ -z "${LANG_C}" ]; then
