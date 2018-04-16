@@ -1044,7 +1044,7 @@ check_library ${VAR} ${_CHKLIB_NAME} ${_REQUIRED}"
 ## {{{ | Check Declarations
 check_decl() {
 	HAVE_DECL=1
-	VAR=`echo "HAVE_DECL_$1" | tr '[a-z]' '[A-Z]' | tr './' '__'`
+	VAR=`echo "HAVE_DECL_$2" | tr '[a-z]' '[A-Z]' | tr './' '__'`
 	add_envword "${VAR}"
 	get_current_compiler
 	SCRIPT=`cat <<EOF
