@@ -2123,7 +2123,7 @@ EOF
 			if [ "${STR}" = "\\" ]; then
 				TMP_VAR="${TMP_VAR} ;"
 			else
-				TMP_VAR="${TMP_VAR}${STR}"
+				TMP_VAR="${TMP_VAR} ${STR}"
 			fi
 		fi
 		;;
