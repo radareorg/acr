@@ -2640,6 +2640,7 @@ ${STR} ; fi"
 			## - flags - ##
 			SCRIPT="`printf \"${SCRIPT}\ntmp=\\\`${S}{PKGCONFIG} --cflags ${STR} 2>/dev/null\\\`\"`"
 			SCRIPT="`printf \"${SCRIPT}\nif [ ${S}? != 0 ]; then echo no ; ${TMP_VAR}=0;\"`"
+			SCRIPT="`printf \"${SCRIPT}\n${_PC_CFLAGS}='';${_PC_LDFLAGS}='';\"`"
 			if [ "${_REQUIRED}" = 1 ]; then
 			SCRIPT="`printf \"${SCRIPT}\necho 'This package is required'\nexit 1\"`"
 			fi
