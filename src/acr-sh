@@ -2177,7 +2177,7 @@ EOF
 ${SCRIPT}
 ${VAR}=0
 printf "checking version of library ${_CHKVER_LIB} >= ${STR}... "
-${S}{PKGCONFIG} --at least-version=${STR} ${_CHKVER_LIB} >/dev/null 2>&1
+${S}{PKGCONFIG} --atleast-version=${STR} ${_CHKVER_LIB} >/dev/null 2>&1
 if [ ${S}? = 0 ]; then ${VAR}=1 ; echo ok; else
 echo "no"
 EOF
