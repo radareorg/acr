@@ -2165,10 +2165,15 @@ EOF
 		;;
 	"chkver")
 		IS_KEYWORD=0
-		REPORT_REQUIRED="${REPORT_REQUIRED} lib${_CHKVER_LIB}>=${STR}"
 		if [ -z "${_CHKVER_LIB}" ]; then
 			_CHKVER_LIB="${STR}"
 		else
+
+		if [ "${_REQUIRED}" = 1 ]; then
+			REPORT_REQUIRED="${REPORT_REQUIRED} lib${_CHKVER_LIB}>=${STR}"
+		else
+			REPORT_OPTIONAL="${REPORT_OPTIONAL} lib${_CHKVER_LIB}>=${STR}"
+		fi
 	
 		# HAVE_GLIB_2_0_VERSION_2_18
 		VAR=`echo HAVE_${_CHKVER_LIB}_VERSION_${STR} | tr '[a-z]' '[A-Z]'| tr '.-' '__'`
@@ -2184,7 +2189,8 @@ EOF
 `
 		if [ 1 = ${_REQUIRED} ]; then
 			SCRIPT=`cat <<EOF
-echo "ERROR: You need ${_CHKVER_LIB} <= ${STR}." >&2
+${SCRIPT}
+echo "ERROR: You need ${_CHKVER_LIB} >= ${STR}." >&2
 exit 1; fi
 EOF
 `
