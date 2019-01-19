@@ -1,6 +1,6 @@
 (( package information ))
 PKGNAME acr
-VERSION 1.7.0
+VERSION 1.7.1
 CONTACT pancake ; @nopcode.org
 
 (( needed programs ))
