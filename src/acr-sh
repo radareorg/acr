@@ -2269,7 +2269,7 @@ EOF
 ${SCRIPT}
 printf "checking for dynamic library... "
 HAVE_LIB_DL=0
-for OS in gnulinux linux gnu/kfreebsd syllable sunos darwin beos solaris ; do
+for OS in gnulinux linux gnu/kfreebsd syllable sunos darwin beos solaris wsl ; do
 if [ "${S}{HOST_OS}" = "${S}{OS}" ]; then
 	HAVE_LIB_DL=1
 	break;
