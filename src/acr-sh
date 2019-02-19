@@ -1474,6 +1474,7 @@ if [ -e "${S}{VPATH}/config.guess" ]; then
 fi
 CPU="\`uname -m|sed -e 's, ,,g'|cut -d - -f 1\`"
 OS="\`uname -s|tr A-Z a-z\`"
+uname -r | grep -qE "(Microsoft|WSL)" 2>/dev/null && OS="wsl"
 GNU="\`uname --help 2>&1 | grep gnu\`"
 [ "${S}{GNU}" ] && OS="${S}{OS}-gnu"
 [ "${S}{CPU}" = ppc ] && CPU="powerpc"
