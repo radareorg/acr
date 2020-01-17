@@ -149,7 +149,7 @@ System types:
 EOF2
 
 printf "
-Report bugs to: pancake <@nopcode.org>"
+Report bugs to: pancake <pancake@nopcode.org>"
 echo ""
 exit 0
 }
@@ -336,8 +336,8 @@ echo " - ${A} = ${VAL}"
 done
 #ACR# (( package information ))
 #ACR# PKGNAME acr
-#ACR# VERSION 1.8.0
-#ACR# CONTACT pancake ; @nopcode.org
+#ACR# VERSION 1.8.1
+#ACR# CONTACT pancake ; pancake@nopcode.org
 #ACR# 
 #ACR# (( needed programs ))
 #ACR# CHECK_PROGRAM INSTALL install
