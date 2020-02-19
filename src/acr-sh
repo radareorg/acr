@@ -2822,6 +2822,10 @@ ${EQUAL}\""
 			echo "`word` | PKGNAME must be defined before VERSION" >&2
 			exit 1
 		fi
+		if [ x != "x`echo \"$STR\" | grep ^@`" ]; then
+			F="`echo \"$STR\" | cut -c 2-`"
+			STR=$(cat $F)
+		fi
 		add_envword "VERSION"
 		INIVARS="${INIVARS} VERSION='${STR}' ;"
 		VERSION="${STR}"
