@@ -1004,7 +1004,7 @@ fi
 check_lib() {
 	_CHKLIB_NAME=$1
 	HAVE_LIBS=1
-	VAR=`echo "HAVE_LIB_$1" | sed -e 's,+,_AND_,g' -e 's,\.,_,g' | awk '{ print toupper($0); }'`
+	VAR=`echo "HAVE_LIB_$1" | sed -e 's,-,_,g' -e 's,+,_AND_,g' -e 's,\.,_,g' | awk '{ print toupper($0); }'`
 	add_envword "${VAR}"
 
 	get_current_compiler
