@@ -801,9 +801,9 @@ if [ "${S}{CROSSBUILD}" = 1 ]; then
  (command -v ${S}{HOST}-${S}{V} >/dev/null 2>&1)
  if [ ${S}? = 0 ]; then V="${S}{HOST}-${S}{V}"; fi
 fi
-echo "fn main() int {return 0}" > .test.V
+echo "fn main() {}" > .test.v
  (exec ${S}{V} ${S}{VFLAGS} .test.v >/dev/null 2>&1)
-if [ ${S}? = 0 ]; then echo ${S}{CC}; else
+if [ ${S}? = 0 ]; then echo ${S}{V}; else
  echo no ; HAVE_LANG_V=0
 _EOF_
 `
@@ -814,6 +814,20 @@ echo \"ERROR: ${S}{V} cannot create executables\" >&2 ;
 exit 1"
 	fi
 	SCRIPT="${SCRIPT} ; fi"
+}
+
+env_v() {
+	[ -n "${LANG_V_ENV}" ] && return
+	LANG=1
+	LANG_V=1
+	LANG_V_ENV="VFLAGS HAVE_LANG_V"
+	ACR_RMFILES="${ACR_RMFILES} .test.v .test"
+	REPORT_LANGS="${REPORT_LANGS} v"
+	add_lang_envwords "V"
+	ENVHELP="${ENVHELP}
+  V           V compiler command
+  VFLAGS      V compiler flags"
+	lang_v
 }
 ## }}}
 ## {{{ C
@@ -852,20 +866,6 @@ COMPILER=CC"
   CPPFLAGS    C/C++ preprocessor flags, e.g. -I<include dir> if you have
               headers in a nonstandard directory <include dir>
   CPP         C preprocessor"
-}
-
-env_v() {
-	[ -n "${LANG_V_ENV}" ] && return
-	LANG=1
-	LANG_V=1
-	LANG_V_ENV="VFLAGS HAVE_LANG_V"
-	ACR_RMFILES="${ACR_RMFILES} .test.v .test"
-	REPORT_LANGS="${REPORT_LANGS} v"
-	add_lang_envwords "V"
-	ENVHELP="${ENVHELP}
-  V           V compiler command
-  VFLAGS      V compiler flags"
-	lang_v
 }
 
 env_c() {
@@ -3098,7 +3098,7 @@ else"
 	"LANG_C")               env_c ; ;;
 	"LANG_C!")              LANG_C_REQUIRED=1; env_c ; ;;
 	"LANG_V")               env_v ; ;;
-	"LANG_V!")              LANG_C_REQUIRED=1; env_v ; ;;
+	"LANG_V!")              LANG_V_REQUIRED=1; env_v ; ;;
 	"LANG_OBJC")		env_objc ; ;;
 	"LANG_OBJC!")		LANG_OBJC_REQUIRED=1 ; env_objc ; ;;
 	"LANG_CC"|"LANG_CXX")   env_cxx ; ;;
