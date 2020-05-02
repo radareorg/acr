@@ -1077,6 +1077,35 @@ EOF
 	SCRIPT="${SCRIPT} ; fi"
 }
 ## }}}
+## {{{ | Check Symbol
+check_sym() {
+	HAVE_LIBS=1
+	VAR=`echo "HAVE_$1" | tr '[a-z]' '[A-Z]'`
+	add_envword "${VAR}"
+	get_current_compiler
+	SCRIPT=`cat <<EOF
+${SCRIPT}
+printf "checking symbol ${_CHKSYM_NAME}() in ${_CHKSYM_LIB}... "
+echo "int main(int ac, char **av){ return (int)(size_t)&${_CHKSYM_NAME}; }" > test.c
+${S}{${COMPILER}} ${S}{CFLAGS} ${S}{CPPFLAGS} ${S}{LDFLAGS} -l${_CHKSYM_LIB} test.c >/dev/null 2>&1
+if [ ${S}? = 0 ]; then
+	echo yes ; ${VAR}=1
+else
+	${VAR}=0 ; echo no
+EOF
+`
+	if [ 1 = "${_REQUIRED}" ]; then
+	SCRIPT=`cat <<EOF
+${SCRIPT}
+echo "this function is required." >&2
+do_remove
+exit 1
+EOF
+`
+	fi
+	SCRIPT="${SCRIPT} ; fi"
+}
+## }}}
 ## {{{ | Check Functions
 check_func() {
 	HAVE_LIBS=1
@@ -2010,6 +2039,19 @@ for STR2 in ${WORDS} NOP ; do
 			_CHKDECL=0
 			_CHKDECL_INC=""
 			_CHKDECL_NAME=""
+		fi
+		;;
+	"chksym")
+		IS_KEYWORD=0
+		if [ -z "${_CHKSYM_LIB}" ]; then
+			_CHKSYM_LIB="${STR}"
+		else
+			MODE=""
+			_CHKSYM_NAME=${STR}
+			check_sym $_CHKLIB_LIB ${_CHKSYM_NAME}
+			_CHKSYM=0
+			_CHKSYM_LIB=""
+			_CHKSYM_NAME=""
 		fi
 		;;
 	"chkfunc")
@@ -3085,6 +3127,13 @@ else"
 		fi
 		enter_mode "chkdecl" ${STR}
 		;;
+	"CHKSYM"|"CHKSYM!"|"CHECK_SYMBOL"|"CHECK_SYMBOL!")
+		if [ -z "${LANG_C}" ]; then
+			echo "`word` | Define LANG_C before use CHKSYM" >&2
+			exit 1
+		fi
+		enter_mode "chksym" ${STR}
+		;;
 	"CHKFNC"|"CHKFNC!"|"CHECK_FUNCTION"|"CHECK_FUNCTION!")
 		if [ -z "${LANG_C}" ]; then
 			echo "`word` | Define LANG_C before use CHECK_FUNC" >&2
@@ -3292,7 +3341,7 @@ else"
 	"ARG_DISABLE")
 		MODE="argument"
 		ARGUMENT=disable ;;
-	"CHECK_EXEC") MODE="check_exec"; ;;
+	"CHKEXE" | "CHECK_EXEC") MODE="check_exec"; ;;
 	"CHECK") MODE="check"; ;;
 	"="|"+="|"?="|"<-")
 		echo "The *old* format <op> <var> <value> is deprecated."  >&2

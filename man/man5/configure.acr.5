@@ -179,17 +179,19 @@ Uses JAVA_HOME to check and define the JCFLAGS for building java native interfac
 Checks if acr version is greater or equal than the given version.
 .It CHECK varname <<EOF <..src..> <<EOF
 Executes the <..code..> delimited by the <eof> keyword and marks varname as the target variable to be defined by the script. (see examples/check.acr fmi)
-.It CHECK_EXEC varname program\ ;
+.It CHKEXE,CHECK_EXEC[!] varname program\ ;
 Execute program and set varname = !!!$?
-.It CHECK_PROGRAM,CHKPRG[!] varname program
+.It CHKPRG, CHECK_PROGRAM[!] varname program
 Finds the program in ${PATH} and sets variable environment to the properly path. Since 0.5 CHKPRG exports HAVE_varname variable and checks first if VARNAME is a valid executable file.
-.It CHECK_INCLUDE,CHKINC[!] include.h[+include2.h[+include3.h]]
+.It CHKINC, CHECK_INCLUDE[!] include.h[+include2.h[+include3.h]]
 Checks if 'include.h' is found in the current system. Requires LANG_C and sets HAVE_include_H environment to 0 or 1 (for example: HAVE_STDIO_H)
-.It CHECK_FUNCTION,CHKFNC[!] libname function
+.It CHKFNC, CHECK_FUNCTION[!] libname function
 Checks if the desired function exists in libname and sets HAVE_FUNCTION to 0 or 1 (for example: HAVE_PRINTF)
-.It CHECK_DECLARATION,CHKDECL[!] include constant
+.It CHKSYM, CHECK_SYMBOL[!] libname symbol
+Checks if the given symbol exists in libname and sets HAVE_SYMBOL to 0 or 1 (for example: HAVE_ENVIRON)
+.It CHKDECL, CHECK_DECLARATION[!] include constant
 Checks if the given constant is defined in the specified include file
-.It CHECK_LIBRARY,CHKLIB[!] libname
+.It CHKLIB, CHECK_LIBRARY[!] libname
 Checks if the desired library exists on the system and sets HAVE_LIB_libname to 0 or 1 (for example: HAVE_LIB_SDL)
 .It ENDIAN|CHECK_ENDIAN
 Checks for the host endianness to be big or little. It'll export BYTEORDER=1234 on little endian hosts or 4321 for big endian ones.
