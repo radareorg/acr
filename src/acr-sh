@@ -1663,6 +1663,9 @@ if [ "${LANG_C}" = 1 ]; then
 	echo ": ${S}{CPP:=cpp}"
 	echo ": ${S}{CC:=gcc}"
 fi
+if [ "${LANG_V}" = 1 ]; then
+	echo ": ${S}{V:=v}"
+fi
 if [ "${LANG_CXX}" = 1 ]; then
 	echo ": ${S}{CPP:=cpp}"
 	echo ": ${S}{CXX:=g++}"
