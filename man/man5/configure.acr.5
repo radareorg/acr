@@ -1,4 +1,4 @@
-.Dd Feb 12, 2015
+.Dd May 3, 2020
 .Dt CONFIGURE.ACR 5
 .Os
 .Sh NAME
@@ -129,6 +129,8 @@ on the target machine.
 .Bl -tag -width indent
 .It LANG_C[!]
 ACR will look for a C compiler and sets CC, depends for implicit LANG_CPP.
+.It LANG_V[!]
+ACR will look for the V compiler and sets V and VFLAGS.
 .It LANG_CC[!] LANG_CXX[!]
 Adds C++ support and sets CXX environ.
 .It LANG_BASH[!]

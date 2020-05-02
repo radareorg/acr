@@ -99,6 +99,7 @@ C="\`"
 
 # Language initialization
 LANG=0           # No langs yet defined
+LANG_V=""        LANG_V_REQUIRED=""      LANG_V_ENV=""
 LANG_C=""        LANG_C_REQUIRED=""      LANG_C_ENV=""    LANG_CPP_ENV=""
 LANC_CXX=""      LANG_CXX_REQUIRED=""    LANG_CXX_ENV=""
 LANG_VALA=""     LANG_VALA_REQUIRED=""   LANG_VALA_ENV=""
@@ -790,6 +791,31 @@ fi
 	SCRIPT="${SCRIPT} fi"
 }
 ## }}}
+## {{{ V
+lang_v() {
+SCRIPT=`cat <<_EOF_
+${SCRIPT}
+printf "checking for V compiler... "
+HAVE_LANG_V=1
+if [ "${S}{CROSSBUILD}" = 1 ]; then
+ (command -v ${S}{HOST}-${S}{V} >/dev/null 2>&1)
+ if [ ${S}? = 0 ]; then V="${S}{HOST}-${S}{V}"; fi
+fi
+echo "fn main() int {return 0}" > .test.V
+ (exec ${S}{V} ${S}{VFLAGS} .test.v >/dev/null 2>&1)
+if [ ${S}? = 0 ]; then echo ${S}{CC}; else
+ echo no ; HAVE_LANG_V=0
+_EOF_
+`
+	if [ "${LANG_V_REQUIRED}" = 1 ]; then
+SCRIPT="${SCRIPT}
+do_remove
+echo \"ERROR: ${S}{V} cannot create executables\" >&2 ;
+exit 1"
+	fi
+	SCRIPT="${SCRIPT} ; fi"
+}
+## }}}
 ## {{{ C
 lang_c() {
 SCRIPT=`cat <<_EOF_
@@ -826,6 +852,20 @@ COMPILER=CC"
   CPPFLAGS    C/C++ preprocessor flags, e.g. -I<include dir> if you have
               headers in a nonstandard directory <include dir>
   CPP         C preprocessor"
+}
+
+env_v() {
+	[ -n "${LANG_V_ENV}" ] && return
+	LANG=1
+	LANG_V=1
+	LANG_V_ENV="VFLAGS HAVE_LANG_V"
+	ACR_RMFILES="${ACR_RMFILES} .test.v .test"
+	REPORT_LANGS="${REPORT_LANGS} v"
+	add_lang_envwords "V"
+	ENVHELP="${ENVHELP}
+  V           V compiler command
+  VFLAGS      V compiler flags"
+	lang_v
 }
 
 env_c() {
@@ -3054,6 +3094,8 @@ else"
 	##LANGS##
 	"LANG_C")               env_c ; ;;
 	"LANG_C!")              LANG_C_REQUIRED=1; env_c ; ;;
+	"LANG_V")               env_v ; ;;
+	"LANG_V!")              LANG_C_REQUIRED=1; env_v ; ;;
 	"LANG_OBJC")		env_objc ; ;;
 	"LANG_OBJC!")		LANG_OBJC_REQUIRED=1 ; env_objc ; ;;
 	"LANG_CC"|"LANG_CXX")   env_cxx ; ;;
@@ -3408,6 +3450,12 @@ JAVAC=@JAVAC@
 	${S}{JAVAC} $<
 EOF
 fi
+
+[ "${LANG_V}" = 1 ] &&\
+cat >> Makefile.acr <<EOF
+V=@V@
+VFLAGS=@VFLAGS@
+EOF
 
 [ "${LANG_C}" = 1 ] &&\
 cat >> Makefile.acr <<EOF
