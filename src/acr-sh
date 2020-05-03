@@ -267,6 +267,10 @@ reset_vars() {
 	_IF_VALUE=""
 }
 
+var_filter() {
+	echo $* | sed -e 's,\.,_,g' -e 's,/,_,g' -e 's,+,_,g' | tr '[a-z]' '[A-Z]' | tr '.-' '__'
+}
+
 get_current_compiler() {
 	case "${CURRENT_LANG}" in
 	"c")   COMPILER="CC" ; ;;
@@ -648,7 +652,7 @@ env_python() {
 ## {{{ - modules
 check_py() {
 	HAVE_LIBS=1
-	VAR=`echo "HAVE_PY_$1" | sed -e 's, ,,g' | tr '[a-z]' '[A-Z]'`
+	VAR=`var_filter "HAVE_PY_$1"`
 	add_envword "${VAR}"
 	SCRIPT=`cat <<EOF
 ${SCRIPT}
@@ -769,7 +773,7 @@ env_perl() {
 ## {{{ + modules
 check_pm() {
 	HAVE_LIBS=1
-	VAR=`echo "HAVE_PM_$1" | sed -e 's, ,,g;s,:,,g' | tr '[a-z]' '[A-Z]'`
+	VAR=`var_filter "HAVE_PM_$1"`
 	add_envword "${VAR}"
 
 	SCRIPT="${SCRIPT}
@@ -975,7 +979,7 @@ EOF
 _CHECK_INC=""
 check_inc() {
 	INC=$1
-	VAR=`echo "HAVE_$1" | sed -e 's,\.,_,g' -e 's,/,_,g' -e 's,+,_,g' | tr "[a-z]" "[A-Z]"`
+	VAR=`var_filter "HAVE_$1"`
 	add_envword "${VAR}"
 	get_current_compiler
 
@@ -1090,7 +1094,7 @@ check_library ${VAR} ${_CHKLIB_NAME} ${_REQUIRED}"
 ## {{{ | Check Declarations
 check_decl() {
 	HAVE_DECL=1
-	VAR=`echo "HAVE_DECL_$2" | tr '[a-z]' '[A-Z]' | tr './' '__'`
+	VAR=`var_filter "HAVE_DECL_$2"`
 	add_envword "${VAR}"
 	get_current_compiler
 	SCRIPT=`cat <<EOF
@@ -1149,7 +1153,7 @@ EOF
 ## {{{ | Check Symbol
 check_sym() {
 	HAVE_LIBS=1
-	VAR=`echo "HAVE_$1" | tr '[a-z]' '[A-Z]'`
+	VAR=`var_filter "HAVE_$1"`
 	add_envword "${VAR}"
 	get_current_compiler
 	SCRIPT=`cat <<EOF
@@ -1178,7 +1182,7 @@ EOF
 ## {{{ | Check Functions
 check_func() {
 	HAVE_LIBS=1
-	VAR=`echo "HAVE_$1" | tr '[a-z]' '[A-Z]'`
+	VAR=`var_filter "HAVE_$1"`
 	add_envword "${VAR}"
 	get_current_compiler
 	SCRIPT=`cat <<EOF
@@ -2159,7 +2163,7 @@ for STR2 in ${WORDS} NOP ; do
 		MODE=""
 		IS_KEYWORD=0
 		REPORT_REQUIRED="${REPORT_REQUIRED} ${STR}"
-		VAR=`echo HAVE_CLASSPATH_${STR} | tr '[a-z]' '[A-Z]'| tr '.-' '__'`
+		VAR=`var_filter "HAVE_CLASSPATH_${STR}"`
 		SCRIPT="
 ${SCRIPT}
 printf \"checking for classpath ${STR}... \"
@@ -2268,7 +2272,7 @@ EOF
 		IS_KEYWORD=0;
 		if [ -z "${CHKUSR_NAME}" ]; then
 		CHKUSR_NAME=":${STR}"
-		CHKUSR_VAR="HAVE_GROUP_`echo $STR|tr '[a-z]' '[A-Z]'`"
+		CHKUSR_VAR=`var_filter "HAVE_GROUP_$STR"`
 		CHKUSR_TARGET="group"
 		MODE="chkusr"
 		fi
@@ -2277,7 +2281,7 @@ EOF
 		IS_KEYWORD=0;
 		if [ -z "${CHKUSR_NAME}" ]; then
 			CHKUSR_NAME=${STR}
-			CHKUSR_VAR="HAVE_USER_`echo $CHKUSR_NAME|tr '[a-z]' '[A-Z]'`"
+			CHKUSR_VAR=`var_filter "HAVE_USER_$CHKUSR_NAME"`
 		else
 		ACR_RMFILES="${ACR_RMFILES} .usrgrp.tmp"
 		# HAVE_USER_WWWDATA=0
@@ -2313,7 +2317,7 @@ EOF
 		fi
 	
 		# HAVE_GLIB_2_0_VERSION_2_18
-		VAR=`echo HAVE_${_CHKVER_LIB}_VERSION_${STR} | tr '[a-z]' '[A-Z]'| tr '.-' '__'`
+		VAR=`var_filter echo HAVE_${_CHKVER_LIB}_VERSION_${STR}`
 		add_envword ${VAR}
 		SCRIPT=`cat <<EOF
 ${SCRIPT}
@@ -2742,7 +2746,7 @@ ${STR} ; fi"
 		;;
 	"valapkg")
 		IS_KEYWORD=0
-		TMP_VAR="HAVE_VALAPKG_`echo ${STR}| sed -e 's,\.,_,g' -e 's,-,_,g' -e 's,+,,g' | tr '[a-z]' '[A-Z]'`"
+		TMP_VAR=`var_filter "HAVE_VALAPKG_${STR}"`
 		add_envword ${TMP_VAR}
 		# TODO: Use EOF or F="$F B"
 		REPORT_PKGCFG="${REPORT_PKGCFG} ${STR}"
@@ -2769,7 +2773,7 @@ ${STR} ; fi"
 		else
 			add_envword ${_PC_CFLAGS}
 			add_envword ${_PC_LDFLAGS}
-			TMP_VAR="HAVE_PKGCFG_`echo ${STR}| sed -e 's,\.,_,g' -e 's,-,_,g' -e 's,+,,g' | tr '[a-z]' '[A-Z]'`"
+			TMP_VAR=`var_filter "HAVE_PKGCFG_${STR}"`
 			add_envword ${TMP_VAR}
 			# TODO: Use EOF or F="$F B"
 			REPORT_PKGCFG="${REPORT_PKGCFG} ${STR}"
