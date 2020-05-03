@@ -12,8 +12,8 @@ if [ $? = 1 ]; then
 	echo "Cannot create vim directoryes at \$HOME"
 	exit 1
 fi
-cp ${DATADIR}/acr/vim/ftplugin/acr.vim ~/.vim/ftplugin/acr.vim
-cp ${DATADIR}/acr/vim/syntax/acr.vim ~/.vim/syntax/acr.vim
+cp -f ${DATADIR}/acr/vim/ftplugin/acr.vim ~/.vim/ftplugin/acr.vim
+cp -f ${DATADIR}/acr/vim/syntax/acr.vim ~/.vim/syntax/acr.vim
 
 if [ "$1" = "-f" ]; then
 	if [ -e ~/.vimrc ]; then
@@ -21,21 +21,18 @@ if [ "$1" = "-f" ]; then
 	cat ~/.vimrc.orig | grep -v "source ~/.vim/acr" > ~/.vimrc
 	echo "Original .vimrc stored in ~/.vimrc.orig"
 	fi
-else
-if [ -e ~/.vimrc ]; then
-if [ -n "`cat ~/.vimrc | grep acr | grep source`" ]; then
-	echo "Failed: It looks that your have already acr syntax highlighting."
-	echo "If you want to force installation remove the acr related line in ~/.vimrc"
-	echo "This operation can be forced (-f), but may modify your ~/.vimrc (DANGEROUS)"
-	exit 1
-fi
-fi
-fi
+else if [ -e ~/.vimrc ]; then
+	if [ -n "`cat ~/.vimrc | grep acr | grep source`" ]; then
+		echo "Failed: It looks that your have already acr syntax highlighting."
+		echo "If you want to force installation remove the acr related line in ~/.vimrc"
+		echo "This operation can be forced (-f), but may modify your ~/.vimrc (DANGEROUS)"
+		exit 1
+	fi
+fi ; fi
 
 mkdir -p ~/.vim/
 cp -f ${DATADIR}/acr/vim/vimrc ~/.vim/acr
 echo "source ~/.vim/acr" >> ~/.vimrc
-
 echo "Success: acr syntax highlighting for vim installed at \${HOME}."
 
 exit 0
