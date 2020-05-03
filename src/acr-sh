@@ -1117,6 +1117,35 @@ EOF
 	SCRIPT="${SCRIPT} ; fi"
 }
 ## }}}
+## {{{ | Check CFLAGS
+check_cflags() {
+	HAVE_LIBS=1
+	VAR=${_CHKFLG_VAR}
+	add_envword "${VAR}"
+	get_current_compiler
+	SCRIPT=`cat <<EOF
+${SCRIPT}
+printf "checking cflags ${_CHKFLG_NAME}... "
+echo "int main(int ac, char **av){ return 0; }" > .test.c
+${S}{${COMPILER}} ${_CHKFLG_NAME} ${S}{CFLAGS} ${S}{CPPFLAGS} ${S}{LDFLAGS} $* .test.c >/dev/null 2>&1
+if [ ${S}? = 0 ]; then
+	echo yes ; ${VAR}=1
+else
+	${VAR}=0 ; echo no
+EOF
+`
+	if [ 1 = "${_REQUIRED}" ]; then
+	SCRIPT=`cat <<EOF
+${SCRIPT}
+echo "this compiler flag is required." >&2
+do_remove
+exit 1
+EOF
+`
+	fi
+	SCRIPT="${SCRIPT} ; fi"
+}
+## }}}
 ## {{{ | Check Symbol
 check_sym() {
 	HAVE_LIBS=1
@@ -2082,6 +2111,22 @@ for STR2 in ${WORDS} NOP ; do
 			_CHKDECL=0
 			_CHKDECL_INC=""
 			_CHKDECL_NAME=""
+		fi
+		;;
+	"chkflg")
+		IS_KEYWORD=0
+		if [ -z "${_CHKFLG_VAR}" ]; then
+			_CHKFLG_VAR="${STR}"
+		else
+			if [ "${STR}" == ";" ]; then
+				check_cflags "${_CHKFLG_NAME}"
+				_CHKFLG_NAME=""
+				_CHKFLG_VAR=""
+				_CHKFLG=0
+				MODE=""
+			else
+				_CHKFLG_NAME="${_CHKFLG_NAME} ${STR}"
+			fi
 		fi
 		;;
 	"chksym")
@@ -3172,6 +3217,13 @@ else"
 		fi
 		enter_mode "chkdecl" ${STR}
 		;;
+	"CHKFLG"|"CHKFLG!"|"CHECK_CFLAGS"|"CHECK_CFLAGS!")
+		if [ -z "${LANG_C}" ]; then
+			echo "`word` | Define LANG_C before use CHKFLG" >&2
+			exit 1
+		fi
+		enter_mode "chkflg" ${STR}
+		;;
 	"CHKSYM"|"CHKSYM!"|"CHECK_SYMBOL"|"CHECK_SYMBOL!")
 		if [ -z "${LANG_C}" ]; then
 			echo "`word` | Define LANG_C before use CHKSYM" >&2
@@ -3386,8 +3438,12 @@ else"
 	"ARG_DISABLE")
 		MODE="argument"
 		ARGUMENT=disable ;;
-	"CHKEXE" | "CHECK_EXEC") MODE="check_exec"; ;;
-	"CHECK") MODE="check"; ;;
+	"CHKEXE" | "CHECK_EXEC")
+		MODE="check_exec"
+		;;
+	"CHECK")
+		MODE="check"
+		;;
 	"="|"+="|"?="|"<-")
 		echo "The *old* format <op> <var> <value> is deprecated."  >&2
 		echo "Please use the standard format <var> <op> <value>."  >&2

@@ -187,6 +187,8 @@ Execute program and set varname = !!!$?
 Finds the program in ${PATH} and sets variable environment to the properly path. Since 0.5 CHKPRG exports HAVE_varname variable and checks first if VARNAME is a valid executable file.
 .It CHKINC, CHECK_INCLUDE[!] include.h[+include2.h[+include3.h]]
 Checks if 'include.h' is found in the current system. Requires LANG_C and sets HAVE_include_H environment to 0 or 1 (for example: HAVE_STDIO_H)
+.It CHKFLG, CHECK_CFLAGS[!] varname cflags\ ;
+Checks if the selected C compiler supports the given CFLAGS (Useful for -std=c99 and such)
 .It CHKFNC, CHECK_FUNCTION[!] libname function
 Checks if the desired function exists in libname and sets HAVE_FUNCTION to 0 or 1 (for example: HAVE_PRINTF)
 .It CHKSYM, CHECK_SYMBOL[!] libname symbol
