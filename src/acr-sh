@@ -2317,7 +2317,7 @@ EOF
 		fi
 	
 		# HAVE_GLIB_2_0_VERSION_2_18
-		VAR=`var_filter echo HAVE_${_CHKVER_LIB}_VERSION_${STR}`
+		VAR=`var_filter HAVE_${_CHKVER_LIB}_VERSION_${STR}`
 		add_envword ${VAR}
 		SCRIPT=`cat <<EOF
 ${SCRIPT}
