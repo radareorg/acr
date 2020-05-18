@@ -24,6 +24,8 @@ install:
 	mkdir -p "$(BINDIR)"
 	sed -e 's,@''VERSION@,$(VERSION),g' "$(VPATH)/src/acr" > "$(BINDIR)/acr"
 	chmod +x "$(BINDIR)/acr"
+	sed -e 's,@''VERSION@,$(VERSION),g' "$(VPATH)/src/acr-cat" > "$(BINDIR)/acr-cat"
+	chmod +x "$(BINDIR)/acr-cat"
 	sed -e 's,@''VERSION@,$(VERSION),g' "$(VPATH)/src/acr-sh" > "$(BINDIR)/acr-sh"
 	chmod +x "$(BINDIR)/acr-sh"
 	$(INSTALL_SCRIPT) "$(VPATH)/src/amr" "$(BINDIR)/amr"
