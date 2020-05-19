@@ -2122,7 +2122,7 @@ for STR2 in ${WORDS} NOP ; do
 		if [ -z "${_CHKFLG_VAR}" ]; then
 			_CHKFLG_VAR="${STR}"
 		else
-			if [ "${STR}" == ";" ]; then
+			if [ "${STR}" = ";" ]; then
 				check_cflags "${_CHKFLG_NAME}"
 				_CHKFLG_NAME=""
 				_CHKFLG_VAR=""
