@@ -30,7 +30,6 @@ install:
 	chmod +x "$(BINDIR)/acr-sh"
 	$(INSTALL_SCRIPT) "$(VPATH)/src/amr" "$(BINDIR)/amr"
 	$(INSTALL_SCRIPT) "$(VPATH)/src/acr-install" "$(BINDIR)/acr-install"
-	$(INSTALL_SCRIPT) "$(VPATH)/src/acr-cat" "$(BINDIR)/acr-cat"
 	mkdir -p "$(MANDIR)/man1/" "$(MANDIR)/man5/"
 	${INSTALL_MAN} "$(VPATH)/man/man1/acr.1" "$(MANDIR)/man1/"
 	${INSTALL_MAN} "$(VPATH)/man/man1/amr.1" "$(MANDIR)/man1/"
