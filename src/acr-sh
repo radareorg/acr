@@ -3187,11 +3187,11 @@ else"
 		add_flag x X_LIBRARIES libraries "=" "Points to the X11 library directory" "=DIR"
 		USE_X11=1   ; ;;
 	"USE_GMAKE") USE_GMAKE=1 ; env_gmake ; ;;
-	"PKGNAME")	MODE="pkgname" ; ;;
-	"VERSION")	MODE="version" ; ;;
-	"CONTACT")	MODE="contact" _CONTACT=1 ; ;;
-	"AUTHOR")	MODE="author" _AUTHOR=1 ; ;;
-	"ARG_IGNORE")  MODE="arg_ignore" ; ;;
+	"PKGNAME") MODE="pkgname" ; ;;
+	"VERSION") MODE="version" ; ;;
+	"CONTACT") MODE="contact" _CONTACT=1 ; ;;
+	"AUTHOR")  MODE="author" _AUTHOR=1 ; ;;
+	"ARG_IGNORE") MODE="arg_ignore" ; ;;
 	"INCLUDE")
 		if [ "${INSIDE_INCLUDE}" = 1 ]; then
 			echo "ERROR: Cannot nest includes." >&2
@@ -3463,6 +3463,11 @@ done # inner loop
 done
 
 if [ "${IS_KEYWORD}" = 1 ]; then
+	echo "`word` | Unexpected end of file." >&2
+	exit 1
+fi
+
+if [ -n "$MODE" ]; then
 	echo "`word` | Unexpected end of file." >&2
 	exit 1
 fi
