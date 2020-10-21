@@ -1,0 +1,6 @@
+PACKAGE=acr
+ARCH=all
+SECTION=devel
+PRIORITY=optional
+MAINTAINER=pancake <pancake@nopcode.org>
+VERSION=$(shell ../../configure --quiet-version)

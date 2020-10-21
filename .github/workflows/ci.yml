@@ -21,6 +21,7 @@ on: push
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   build:
+
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
@@ -36,3 +37,9 @@ jobs:
       run: make -C tests
     - name: Regenerate
       run: sh autogen.sh
+    - name: Debian
+      run: make -C dist
+    - name: Pub
+      uses: actions/upload-artifact@v2
+      with:
+        path: dist/acr/*.deb
