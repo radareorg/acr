@@ -176,7 +176,6 @@ ocho() {
 }
 
 show_version() {
-<<<<<<< HEAD
 if [ "$QUIET" = 1 ]; then
 	echo "1.9.3"
 	exit 0

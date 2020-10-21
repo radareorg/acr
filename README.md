@@ -1,6 +1,8 @@
 ACR: Auto Conf Replacement
 ==========================
 
+![ci](https://github.com/radare/acr/workflows/ci/badge.svg)
+
 ACR tries to replace autoconf functionality generating a full-compatible
 'configure' script (runtime flags). But using shell-script instead of m4.
 This means that ACR is faster, smaller and easy to use.
