@@ -887,7 +887,6 @@ env_c() {
 	ENVHELP="${ENVHELP}
   CC          C compiler command
   CFLAGS      C compiler flags
-  CPPFLAGS    C preprocessor flags
   LDFLAGS     linker flags, e.g. -L<lib dir> if you have libraries in a
               nonstandard directory <lib dir>"
 	env_cpp
