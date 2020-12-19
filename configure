@@ -338,7 +338,7 @@ if [ -f "${VPATH}/${A}.acr" ]; then
   fi
  fi
  ocho "creating ${SD_TARGET}"
-mkdir -p $(echo ${A} | sed -e "s,/`basename ${A}`$,,g")
+[ "${VPATH}" != '.' ] &&  mkdir -p $(echo ${A} | sed -e "s,/`basename ${A}`$,,g")
  cat ${VPATH}/${SD_TARGET}.acr | \
 eval sed -e "s,@VPATH@,${VPATH}/${A},g" ${SEDFLAGS} > ${SD_TARGET}.tmp
 
