@@ -1,4 +1,4 @@
-.Dd May 3, 2020
+.Dd Dec 19, 2020
 .Dt CONFIGURE.ACR 5
 .Os
 .Sh NAME
@@ -157,6 +157,8 @@ Finds a ruby executable on the current system. Exports RUBY, HAVE_LANG_RUBY and 
 Sets LIBS_DL to \-ldl or "" depending on the target system.
 .It USE_LIBTOOL
 Checks for the libtool command and exports LIBTOOL_CC, LIBTOOL_CXX and some useful commands for your makefiles: LIBTOOL_SHARED, LIBTOOL_STATIC and LIBTOOL_INSTALL.
+.It USE_PKGCONFIG | USE_PKGCONFIG!
+Check for pkg-config or pkgconf program in PATH. Required for the PKGCFG directive
 .It USE_ICONV
 Sets LIBS_ICONV to \-liconv or "" depending if iconv functions are implemented
 into the LibC or not.

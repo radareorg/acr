@@ -136,7 +136,7 @@ CHKUSR_TARGET=""
 HAVE_LIBS=0
 REPORT=""
 _REQUIRED=0
-#- pkgconfig -#
+_USE_PKGCONFIG=0
 _USE_LIBTOOL=0
 _USE_LIBTOOL_REQUIRED=0
 _USE_PTHREAD=0
@@ -1317,6 +1317,50 @@ env_tcl() {
 	add_flag with TCL_BASEDIR tcl-basedir "=" "Sets the TCL basedir to find [/usr]/lib/tclConfig.sh"
 
 	lang_tcl
+}
+## }}}
+## {{{ PkgConfig
+use_pkgconfig() {
+	_USE_PKGCONFIG=1
+	add_envword "PKGCONFIG"
+	SCRIPT=`cat <<EOF
+${SCRIPT}
+ochof "checking for pkg-config... "
+if [ -n "${S}PKGCONFIG" ]; then
+	if [ -x "${S}PKGCONFIG" ]; then
+		_HAVE_PKGCONFIG="${S}{PKGCONFIG}"
+	else
+		ocho "PKGCONFIG env is not executable"
+		PKGCONFIG=""
+	fi
+else
+	IFS=:
+	for A in ${S}{PATH} ; do
+		if [ -x "${S}{A}/pkg-config" ]; then
+			PKGCONFIG="${S}{A}/pkg-config"
+		elif [ -x "${S}{A}/pkgconf" ]; then
+			PKGCONFIG="${S}{A}/pkgconf"
+		else
+			continue
+		fi
+		break
+	done
+	unset IFS
+fi
+if [ -n "${S}{PKGCONFIG}" ]; then
+	ocho ${S}{PKGCONFIG}
+else
+EOF
+`
+if [ "${_REQUIRED}" = 1 ]; then
+SCRIPT=`cat <<EOF
+${SCRIPT}
+	echo "Cannot find pkg-config or pkgconf in PATH" >&2
+	exit 1
+EOF
+`
+fi
+	SCRIPT="${SCRIPT} ocho no; fi"
 }
 ## }}}
 ## {{{ Libtool
@@ -2795,6 +2839,10 @@ ${STR} ; fi"
 		MODE=""
 		;;
 	"pkgconfig")
+		if [ "${_USE_PKGCONFIG}" = 0 ]; then
+			echo "PKGCFG directive requires USE_PKGCONFIG" >&2
+			exit 1
+		fi
 		IS_KEYWORD=0
 		if [ -z "${_PC_CFLAGS}" ]; then
 			_PC_CFLAGS="${STR}"
@@ -3356,6 +3404,14 @@ else"
 			_REQUIRED=0
 		fi
 		use_libtool
+		;;
+	"USE_PKGCONFIG"|"USE_PKGCONFIG!")
+		if [ "`echo ${STR}| grep '!'`" ]; then
+			_REQUIRED=1
+		else
+			_REQUIRED=0
+		fi
+		use_pkgconfig
 		;;
 	"USE_PTHREAD"|"USE_PTHREAD!")
 		if [ -z "${LANG_C}${LANG_CXX}" ]; then
