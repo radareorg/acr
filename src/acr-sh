@@ -111,7 +111,7 @@ LANG_RUBY=""     LANG_RUBY_REQUIRED=""   LANG_RUBY_ENV=""
 LANG_LUA=""      LANG_LUA_REQUIRED=""    LANG_LUA_ENV=""
 # Defaults
 PKGNAME="example"
-VERSION="1.0"
+VERSION="0.1.0"
 _CONTACT=0
 CONTACT_MAIL=""
 CONTACT_NAME=""
@@ -255,6 +255,14 @@ add_lang_envwords() {
 
 word() {
 	printf "%04d" $WORDS_N
+}
+
+append() {
+	SCRIPT="`cat <<EOF
+${SCRIPT}
+$@
+EOF
+`"
 }
 
 reset_vars() {
@@ -2446,7 +2454,7 @@ fi
 EOF
 `
 		;;
-	"exec")
+	"exec"|"exec!")
 		IS_KEYWORD=0
 		if [ -z "${_EXEC_VAR}" ]; then
 			_EXEC_VAR="${STR}"
@@ -2455,8 +2463,7 @@ EOF
 		enter_string_mode ${STR}
 		wait_string_mode
 		add_envword "${_EXEC_VAR}"
-		SCRIPT=`cat <<EOF
-${SCRIPT}
+		append "`cat<<EOF
 printf "checking exec ${STRING}... "
 ${_EXEC_VAR}="\\\`${STRING} 2>/dev/null\\\`"
 if [ ${S}? = 0 ]; then
@@ -2464,9 +2471,11 @@ if [ ${S}? = 0 ]; then
 else
 	${_EXEC_VAR}=""
 	echo "not found"
-fi
 EOF
-`
+`"
+		[ "$MODE" = 'exec!' ] && \
+			append "echo 'required'; exit 1"
+		append "fi"
 		MODE=""
 		_EXEC_VAR=""
 		leave_string_mode
@@ -3514,7 +3523,11 @@ else"
 			echo "`word` | ignored twice USE_DL found at ${_USE_DL_USED}." >&2
 		fi ;;
 	"EXEC")
-		MODE="exec" ;;
+		MODE="exec"
+		;;
+	"EXEC!")
+		MODE="exec!"
+		;;
 	"USE_ICONV")
 		MODE="useiconv" ;;
 	"ARG_WITH")

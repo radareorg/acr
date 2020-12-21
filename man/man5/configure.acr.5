@@ -226,7 +226,7 @@ Sets the value of varname to value.
 Appends the content of varname with value.
 .It ?= varname value\ ;
 If the content of varname is empty then assign the value to it.
-.It EXEC variable command to execute\ ;
+.It EXEC[!] variable command to execute\ ;
 Sets variable to the output (stdout) of the desired command to be executed.
 .It CHECK_VERSION,CHKVER[!] pkgname version
 Checks if pkgname (software package registered into pkg-config database) is <= version. And crashes execution if it fails. It exports the HAVE_(pkgname)_VERSION_(version) variable to 0 or 1.
