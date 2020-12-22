@@ -905,15 +905,18 @@ lang_cpp() {
 	LANG=1
 	if [ "${LANG_CPP_ENV}" ]; then return ; fi
 	add_envword "CPP"
-	echo "ochof \"checking for cpp... \""
-	echo "if [ \"${S}{CROSSBUILD}\" = 1 ]; then"
-	echo "(exec ${S}{HOST}-${S}{CPP} --help >/dev/null 2>&1)"
-	echo "[ ${S}? = 0 ] && CPP=\"${S}{HOST}-${S}{CPP}\""
-	echo "fi"
-	echo "(echo \"int main(int ac, char **av){return 0;}\" | ${S}{CPP} ${CPPFLAGS} >/dev/null 2>&1)"
-	echo "if [ \$? = 0 ]; then echo ${S}{CPP}; else"
-	echo "echo \"ERROR: ${S}{CPP} cannot parse sources\"; fi"
-	echo ""
+	SCRIPT="`cat<<EOF
+	$SCRIPT
+	ochof \"checking for cpp... \"
+	if [ \"${S}{CROSSBUILD}\" = 1 ]; then
+	(exec ${S}{HOST}-${S}{CPP} --help >/dev/null 2>&1)
+	[ ${S}? = 0 ] && CPP=\"${S}{HOST}-${S}{CPP}\"
+	fi
+	(echo \"int main(int ac, char **av){return 0;}\" | ${S}{CPP} ${CPPFLAGS} >/dev/null 2>&1)
+	if [ \$? = 0 ]; then echo ${S}{CPP}; else
+	echo \"ERROR: ${S}{CPP} cannot parse sources\"; fi
+EOF
+`"
 }
 ## }}}
 ## {{{ C++
