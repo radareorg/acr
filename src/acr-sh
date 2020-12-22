@@ -478,7 +478,7 @@ use_jni() {
 	REPORT_REQUIRED="${REPORT_REQUIRED} JNI"
 	SCRIPT=`cat <<EOF
 ${SCRIPT}
-printf "checking for java native interface (jni)... "
+ochof "checking for java native interface (jni)... "
 if [ -z "${S}{JAVA_HOME}" ]; then
 	echo no
 	echo "ERROR: JAVA_HOME not defined." >&2
@@ -531,7 +531,7 @@ lang_bash() {
 	REPORT_LANGS="${REPORT_LANGS} bash"
 	SCRIPT=`cat <<_EOF_
 ${SCRIPT}
-printf "checking for bash... "
+ochof "checking for bash... "
 type bash 2>&1 >/dev/null
 if [ ${S}? = 0 ]; then echo yes ;
 SH=\`sh -c "command -v bash 2>/dev/null"\`
@@ -563,7 +563,7 @@ EOF
 ## lang_ruby
 	SCRIPT=`cat <<_EOF_
 ${SCRIPT}
-printf "checking for ruby... "
+ochof "checking for ruby... "
 HAVE_LANG_RUBY=0
 for A in \\\`echo ${S}{PATH} | sed -e 's,:, ,g'\\\`; do
 RUBY=\\\`ls ${S}{A}/ruby* 2>/dev/null\\\`
@@ -599,7 +599,7 @@ check_ru() {
 
 	SCRIPT=`cat <<EOF
 ${SCRIPT}
-printf "checking for ${1} ruby extension... "
+ochof "checking for ${1} ruby extension... "
 if [ -z "${S}{RUBY}" ]; then
 	false
 else
@@ -627,7 +627,7 @@ fi
 lang_python() {
 	SCRIPT=`cat <<_EOF_
 ${SCRIPT}
-printf "checking for python... "
+ochof "checking for python... "
 HAVE_LANG_PYTHON=0
 for A in \\\`echo ${S}{PATH} | sed -e 's,:, ,g'\\\` ; do
 PYTHON=\\\`ls ${S}{A}/python* 2>/dev/null\\\`
@@ -668,7 +668,7 @@ check_py() {
 	add_envword "${VAR}"
 	SCRIPT=`cat <<EOF
 ${SCRIPT}
-printf "checking for ${1} python module... "
+ochof "checking for ${1} python module... "
 if [ -z "${PYTHON}" ]; then false ; else
 \\\`echo import ${1} | ${S}{PYTHON} - 2>&1 >/dev/null\\\` 2>/dev/null
 fi
@@ -691,12 +691,12 @@ fi
 ## {{{ Lua
 lang_lua() {
 	SCRIPT="${SCRIPT}
-printf \"checking for lua... \"
+ochof \"checking for lua... \"
 HAVE_LANG_LUA=0
 ${S}{LUA} -v > /dev/null 2>&1
 if [ ${S}? = 0 ]; then
   echo ok ; HAVE_LANG_LUA=1 ;
-echo \"checking for lua libs... \""
+ocho \"checking for lua libs... \""
 if [ "${LANG_C}" = 1 ]; then
 	check_lib lua
 	check_lib lua5.1
@@ -740,7 +740,7 @@ env_perl_threads() {
 	fi
 
 	SCRIPT="${SCRIPT}
-printf \"checking for perl threads... \"
+ochof \"checking for perl threads... \"
 HAVE_LANG_PERL_THREADS=1
 ${S}{PERL} -e 'use threads;' 2>&1 > /dev/null
 if [ ${S}? = 0 ]; then
@@ -756,12 +756,12 @@ if [ ${S}? = 0 ]; then
 
 lang_perl() {
 	SCRIPT="${SCRIPT}
-printf \"checking for perl... \"
+ochof \"checking for perl... \"
 HAVE_LANG_PERL=0
 ${S}{PERL} -e '' 2>&1 > /dev/null
 if [ ${S}? = 0 ]; then
-  echo ok ; HAVE_LANG_PERL=1 ; else
-  echo no "
+  ocho ok ; HAVE_LANG_PERL=1 ; else
+  ocho no "
 	if [ "${_REQUIRED}" = 1 ]; then
 	SCRIPT="${SCRIPT}
 echo \"${LINENO}: You need perl installed on your system.\" >&2
@@ -789,14 +789,14 @@ check_pm() {
 	add_envword "${VAR}"
 
 	SCRIPT="${SCRIPT}
-printf \"checking for '${1}' perl module ... \"
+ochof \"checking for '${1}' perl module ... \"
 perl -m${1} -e '' 2>/dev/null
 if [ ${S}? = 0 ]; then
 	${VAR}=1
-	echo ok
+	ocho ok
 else
 	${VAR}=0
-	echo no
+	ocho no
 "
 if [ "${_REQUIRED}" = 1 ]; then
 	SCRIPT="${SCRIPT}
@@ -811,7 +811,7 @@ fi
 lang_v() {
 SCRIPT=`cat <<_EOF_
 ${SCRIPT}
-printf "checking for V compiler... "
+ochof "checking for V compiler... "
 HAVE_LANG_V=1
 if [ "${S}{CROSSBUILD}" = 1 ]; then
  (command -v ${S}{HOST}-${S}{V} >/dev/null 2>&1)
@@ -850,7 +850,7 @@ env_v() {
 lang_c() {
 SCRIPT=`cat <<_EOF_
 ${SCRIPT}
-printf "checking for c compiler... "
+ochof "checking for c compiler... "
 HAVE_LANG_C=1
 if [ "${S}{CROSSBUILD}" = 1 ]; then
  (command -v ${S}{HOST}-${S}{CC} >/dev/null 2>&1)
@@ -905,7 +905,7 @@ lang_cpp() {
 	LANG=1
 	if [ "${LANG_CPP_ENV}" ]; then return ; fi
 	add_envword "CPP"
-	echo "printf \"checking for cpp... \""
+	echo "ochof \"checking for cpp... \""
 	echo "if [ \"${S}{CROSSBUILD}\" = 1 ]; then"
 	echo "(exec ${S}{HOST}-${S}{CPP} --help >/dev/null 2>&1)"
 	echo "[ ${S}? = 0 ] && CPP=\"${S}{HOST}-${S}{CPP}\""
@@ -922,7 +922,7 @@ lang_cxx() {
 	SCRIPT="
 ${SCRIPT}
 HAVE_LANG_CXX=1
-printf \"checking for c++ compiler... \"
+ochof \"checking for c++ compiler... \"
 if [ \"${S}{CROSSBUILD}\" = 1 ]; then
 (command -v ${S}{HOST}-${S}{CXX} 2>&1 >/dev/null)
 if [ \"${S}?\" = 0 ]; then CXX=\"${S}{HOST}-${S}{CXX}\"; fi
@@ -1001,7 +1001,7 @@ check_include() {
 VAR=${S}1
 INC=${S}2
 _REQUIRED=${S}3
-printf \"checking for ${S}2... \"
+ochof \"checking for ${S}2... \"
 echo > test.c
 "
 	for A in `echo ${S}{INC} | sed -e 's,+, ,g'`; do
@@ -1073,7 +1073,7 @@ S=\"$\"
 _REQUIRED=${S}3
 _CHKLIB_NAME=${S}2
 _CHKLIB_LIBS=${S}(echo \"-l${S}{_CHKLIB_NAME}\" | sed 's,+, -l,g')
-printf \"checking for lib${S}{_CHKLIB_NAME} ... \"
+ochof \"checking for lib${S}{_CHKLIB_NAME} ... \"
 echo \"int main(int ac, char **av){return 0;}\" > test.c
 eval ${S}{S}${S}{COMPILER} ${S}{CFLAGS} ${S}{CPPFLAGS} ${S}{CXXFLAGS} ${S}{LDFLAGS} ${S}{_CHKLIB_LIBS} test.c >/dev/null 2>&1
 if [ ${S}? = 0 ]; then
@@ -1263,7 +1263,7 @@ use_pthread() {
 	add_envword "PTHREAD_LIBS"
 	add_envword "HAVE_PTHREAD"
 	SCRIPT="${SCRIPT}
-printf \"checking for POSIX threads... \"
+ochof \"checking for POSIX threads... \"
 if [ \"${S}{HOST_OS}\" = \"freebsd\" ]; then
 PTHREAD_LIBS=-pthread ; else
 PTHREAD_LIBS=-lpthread ; fi
@@ -1290,7 +1290,7 @@ fi"
 lang_tcl() {
 	LANG=1
 	SCRIPT=`cat <<_EOF_
-printf "checking for tcl... "
+ochof "checking for tcl... "
 HAVE_LANG_TCL=0
 for A in ${S}{TCL_LIBDIR} ${S}{SEARCHPATH}; do
 if [ -f \"${S}{A}/lib/tclConfig.sh\" ]; then
@@ -1388,7 +1388,7 @@ use_libtool() {
 ## }}}
 ## {{{ TK
 use_tk() {
-	echo "printf \"checking for tk... \""
+	echo "ochof \"checking for tk... \""
 	echo "HAVE_TK=0"
 	echo "for A in ${S}{TK_BASEDIR} ${S}{SEARCHPATH}; do"
 	echo "if [ -f \"${S}{A}/lib/tkConfig.sh\" ]; then"
@@ -1406,7 +1406,7 @@ use_x11() {
 	add_envword "HAVE_X11"
 	SCRIPT=`cat <<_EOF_
 ${SCRIPT}
-printf "checking for X11... "
+ochof "checking for X11... "
 CFLAGS="${S}CFLAGS ${S}CPPFLAGS -I${S}{X11BASE}/include"
 LDFLAGS="${S}LDFLAGS -L${S}{X11BASE}/lib"
 [ "${X_INCLUDES}" ] && CFLAGS="${CFLAGS} -I${X_INCLUDES}"
@@ -1439,7 +1439,7 @@ use_gmake() {
 
 	SCRIPT=`cat <<_EOF_
 ${SCRIPT}
-printf "checking for GNU make... "
+ochof "checking for GNU make... "
 GMAKE=0
 for MAKE in make gmake ; do
  if [ -n "\\\`${S}{MAKE} -version 2>&1 | grep GNU\\\`" ]; then
@@ -2249,7 +2249,7 @@ for STR2 in ${WORDS} NOP ; do
 		VAR=`var_filter "HAVE_CLASSPATH_${STR}"`
 		SCRIPT="
 ${SCRIPT}
-printf \"checking for classpath ${STR}... \"
+ochof \"checking for classpath ${STR}... \"
 echo \"import ${STR}.*;\" > test.java
 ${S}{JAVAC} test.java 2>&1 > /dev/null
 if [ \"${S}?\" = 0 ]; then echo yes
@@ -2326,7 +2326,7 @@ EOF
 		elif [ "${STR}" = "${CHECK_EOF}" ]; then
 SCRIPT=`cat <<EOF
 ${SCRIPT}
-printf "checking for ${CHECK_VAR}... "
+ochof "checking for ${CHECK_VAR}... "
 ${TMP_VAR}
 if [ "${S}${CHECK_VAR}" = 0 ]; then
 	${CHECK_VAR}=1
@@ -2372,7 +2372,7 @@ EOF
 
 		SCRIPT=`cat <<EOF
 ${CHKUSR_VAR}=0
-printf "checking for ${CHKUSR_TARGET} '${CHKUSR_NAME}'... "
+ochof "checking for ${CHKUSR_TARGET} '${CHKUSR_NAME}'... "
 touch .usrgrp.tmp && chown ${CHKUSR_NAME} .usrgrp.tmp 2>/dev/null
 if [ \\$? = 0 ]; then echo "ok" ; $CHKUSR_VAR=1; else echo "no"
 EOF
@@ -2433,7 +2433,7 @@ EOF
 		REPORT_REQUIRED="${REPORT_REQUIRED} libiconv"
 		SCRIPT=`cat <<EOF
 ${SCRIPT}
-printf "checking for iconv... "
+ochof "checking for iconv... "
 HAVE_LIB_ICONV=0
 ICONV_LIBS=""
 for HOST_OS in solaris linux netbsd ; do
@@ -2489,7 +2489,7 @@ EOF
 		# Linux Darwin BeOS Solaris need libdl
 		SCRIPT=`cat <<EOF
 ${SCRIPT}
-printf "checking for dynamic library... "
+ochof "checking for dynamic library... "
 HAVE_LIB_DL=0
 for OS in gnulinux linux gnu/kfreebsd syllable sunos darwin beos solaris wsl ; do
 if [ "${S}{HOST_OS}" = "${S}{OS}" ]; then
