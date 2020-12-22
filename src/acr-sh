@@ -1766,7 +1766,7 @@ if [ "${LANG_V}" = 1 ]; then
 fi
 if [ "${LANG_CXX}" = 1 ]; then
 	echo ": ${S}{CPP:=cpp}"
-	echo ": ${S}{CXX:=g++}"
+	echo ": ${S}{CXX:=c++}"
 fi
 if [ "${LANG_JAVA}" = 1 ]; then
 	echo ": ${S}{JAVAC:=javac}"
