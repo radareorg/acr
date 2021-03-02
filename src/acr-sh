@@ -122,7 +122,7 @@ AUTHOR_NAME=""
 REPORT_REQUIRED=""   REPORT_PKGCFG=""    REPORT_OPTIONAL=""
 REPORT_FLAGS=""      REPORT_LANGS=""     REPORT_TOOLS=""
 # Environment
-ENVWORDS="MANDIR INFODIR LIBDIR INCLUDEDIR LOCALSTATEDIR SYSCONFDIR DATADIR DOCDIR"
+ENVWORDS="MANDIR INFODIR LIBDIR INCLUDEDIR LOCALSTATEDIR ETCDIR SYSCONFDIR DATADIR DOCDIR"
 ENVWORDS="${ENVWORDS} LIBEXECDIR SBINDIR BINDIR EPREFIX PREFIX SPREFIX"
 ENVWORDS="${ENVWORDS} TARGET HOST BUILD INSTALL INSTALL_LIB INSTALL_MAN INSTALL_PROGRAM"
 ENVWORDS="${ENVWORDS} INSTALL_PROGRAM_STRIP INSTALL_DIR INSTALL_SCRIPT INSTALL_DATA"
@@ -1660,6 +1660,7 @@ CROSSBUILD=0
 BUILD=\`guess_os\`
 HOST="${S}{BUILD}"
 TARGET="${S}{HOST}"
+ETCDIR="/etc"
 SYSCONFDIR=""
 
 create_environ() {
@@ -1667,7 +1668,7 @@ create_environ() {
 : ${S}{SPREFIX:="${S}{PREFIX}"}
 : ${S}{BINDIR:="${S}{SPREFIX}/bin"}
 : ${S}{SBINDIR:="${S}{PREFIX}/sbin"}
-: ${S}{SYSCONFDIR:="${S}{SPREFIX}/etc"}
+: ${S}{ETCDIR:="${S}{SPREFIX}/etc"}
 : ${S}{LIBDIR:="${S}{SPREFIX}/lib"}
 : ${S}{LIBEXECDIR:="${S}{SPREFIX}/libexec"}
 : ${S}{INCLUDEDIR:="${S}{SPREFIX}/include"}
@@ -1725,6 +1726,7 @@ Fine tuning of the installation directories:
   --localstatedir=DIR    modifiable single-machine data [PREFIX/var]
   --mandir=DIR           man documentation [DATADIR/man]
   --sbindir=DIR          system admin executables [EPREFIX/sbin]
+  --etcdir=DIR           same as --sysconfdir (/etc)
   --sysconfdir=DIR       read-only single-machine data [PREFIX/etc]
   --sharedstatedir=DIR   modifiable architecture-independent data [PREFIX/com]
 
@@ -1879,7 +1881,11 @@ cat <<EOF
 --datadir)
 	DATADIR="\$value"; ;;
 --sysconfdir)
-	SYSCONFDIR="\$value"; ;;
+	SYSCONFDIR="\$value"
+	ETCDIR="\$value"; ;;
+--etcdir)
+	SYSCONFDIR="\$value"
+	ETCDIR="\$value"; ;;
 --sharedstatedir)
 	SHAREDSTATEDIR="\$value"; ;;
 --localstatedir)
