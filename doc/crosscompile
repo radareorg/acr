@@ -16,12 +16,12 @@ are different between them.
 --target flag is only used for compilers that will generate code for the
 target os/architecture. This must be used internally in your program.
 
---build flag is autodetected and unmodificable. And refers to the local
+--build flag is autodetected and unmodifiable. And refers to the local
 architecture.
 
 --host flag is used to point to the os/arch where your program will run, for
 example: if you want to build a Solaris/sparc binary from your NetBSD/x86 box
-you must use --host=solaris-unknown-sparc or whathever the GCC toolchain prefix
+you must use --host=solaris-unknown-sparc or whatever the GCC toolchain prefix
 tells.
 
 A canadian cross example may be to build a solaris compiler that generates
@@ -30,7 +30,7 @@ code for linux-x86 from your NetBSD/mips box.
 Well, using them you'll be able to crosscompile your projects in a simple way.
 
 Imagine that you need to build a win32 application. But you don't want to use
-any propietary software, and you prefer to stay on your UNIX box.
+any proprietary software, and you prefer to stay on your UNIX box.
 
 Then you'll need to crosscompile. Crosscompile allows you to build binaries for
 other architectures or OS.
