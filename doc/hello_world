@@ -4,14 +4,14 @@ hello_world example for the ACR
 
 Introduction:
 -------------
-As you knows after read the ../README file. ACR is a autotool replacement.
+As you knows after read the ../README file. ACR is an autotools replacement.
 This tool allows developers to create portable and lightweight 'configure'
 scripts in a lightweight way.
 
 Configure script allows end-users and developers to check what libs are
 installed on the system, allowing the user to choose between different
 options and prepare all scripts and Makefiles to build the target package
-with the choosed options.
+with the chosen options.
 
 
 The Hello World:
@@ -32,7 +32,7 @@ int main(int argc, char *argv[])
 
 Ok, now we have our powerful hello world program created.
 
-The first thing you must think about is what kind of requeriments will your
+The first thing you must think about is what kind of requirements will your
 program need...
 
 - C compiler
@@ -101,7 +101,7 @@ directories must find for Makefile.acr files.
 
 For this reason out 'configure.acr' file has the 'SUBDIRS . ;' line.
 
-Out Makefile will use the @VAR@ syntax like, autotool does.
+Our Makefile will use the @VAR@ syntax like autotools does.
 
 Let's see how Makefile.acr looks like:
 

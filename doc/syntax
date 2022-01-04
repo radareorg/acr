@@ -1,7 +1,7 @@
 Syntax:
 =======
 
-This documents explains the ACR syntax, not the keyworkds.
+This documents explains the ACR syntax, not the keywords.
 
 
 The Configure.Acr file:
@@ -38,11 +38,11 @@ Instead of that, acr uses three different syntax strings:
 
 	- Acr will read from file until the found a string like the <<XXX typed
 
-Comments in ACR are limmited by "//" and "\\" strings, for example:
+Comments in ACR are limited by "//" and "\\" strings, for example:
 	PKGNAME FooBar
 	//
 	this is a comment
-	no code is readed here
+	no code is read here
 	just a simple message
 	\\
 	VERSION 1.4

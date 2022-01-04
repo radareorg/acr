@@ -26,9 +26,9 @@ Random issues
 - optimize cat foo|awk -> awk < foo
 - make something generic to create HAVE_BLABL variables
 - add yacc/lex/bison/flex support USE_LEX_AND_YACC
-- cdeps in AMR is nosense ? amr must be redefined from the ground!
+- cdeps in AMR is nonsense ? amr must be redefined from the ground!
 - add LICENSE keyword. Store a pool of licenses.
-- finish the "optimized by a single functin call" (not only for CHKINC and CHKLIB)
+- finish the "optimized by a single function call" (not only for CHKINC and CHKLIB)
 - allow to run commands without {} keys in conditionals: IF FOO BAR DIENOW bla ;
 - manage user creation, etc. (portable tool to create/remove user/groups..)
 - install command replacement to autogenerate PLISTs
