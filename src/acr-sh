@@ -2017,7 +2017,7 @@ echo
 echo "Final report:"
 for A in ${REPORT} ; do
 eval VAL="\\${S}${S}{A}"
-[ -z "${S}{VAL}" ] && VAL="(null)"
+[ -z "${S}{VAL}" ] && VAL="\"\""
 echo " - ${S}{A} = ${S}{VAL}"
 done
 fi

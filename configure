@@ -367,7 +367,7 @@ echo
 echo "Final report:"
 for A in  SPREFIX PREFIX INSTALL VERSION CONTACT ; do
 eval VAL="\$${A}"
-[ -z "${VAL}" ] && VAL="(null)"
+[ -z "${VAL}" ] && VAL="\"\""
 echo " - ${A} = ${VAL}"
 done
 fi
