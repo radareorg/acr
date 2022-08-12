@@ -1,0 +1,23 @@
+.Dd Aug 12, 2022
+.Dt ACR-WRAP 1
+.Os
+.Sh NAME
+.Nm acr-wrap
+.Nd compile meson wrap files into makefiles
+.Sh SYNOPSIS
+.Nm acr-wrap
+.Op Ar configure-script
+.Sh DESCRIPTION
+acr-wrap is script that generates a makefile from a meson wrap file.
+.Pp
+This way it is possible to use meson subprojects without depending on
+meson to work. Reducing maintainance costs when multiple build systems
+are in use, but also enabling make-based projects to use a cleaner
+syntax for external source projects.
+.Sh SEE ALSO
+.Xr amr 1
+.Xr acr 1
+.Xr acr-cat 1
+.Xr configure.acr 5
+.Sh AUTHOR
+Written by pancake <pancake@nopcode.org>
