@@ -1,0 +1,56 @@
+#!/bin/sh
+# convert meson wrap files into makefiles for compatibility reasons
+F="$1"
+if [ -z "$F" ]; then
+	echo "Usage: acr-wrap subprojects/wxjson.wrap > subprojects/wxjson.mk"
+	exit 1
+fi
+(
+NAME=""
+while : ; do
+	read LINE
+	[ $? != 0 ] && break
+	echo "$LINE" | grep -q =
+	if [ $? = 0 ]; then
+		if [ -z "${NAME}" ]; then
+			echo "malformed"
+			break
+		fi
+		LINE=`echo "$LINE"|sed -e 's, ,,g'`
+		echo "WRAP_${NAME}_${LINE}" | sed -e 's/=/:=/g'
+		eval "export WRAP_${LINE}"
+	else
+		echo "$LINE" | grep -q '^\['
+		if [ $? = 0 ]; then
+			NAME=$(echo "$LINE" |sed -e 's,-,_,g' -e 's,\[,,g' -e 's,\],,g')
+		fi
+	fi
+done
+
+cat <<EOF
+
+all: subprojects/${WRAP_directory}
+	@echo jeje
+
+subprojects/${WRAP_directory}:
+EOF
+echo "${NAME}" | grep -q -- '_git'
+if [ $? = 0 ]; then
+	echo "	git clone ${WRAP_url} subprojects/${WRAP_directory}"
+else
+	echo "	echo Not supported && exit 1"
+fi
+if [ -n "$WRAP_revision" ]; then
+	echo "	cd subprojects/${WRAP_directory} && git checkout ${WRAP_revision}"
+fi
+if [ -n "$WRAP_patch_directory" ]; then
+	echo "	cp -f subprojects/${WRAP_patch_directory}/* subprojects/${WRAP_directory}"
+fi
+
+cat <<EOF
+
+clean:
+	rm -rf subprojects/${WRAP_directory}
+EOF
+
+) < $F

@@ -29,9 +29,11 @@ install:
 	sed -e 's,@''VERSION@,$(VERSION),g' "$(VPATH)/src/acr-sh" > "$(BINDIR)/acr-sh"
 	chmod +x "$(BINDIR)/acr-sh"
 	$(INSTALL_SCRIPT) "$(VPATH)/src/amr" "$(BINDIR)/amr"
+	$(INSTALL_SCRIPT) "$(VPATH)/src/acr-wrap" "$(BINDIR)/acr-wrap"
 	$(INSTALL_SCRIPT) "$(VPATH)/src/acr-install" "$(BINDIR)/acr-install"
 	mkdir -p "$(MANDIR)/man1/" "$(MANDIR)/man5/"
 	${INSTALL_MAN} "$(VPATH)/man/man1/acr.1" "$(MANDIR)/man1/"
+	${INSTALL_MAN} "$(VPATH)/man/man1/acr-wrap.1" "$(MANDIR)/man1/"
 	${INSTALL_MAN} "$(VPATH)/man/man1/amr.1" "$(MANDIR)/man1/"
 	${INSTALL_MAN} "$(VPATH)/man/man1/acr-cat.1" "$(MANDIR)/man1/"
 	#${INSTALL_MAN} "${VPATH}/man/man1/install-acr.1 $(MANDIR)/man1/"
@@ -57,8 +59,10 @@ install:
 uninstall deinstall:
 	-rm -f $(BINDIR)/acr-sh $(BINDIR)/acr $(BINDIR)/amr
 	-rm -f $(BINDIR)/acr-cat $(BINDIR)/acr-install
+	-rm -f $(BINDIR)/acr-wrap
 	-rm -f $(MANDIR)/man1/acr.1 $(MANDIR)/man5/configure.acr.5
 	-rm -f $(MANDIR)/man1/acr-cat.1 $(MANDIR)/man1/amr.1
+	-rm -f $(MANDIR)/man1/acr-wrap.1
 	-rm -f $(MANDIR)/man5/configure.amr.5
 	-rm -rf $(DATADIR)/doc/acr/examples $(DATADIR)/doc/acr
 	-rm -rf $(DATADIR)/acr
