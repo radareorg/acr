@@ -2038,6 +2038,7 @@ show_progress_bar() {
 	if [ "${LAST_DOT}" = "${DOTS}" ]; then return ; fi
 	PCENT=`echo $WORDS_N $WORDS_T | awk '{printf ("%.d",$1*100/$2);}'`
 	LAST_DOT=$DOTS
+	[ -z "$PCENT" ] && PCENT=0
 	dots=`printf "%.2d" $PCENT`
 	N=0
 	BAR=`echo $DOTS | awk '{ str=""; for(i=0;i<$1;i++) { str=str"#"; } print str;  }'`
@@ -2050,7 +2051,6 @@ is_envword() {
 	for A in $ENVWORDS ; do
 		[ $A = $1 ] && found=1 && break;
 	done
-
 	[ -z "$found" ] && \
 	echo "`word` | Warning: Variable '$1' not defined." >&2
 }
