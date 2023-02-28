@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# Copyright (C) 2005-2022
+# Copyright (C) 2005-2023
 #       pancake <pancake@nopcode.org>
 #
 # acr is free software; you can redistribute it and/or modify
@@ -115,6 +115,7 @@ VERSION="0.1.0"
 _CONTACT=0
 CONTACT_MAIL=""
 CONTACT_NAME=""
+DESCRIPTION=""
 _AUTHOR=0
 AUTHOR_MAIL=""
 AUTHOR_NAME=""
@@ -122,7 +123,7 @@ AUTHOR_NAME=""
 REPORT_REQUIRED=""   REPORT_PKGCFG=""    REPORT_OPTIONAL=""
 REPORT_FLAGS=""      REPORT_LANGS=""     REPORT_TOOLS=""
 # Environment
-ENVWORDS="MANDIR INFODIR LIBDIR INCLUDEDIR LOCALSTATEDIR ETCDIR SYSCONFDIR DATADIR DOCDIR"
+ENVWORDS="MANDIR DESCRIPTION INFODIR LIBDIR INCLUDEDIR LOCALSTATEDIR ETCDIR SYSCONFDIR DATADIR DOCDIR"
 ENVWORDS="${ENVWORDS} LIBEXECDIR SBINDIR BINDIR EPREFIX PREFIX SPREFIX"
 ENVWORDS="${ENVWORDS} TARGET HOST BUILD INSTALL INSTALL_LIB INSTALL_MAN INSTALL_PROGRAM"
 ENVWORDS="${ENVWORDS} INSTALL_PROGRAM_STRIP INSTALL_DIR INSTALL_SCRIPT INSTALL_DATA"
@@ -1836,20 +1837,27 @@ case \$flag in
 -r|--r|--report)
 EOF
 	if [ ! "${PKGNAME}" = "this package" ]; then
-		echo "echo \"PKGNAME:   ${PKGNAME}\""; fi
-	test "$VERSION" && echo "echo \"VERSION:   ${VERSION}\""
+		echo "echo \"PKGNAME:     ${PKGNAME}\"" ; fi
+	if [ "${VERSION}" ]; then
+		echo "echo \"VERSION:     ${VERSION}\"" ; fi
+	if [ "${CONTACT_NAME}" ]; then
+		echo "echo \"AUTHOR:      ${CONTACT_NAME}\"" ; fi
+	if [ "${CONTACT_MAIL}" ]; then
+		echo "echo \"EMAIL:       ${CONTACT_MAIL}\"" ; fi
+	if [ "${DESCRIPTION}" ]; then
+		echo "echo \"DESCRIPTION: ${DESCRIPTION}\"" ; fi
 	if [ "${REPORT_LANGS}" ]; then
-		echo "echo \"LANGS:    ${REPORT_LANGS}\"" ; fi
+		echo "echo \"LANGS:      ${REPORT_LANGS}\"" ; fi
 	if [ "${REPORT_REQUIRED}" ]; then
-		echo "echo \"REQUIRED: ${REPORT_REQUIRED}\"" ; fi
+		echo "echo \"REQUIRED:   ${REPORT_REQUIRED}\"" ; fi
 	if [ "${REPORT_OPTIONAL}" ]; then
-		echo "echo \"OPTIONAL: ${REPORT_OPTIONAL}\"" ; fi
+		echo "echo \"OPTIONAL:   ${REPORT_OPTIONAL}\"" ; fi
 	if [ "${REPORT_PKGCFG}" ]; then
-		echo "echo \"PKG-CONFIG: ${REPORT_PKGCFG}\"" ; fi
+		echo "echo \"PKGCONFIG:  ${REPORT_PKGCFG}\"" ; fi
 	if [ "${REPORT_FLAGS}" ]; then
-		echo "echo \"FLAGS:    ${REPORT_FLAGS}\"" ; fi
+		echo "echo \"FLAGS:      ${REPORT_FLAGS}\"" ; fi
 	if [ "${REPORT_TOOLS}" ]; then
-		echo "echo \"TOOLS:    ${REPORT_TOOLS}\"" ; fi
+		echo "echo \"TOOLS:      ${REPORT_TOOLS}\"" ; fi
 # TODO
 # We could probably reduce this case/switch because :
 #	$ ./configure --prefix=/usr # flag=value
@@ -2066,7 +2074,6 @@ enter_string_mode() {
 	MODE_OLD="${MODE}"
 	MODE="string"
 	STRING="${1}"
-
 	return 1
 }
 alias wait_string_mode='[ "${MODE}" = "string" ] && continue'
@@ -2202,6 +2209,14 @@ for STR2 in ${WORDS} NOP ; do
 	fi
 
 	case "${MODE}" in
+	"description")
+		enter_string_mode ${STR}
+		wait_string_mode
+		DESCRIPTION="${STRING}"
+		IS_KEYWORD=0
+		MODE=""
+		leave_string_mode
+		;;
 	"chkdecl")
 		IS_KEYWORD=0
 		if [ -z "${_CHKDECL_INC}" ]; then
@@ -2474,11 +2489,10 @@ EOF
 		if [ -z "${_EXEC_VAR}" ]; then
 			_EXEC_VAR="${STR}"
 		else
-
-		enter_string_mode ${STR}
-		wait_string_mode
-		add_envword "${_EXEC_VAR}"
-		append "`cat<<EOF
+			enter_string_mode ${STR}
+			wait_string_mode
+			add_envword "${_EXEC_VAR}"
+			append "`cat<<EOF
 printf "checking exec ${STRING}... "
 ${_EXEC_VAR}="\\\`${STRING} 2>/dev/null\\\`"
 if [ ${S}? = 0 ]; then
@@ -2488,12 +2502,12 @@ else
 	echo "not found"
 EOF
 `"
-		[ "$MODE" = 'exec!' ] && \
-			append "echo 'required'; exit 1"
-		append "fi"
-		MODE=""
-		_EXEC_VAR=""
-		leave_string_mode
+			[ "$MODE" = 'exec!' ] && \
+				append "echo 'required'; exit 1"
+			append "fi"
+			MODE=""
+			_EXEC_VAR=""
+			leave_string_mode
 		fi
 		;;
 	"usedl")
@@ -3294,6 +3308,7 @@ else"
 	"VERSION") MODE="version" ; ;;
 	"CONTACT") MODE="contact" _CONTACT=1 ; ;;
 	"AUTHOR")  MODE="author" _AUTHOR=1 ; ;;
+	"DESC"|"DESCRIPTION") MODE="description" ; ;;
 	"ARG_IGNORE") MODE="arg_ignore" ; ;;
 	"INCLUDE")
 		if [ "${INSIDE_INCLUDE}" = 1 ]; then
