@@ -2259,10 +2259,6 @@ for STR2 in ${WORDS} NOP ; do
 		enter_string_mode ${STR}
 		wait_string_mode
 		DESCRIPTION="${STRING}"
-		SCRIPT=`cat << EOF
-		DESCRIPTION=\"${S}{STRING}\"
-EOF
-		`
 		IS_KEYWORD=0
 		MODE=""
 		leave_string_mode

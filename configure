@@ -300,7 +300,7 @@ ocho "checking target system type... ${TARGET}"
 ocho "checking for working directories... ${WODIS}"
 ocho "using prefix '${PREFIX}'"
 ACR_RMFILES=""
-		DESCRIPTION=\"${STRING}\"
+
 ochof "checking for install... "
 if [ -x "${INSTALL}" ]; then
 	FIND=${INSTALL}
