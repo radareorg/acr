@@ -2257,7 +2257,6 @@ for STR2 in ${WORDS} NOP ; do
 		;;
 	"description")
 		enter_string_mode ${STR}
-		echo "ADD STRING"  > /dev/stderr
 		wait_string_mode
 		SCRIPT="${SCRIPT}
 		DESCRIPTION=\"${STRING}\"
