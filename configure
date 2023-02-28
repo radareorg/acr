@@ -156,7 +156,8 @@ System types:
   --target=TARGET        configure for building compilers for TARGET [HOST]
 EOF2
 
-printf "\nReport bugs to: pancake <pancake@nopcode.org>"
+printf "
+Report bugs to: pancake <pancake@nopcode.org>"
 echo ""
 exit 0
 }
@@ -370,17 +371,17 @@ eval VAL="\$${A}"
 echo " - ${A} = ${VAL}"
 done
 fi
-#ACR# (( package information ))
+#ACR# /* package information */
 #ACR# PKGNAME acr
 #ACR# VERSION 2.0.1
 #ACR# CONTACT pancake ; pancake@nopcode.org
 #ACR# 
-#ACR# (( needed programs ))
+#ACR# /* needed programs */
 #ACR# CHECK_PROGRAM INSTALL install
 #ACR# 
-#ACR# (( directories ))
+#ACR# /* directories */
 #ACR# SUBDIRS . src/vim/install.sh ;
-#ACR# (( src/acr src/acr-sh ))
+#ACR# /* src/acr src/acr-sh */
 #ACR# 
-#ACR# (( final report ))
+#ACR# /* final report */
 #ACR# REPORT SPREFIX PREFIX INSTALL VERSION CONTACT ;

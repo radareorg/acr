@@ -2147,7 +2147,7 @@ for STR2 in ${WORDS} NOP ; do
 	case ${COMMENT} in
 	"1")
 		case "${STR}" in
-		"##"|"\\\\"|"))")
+		"##"|"\\\\"|"))"|"*/")
 			COMMENT=0
 			;;
 		esac
@@ -2162,7 +2162,7 @@ for STR2 in ${WORDS} NOP ; do
 		;;
 	*)
 		case "${STR}" in
-		"##"|"((")
+		"##"|"(("|"/*")
 			COMMENT=1
 			continue
 			;;

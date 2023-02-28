@@ -1,14 +1,14 @@
-(( package information ))
+/* package information */
 PKGNAME acr
 VERSION 2.0.1
 CONTACT pancake ; pancake@nopcode.org
 
-(( needed programs ))
+/* needed programs */
 CHECK_PROGRAM INSTALL install
 
-(( directories ))
+/* directories */
 SUBDIRS . src/vim/install.sh ;
-(( src/acr src/acr-sh ))
+/* src/acr src/acr-sh */
 
-(( final report ))
+/* final report */
 REPORT SPREFIX PREFIX INSTALL VERSION CONTACT ;

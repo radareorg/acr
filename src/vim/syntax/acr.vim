@@ -42,12 +42,12 @@ syn match acrOperator "<-"
 syn keyword acrTodo TODO FIXME XXX NOTE
 "syn region acrTag start="@" end="@" # TODO
 syn region acrComment start="//" skip="\\$" end="$" keepend
-syn region  acrComment start="/\*" end="\*/" contains=acrTodo
-syn region  acrComment start="((" end="))" contains=acrTodo
-syn region  acrComment start="##" end="##" contains=acrTodo
-"syn region  acrComment start="//" end="\\" contains=acrTodo
-syn region  acrOutput start="<<EOF" end="<<EOF" contains=acrTodo
-"syn match   acrNumber "-\=\<\d*\.\=[0-9_]\>" # may help ?
+syn region acrComment start="/\*" end="\*/" contains=acrTodo
+syn region acrComment start="((" end="))" contains=acrTodo
+syn region acrComment start="##" end="##" contains=acrTodo
+"syn region acrComment start="//" end="\\" contains=acrTodo
+syn region acrOutput start="<<EOF" end="<<EOF" contains=acrTodo
+"syn match acrNumber "-\=\<\d*\.\=[0-9_]\>" # may help ?
 syn match acrSeparator ";" 
 syn match acrSeparator "{" 
 syn match acrSeparator "}" 
