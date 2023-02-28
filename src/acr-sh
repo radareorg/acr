@@ -406,8 +406,7 @@ fi
 _EOF_
 `
 	if [ "${LANG_VALA_REQUIRED}" = 1 ]; then
-		SCRIPT="
-${SCRIPT}
+		SCRIPT="${SCRIPT}
 if [ \"${S}{HAVE_LANG_VALA}\" = 0 ]; then
 	echo \"ERROR: ${S}{VALAC} cannot create C code\"; exit 1
 fi
@@ -447,8 +446,7 @@ if [ ${S}? = 0 ]; then echo ${S}{JAVAC}; else
 _EOF_
 `
 	if [ "${LANG_JAVA_REQUIRED}" = 1 ]; then
-SCRIPT="
-${SCRIPT}
+SCRIPT="${SCRIPT}
 echo \"ERROR: ${S}{JAVAC} cannot create bytecode\"; exit 1"
 	fi
 
@@ -925,8 +923,7 @@ EOF
 ## {{{ C++
 lang_cxx() {
 	add_envword "CXX"
-	SCRIPT="
-${SCRIPT}
+	SCRIPT="${SCRIPT}
 HAVE_LANG_CXX=1
 ochof \"checking for c++ compiler... \"
 if [ \"${S}{CROSSBUILD}\" = 1 ]; then
@@ -941,8 +938,7 @@ HAVE_LANG_CXX=0
 echo no
 "
 	if [ "${LANG_CXX_REQUIRED}" = 1 ]; then
-	SCRIPT="
-${SCRIPT}
+	SCRIPT="${SCRIPT}
 echo \"ERROR: ${S}{CXX} cannot create executables\" >&2 ;
 do_remove
 exit 1
@@ -1001,8 +997,7 @@ check_inc() {
 	get_current_compiler
 
 	if [ -z "${_CHECK_INC}" ]; then
-	SCRIPT="
-${SCRIPT}
+	SCRIPT="${SCRIPT}
 check_include() {
 VAR=${S}1
 INC=${S}2
@@ -1014,8 +1009,7 @@ echo > test.c
 		SCRIPT="${SCRIPT}
 echo \"#include <${A}>\" >>test.c"
 	done
-SCRIPT="
-${SCRIPT}
+SCRIPT="${SCRIPT}
 echo 'int main(int ac, char **av){return 0;}' >>test.c
 eval \\\\${S}${S}{COMPILER} ${S}{CFLAGS} ${S}{CPPFLAGS} ${S}{CXXFLAGS} test.c >/dev/null 2>&1
 if [ ${S}? = 0 ]; then
@@ -1044,8 +1038,7 @@ check_endian() {
 	add_envword "LIL_ENDIAN"
 	add_envword "BIG_ENDIAN"
 	add_envword "BYTEORDER"
-	SCRIPT="
-${SCRIPT}
+	SCRIPT="${SCRIPT}
 printf \"checking host endianness... \"
 LIL_ENDIAN=${S}(printf I|od|${S}{AWK}'{print substr(${S}2,6,1);exit}')
 if [ $? != 0 -o \"${S}{LIL_ENDIAN}\" = 1 ]; then
@@ -1066,8 +1059,7 @@ PCGEN_INIT=0
 check_pcgen() {
 	if [ "${PCGEN_INIT}" = 0 ]; then
 		PCGEN_INIT=1
-		SCRIPT="
-${SCRIPT}
+		SCRIPT="${SCRIPT}
 pcgen() {
 	PCFILE=\"${S}{1}\" ; shift
 	PCNAME=\"${S}{1}\" ; shift
@@ -1090,10 +1082,8 @@ pcgen() {
 }
 "
 	fi
-	SCRIPT="
-${SCRIPT}
-pcgen $@
-"
+	SCRIPT="${SCRIPT}
+pcgen $@"
 }
 ## }}}
 ## {{{ | Check Libraries
@@ -1106,8 +1096,7 @@ check_lib() {
 	get_current_compiler
 
 	if [ -z "${_CHECK_LIB}" ]; then
-	SCRIPT="
-${SCRIPT}
+	SCRIPT="${SCRIPT}
 check_library() {
 VAR=${S}1
 S=\"$\"
@@ -1267,8 +1256,7 @@ check_sizeof() {
 
 	add_envword "${VAR}"
  	## the $(./a.out) XXX this could be not portable
-	SCRIPT="
-${SCRIPT}
+	SCRIPT="${SCRIPT}
 printf 'checking size of $1... '
 echo '#include <stdio.h>' > test.c
 echo 'int main(int ac, char **av){printf(\"##d##\",sizeof($1));return 0;}' >>test.c
@@ -1281,19 +1269,16 @@ else
 	${VAR}=0 ; echo error
 "
 	if [ 1 = "${_REQUIRE}" ]; then
-	SCRIPT="
-${SCRIPT}
+	SCRIPT="${SCRIPT}
 do_remove
 exit 1
 "
 	else
-	SCRIPT="
-${SCRIPT}
+	SCRIPT="${SCRIPT}
 HAVE_${VAR}=0
 "
 	fi
-SCRIPT="
-${SCRIPT}
+SCRIPT="${SCRIPT}
 fi
 "
 }
@@ -2323,8 +2308,7 @@ for STR2 in ${WORDS} NOP ; do
 		IS_KEYWORD=0
 		REPORT_REQUIRED="${REPORT_REQUIRED} ${STR}"
 		VAR=`var_filter "HAVE_CLASSPATH_${STR}"`
-		SCRIPT="
-${SCRIPT}
+		SCRIPT="${SCRIPT}
 ochof \"checking for classpath ${STR}... \"
 echo \"import ${STR}.*;\" > test.java
 ${S}{JAVAC} test.java 2>&1 > /dev/null
@@ -2334,8 +2318,7 @@ else echo no
 ${VAR}=0
 "
 		if [ "${_REQUIRED}" = 1 ]; then
-			SCRIPT="
-${SCRIPT}
+			SCRIPT="${SCRIPT}
 echo 'This classpath is required.'
 exit 1
 "
@@ -2601,8 +2584,7 @@ EOF
 		IS_KEYWORD=0;
 		enter_string_mode ${STR}
 		wait_string_mode
-		SCRIPT="
-${SCRIPT}
+		SCRIPT="${SCRIPT}
 echo \"   ${STRING}\" >&2 "
 		MODE=""
 		leave_string_mode
@@ -2615,12 +2597,10 @@ echo \"   ${STRING}\" >&2 "
 			enter_string_mode ${STR}
 			wait_string_mode
 			if [ "${_DIE_BOOL}" = 0 ]; then
-			SCRIPT="
-${SCRIPT}
+			SCRIPT="${SCRIPT}
 case \"${S}${_DIE_VAR}\" in 0|\"\") echo ; echo \"ERROR: ${STRING}\" >&2 ; echo ; exit 1 ;; esac"
 			else
-			SCRIPT="
-${SCRIPT}
+			SCRIPT="${SCRIPT}
 case \"${S}${_DIE_VAR}\" in 0|\"\") ;; *) echo ; echo \"ERROR: ${STRING}\" >&2 ; echo ; exit 1 ; ;; esac"
 			fi
 			MODE=""
@@ -2654,8 +2634,7 @@ if [ \"${S}${_IF_VAR}\" = \"${_IF_BOOL}\" ]; then"
 			enter_string_mode ${STR}
 			wait_string_mode
 			add_envword ${_IF_SETVAR}
-			SCRIPT="
-${SCRIPT}
+			SCRIPT="${SCRIPT}
 if [ \"${S}${_IF_VAR}\" = \"${_IF_BOOL}\" ]; then"
 			# check_ifop TODO -> use ifop instead of that.
 			case ${_IF_OP} in
