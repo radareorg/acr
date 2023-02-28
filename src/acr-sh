@@ -116,6 +116,7 @@ _CONTACT=0
 CONTACT_MAIL=""
 CONTACT_NAME=""
 DESCRIPTION=""
+PCGEN=""
 _AUTHOR=0
 AUTHOR_MAIL=""
 AUTHOR_NAME=""
@@ -1060,6 +1061,41 @@ fi
 "
 }
 ## }}}
+## {{{ | PkgConfig Generator
+PCGEN_INIT=0
+check_pcgen() {
+	if [ "${PCGEN_INIT}" = 0 ]; then
+		PCGEN_INIT=1
+		SCRIPT="
+${SCRIPT}
+pcgen() {
+	PCFILE=\"${S}{1}\" ; shift
+	PCNAME=\"${S}{1}\" ; shift
+	REQUIRES=\"${S}@\"
+
+	echo \"generating ${S}{PCFILE}\" > /dev/stderr
+	echo \"prefix=${S}{PREFIX}\" > ${S}{PCFILE}
+	echo \"exec_prefix=\\${S}{prefix}\" >> ${S}{PCFILE}
+	echo \"libdir=${S}{PKGCFG_LIBDIR}\" >> ${S}{PCFILE}
+	echo \"includedir=${S}{PKGCFG_INCDIR}\" >> ${S}{PCFILE}
+	echo \"\" >> ${S}{PCFILE}
+	echo \"Name: ${S}{PCNAME}\" >> ${S}{PCFILE}
+	if [ -n \"${S}{DESCRIPTION}\" ]; then
+		echo \"Description: ${S}{DESCRIPTION}\" >> ${S}{PCFILE}
+	fi
+	echo \"Version: ${S}{VERSION}\" >> ${S}{PCFILE}
+	echo \"Requires: ${S}{REQUIRES}\" >> ${S}{PCFILE}
+	echo \"Cflags: -I\\${S}{includedir}/libr\" >> ${S}{PCFILE}
+	echo \"Libs: -L\\${S}{libdir} -l${S}{PCNAME} ${S}{DL_LIBS}\" >> ${S}{PCFILE}
+}
+"
+	fi
+	SCRIPT="
+${SCRIPT}
+pcgen $@
+"
+}
+## }}}
 ## {{{ | Check Libraries
 check_lib() {
 	_CHKLIB_NAME=$1
@@ -1665,6 +1701,7 @@ HOST="${S}{BUILD}"
 TARGET="${S}{HOST}"
 ETCDIR="/etc"
 SYSCONFDIR=""
+DESCRIPTION="${DESCRIPTION}"
 
 create_environ() {
 : ${S}{EPREFIX:="${S}{PREFIX}"}
@@ -2209,10 +2246,22 @@ for STR2 in ${WORDS} NOP ; do
 	fi
 
 	case "${MODE}" in
-	"description")
+	"pkgconfig-do")
 		enter_string_mode ${STR}
 		wait_string_mode
-		DESCRIPTION="${STRING}"
+		FILE_NAME="${STRING}"
+		check_pcgen ${STRING}
+		IS_KEYWORD=0
+		MODE=""
+		leave_string_mode
+		;;
+	"description")
+		enter_string_mode ${STR}
+		echo "ADD STRING"  > /dev/stderr
+		wait_string_mode
+		SCRIPT="${SCRIPT}
+		DESCRIPTION=\"${STRING}\"
+		"
 		IS_KEYWORD=0
 		MODE=""
 		leave_string_mode
@@ -3309,6 +3358,7 @@ else"
 	"CONTACT") MODE="contact" _CONTACT=1 ; ;;
 	"AUTHOR")  MODE="author" _AUTHOR=1 ; ;;
 	"DESC"|"DESCRIPTION") MODE="description" ; ;;
+	"PKGCFG_DO"|"PKGCONFIG_DO") MODE="pkgconfig-do" ; ;;
 	"ARG_IGNORE") MODE="arg_ignore" ; ;;
 	"INCLUDE")
 		if [ "${INSIDE_INCLUDE}" = 1 ]; then
