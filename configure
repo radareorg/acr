@@ -83,7 +83,7 @@ HOST="${BUILD}"
 TARGET="${HOST}"
 ETCDIR="/etc"
 SYSCONFDIR=""
-DESCRIPTION=""
+DESCRIPTION="automatic configuration replacement tool"
 
 create_environ() {
 : ${EPREFIX:="${PREFIX}"}
@@ -217,6 +217,7 @@ echo "PKGNAME:     acr"
 echo "VERSION:     2.1.0"
 echo "AUTHOR:      pancake"
 echo "EMAIL:       pancake@nopcode.org"
+echo "DESCRIPTION: automatic configuration replacement tool"
 	exit 0
 	;;
 --cache-file)
@@ -299,9 +300,7 @@ ocho "checking target system type... ${TARGET}"
 ocho "checking for working directories... ${WODIS}"
 ocho "using prefix '${PREFIX}'"
 ACR_RMFILES=""
-
-		DESCRIPTION="automatic configuration replacement tool"
-		
+		DESCRIPTION=\"${STRING}\"
 ochof "checking for install... "
 if [ -x "${INSTALL}" ]; then
 	FIND=${INSTALL}
