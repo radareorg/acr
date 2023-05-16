@@ -858,7 +858,7 @@ if [ "${S}{CROSSBUILD}" = 1 ]; then
  if [ ${S}? = 0 ]; then CC="${S}{HOST}-${S}{CC}"; fi
 fi
 echo "int main(int argc, char **argv){return 0;}" > test.c
- (exec ${S}{CC} ${S}{CFLAGS} ${S}{CPPFLAGS} ${S}{LDFLAGS} test.c >/dev/null 2>&1)
+ (exec ${S}{CC} -o a.out ${S}{CFLAGS} ${S}{CPPFLAGS} ${S}{LDFLAGS} test.c >/dev/null 2>&1)
 if [ ${S}? = 0 ]; then echo ${S}{CC}; else
  echo no ; HAVE_LANG_C=0
 _EOF_
