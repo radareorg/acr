@@ -1142,7 +1142,7 @@ check_decl() {
 ${SCRIPT}
 printf "checking declaration of ${_CHKDECL_NAME} in ${_CHKDECL_INC}... "
 echo "#include <${_CHKDECL_INC}>" > test.c
-echo "int main(int ac, char **av){ void *a = ${_CHKDECL_NAME}; return 0; }" >> test.c
+echo "int main(int ac, char **av){ void *a = (void *)${_CHKDECL_NAME}; return 0; }" >> test.c
 ${S}{${COMPILER}} ${S}{CFLAGS} ${S}{CPPFLAGS} ${S}{LDFLAGS} test.c >/dev/null 2>&1
 if [ ${S}? = 0 ]; then
 	echo yes ; ${VAR}=1
@@ -1229,7 +1229,7 @@ check_func() {
 	SCRIPT=`cat <<EOF
 ${SCRIPT}
 printf "checking function ${_CHKFUNC_NAME}() in ${_CHKFUNC_LIB}... "
-echo "int main(int ac, char **av){ ${_CHKFUNC_NAME}(0); return 0; }" > test.c
+echo "extern int ${_CHKFUNC_NAME}(); int main(int ac, char **av){ ${_CHKFUNC_NAME}(0); return 0; }" > test.c
 ${S}{${COMPILER}} ${S}{CFLAGS} ${S}{CPPFLAGS} ${S}{LDFLAGS} -l${_CHKFUNC_LIB} test.c >/dev/null 2>&1
 if [ ${S}? = 0 ]; then
 	echo yes ; ${VAR}=1
