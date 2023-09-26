@@ -3270,7 +3270,6 @@ else"
 			echo "`word` < unmatching '}' key." >&2
 			exit 1
 		fi
-
 		NKEYS=$(($NKEYS-1))
 		SCRIPT="${SCRIPT}; fi"
 		;;
@@ -3587,15 +3586,31 @@ else"
 	"USE_ICONV")
 		MODE="useiconv" ;;
 	"ARG_WITH")
+		if [ $NKEYS -gt 0 ]; then
+			echo "cant use ARG_WITH inside bracket blocks" >&2
+			exit 1
+		fi
 		MODE="argument"
 		ARGUMENT=with ;;
 	"ARG_WITHOUT")
+		if [ $NKEYS -gt 0 ]; then
+			echo "cant use ARG_WITHOUT inside bracket blocks" >&2
+			exit 1
+		fi
 		MODE="argument"
 		ARGUMENT=without ;;
 	"ARG_ENABLE")
+		if [ $NKEYS -gt 0 ]; then
+			echo "cant use ARG_ENABLE inside bracket blocks" >&2
+			exit 1
+		fi
 		MODE="argument"
 		ARGUMENT=enable ;;
 	"ARG_DISABLE")
+		if [ $NKEYS -gt 0 ]; then
+			echo "cant use ARG_DISABLE inside bracket blocks" >&2
+			exit 1
+		fi
 		MODE="argument"
 		ARGUMENT=disable ;;
 	"CHKEXE" | "CHECK_EXEC")
@@ -3786,7 +3801,7 @@ else
 	fi
 fi
 
-makedist_failed(){
+makedist_failed() {
 	echo "ERROR: $1"  >&2
 	exit 1
 }
