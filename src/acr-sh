@@ -553,7 +553,8 @@ env_ruby() {
 	if [ "${LANG_RUBY_ENV}" ]; then return ; fi
 	add_envword "RUBY"
 	add_envword "RUBY_VERSION"
-	LANG_RUBY_ENV="RUBY RUBY_VERSION" ## TODO no need to use this now.
+	add_envword "HAVE_LANG_RUBY"
+	LANG_RUBY_ENV="RUBY RUBY_VERSION HAVE_LANG_RUBY" ## TODO no need to use this now.
 	ENVHELP=`cat <<EOF
 ${ENVHELP}
   RUBY        Ruby interpreter path or binary name.
