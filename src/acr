@@ -93,7 +93,7 @@ while [ $# -gt 0 ]; do
 		break;
 		;;
 	"-D"|"--dist")
-		echo "[1/4] Parsing configure.acr." >/dev/stderr
+		echo "[1/4] Parsing configure.acr." >&2
 		PBAR=1
 		MAKEDIST=1
 		NOPE=1
@@ -140,7 +140,7 @@ while [ $# -gt 0 ]; do
 done
 
 #if [ "`echo ${ACRFILE}|cut -c 1`" = "-" ]; then
-#	echo "error: unknown flag '${ACRFILE}'." > /dev/stderr
+#	echo "error: unknown flag '${ACRFILE}'." >&2
 #	exit 1
 #fi
 
@@ -151,7 +151,7 @@ if [ "${RECOVER}" = 1 ]; then
 fi
 
 if [ ! -f "${ACRFILE}" ]; then
-	echo "error: file ${ACRFILE} not found" > /dev/stderr
+	echo "error: file ${ACRFILE} not found" >&2
 	exit 1
 fi
 
