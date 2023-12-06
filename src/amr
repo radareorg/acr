@@ -114,7 +114,7 @@ check_cidep() {
 		[ "$A" = "$FILE" ] && return
 	done
 
-	echo "CInclude ${FILE} not found" > /dev/stderr
+	echo "CInclude ${FILE} not found" >&2
 	exit 1
 }
 
@@ -124,7 +124,7 @@ check_cdep() {
 		[ "$A" = "$FILE" ] && return
 	done
 
-	echo "CSource ${FILE} not found" > /dev/stderr
+	echo "CSource ${FILE} not found" >&2
 	exit 1
 }
 
@@ -212,7 +212,7 @@ fi
 
 parse_configure_amr() {
 FILE=$1
-echo "Parsing ${FILE}..." >/dev/stderr
+echo "Parsing ${FILE}..." >&2
 CONFIGURE_AMR="`cat ${FILE} 2>/dev/null`"
 for A in $CONFIGURE_AMR ; do
 	# TODO: Support for oneline commands and /* */
@@ -268,7 +268,7 @@ for A in $CONFIGURE_AMR ; do
 			eval "${CDEPS_VAR}=\"\$${CDEPS_VAR} ${A}\""
 			;;
 		*|0)
-			echo "Invalid keyword '$A'" > /dev/stderr
+			echo "Invalid keyword '$A'" >&2
 			exit 1
 			;;
 		esac

@@ -47,18 +47,18 @@ if [ -z "$1" ]; then
 fi
 
 if [ ! -f "$1" ]; then
-	echo "error: target file '$1' does not exist." > /dev/stderr
+	echo "error: target file '$1' does not exist." >&2
 	exit 1
 fi
 
 if [ ! -x "$1" ]; then
-	echo "error: target file '$1' is not executable." > /dev/stderr
+	echo "error: target file '$1' is not executable." >&2
 	exit 1
 fi
 
 VERSION="`./${1} --version 2>/dev/null`"
 if [ -z "`echo ${VERSION} | grep ACR`" ]; then
-	echo "error: this is not an acr generated configure script." > /dev/stderr
+	echo "error: this is not an acr generated configure script." >&2
 	exit 1
 fi
 

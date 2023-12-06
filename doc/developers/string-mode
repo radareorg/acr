@@ -20,7 +20,7 @@ case "${MODE}" in
 	wait_string_mode
 
 	# do whatever i want with the string
-	echo "My string is: ${STRING}" >/dev/stderr
+	echo "My string is: ${STRING}" >&2
 
 	leave_string_mode
 ;;
