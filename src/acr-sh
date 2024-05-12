@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# Copyright (C) 2005-2023
+# Copyright (C) 2005-2024
 #       pancake <pancake@nopcode.org>
 #
 # acr is free software; you can redistribute it and/or modify
@@ -1361,6 +1361,7 @@ use_pkgconfig() {
 	SCRIPT=`cat <<EOF
 ${SCRIPT}
 ochof "checking for pkg-config... "
+ENVWORDS="${S}{ENVWORDS} HAVE_PKGCONFIG"
 if [ -n "${S}PKGCONFIG" ]; then
 	if [ -x "${S}PKGCONFIG" ]; then
 		_HAVE_PKGCONFIG="${S}{PKGCONFIG}"
@@ -1384,7 +1385,9 @@ else
 fi
 if [ -n "${S}{PKGCONFIG}" ]; then
 	ocho ${S}{PKGCONFIG}
+	HAVE_PKGCONFIG=1
 else
+	HAVE_PKGCONFIG=0
 EOF
 `
 if [ "${_REQUIRED}" = 1 ]; then
