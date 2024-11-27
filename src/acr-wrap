@@ -16,6 +16,7 @@ while : ; do
 			echo "malformed"
 			break
 		fi
+		echo ${LINE} |grep '^#' && continue
 		LINE=`echo "$LINE"|sed -e 's, ,,g'`
 		echo "WRAP_${NAME}_${LINE}" | sed -e 's/=/:=/g'
 		eval "export WRAP_${LINE}"
@@ -27,9 +28,11 @@ while : ; do
 	fi
 done
 
+WRAP_name=`echo ${WRAP_directory}|sed -e 's/-/-/g'`
+
 cat <<EOF
 
-all: ${WRAP_directory}
+${WRAP_name}_all: ${WRAP_directory}
 	@echo "Nothing to do"
 
 ${WRAP_directory}:
@@ -40,21 +43,23 @@ if [ -n "${WRAP_depth}" ]; then
 	GIT_FLAGS="--depth=${WRAP_depth}"
 fi
 echo "${NAME}" | grep -q -- '_git'
-if [ $? = 0 ]; then
-	echo "	git clone ${GIT_FLAGS} ${WRAP_url} ${WRAP_directory}"
-else
+if [ $? != 0 ]; then
 	echo "	echo Not supported && exit 1"
 fi
 if [ -n "$WRAP_revision" ]; then
-	echo "	cd ${WRAP_directory} && git reset --hard ${WRAP_revision}"
+	echo "	git clone --no-checkout ${GIT_FLAGS} ${WRAP_url} ${WRAP_directory}"
+	echo "	cd ${WRAP_directory} && git fetch ${GIT_FLAGS} origin ${WRAP_revision}"
+else
+	echo "	git clone ${GIT_FLAGS} ${WRAP_url} ${WRAP_directory}"
 fi
+	echo "	cd ${WRAP_directory} && git checkout"
 if [ -n "$WRAP_patch_directory" ]; then
 	echo "	cp -f ${WRAP_patch_directory}/* ${WRAP_directory}"
 fi
 
 cat <<EOF
 
-clean:
+${WRAP_name}_clean:
 	rm -rf ${WRAP_directory}
 EOF
 
