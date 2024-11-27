@@ -2,7 +2,7 @@
 # convert meson wrap files into makefiles for compatibility reasons
 F="$1"
 if [ -z "$F" ]; then
-	echo "Usage: acr-wrap subprojects/wxjson.wrap > subprojects/wxjson.mk"
+	echo "Usage: acr-wrap foo.wrap > foo.mk"
 	exit 1
 fi
 (
@@ -29,28 +29,33 @@ done
 
 cat <<EOF
 
-all: subprojects/${WRAP_directory}
-	@echo jeje
+all: ${WRAP_directory}
+	@echo "Nothing to do"
 
-subprojects/${WRAP_directory}:
+${WRAP_directory}:
 EOF
+
+GIT_FLAGS=""
+if [ -n "${WRAP_depth}" ]; then
+	GIT_FLAGS="--depth=${WRAP_depth}"
+fi
 echo "${NAME}" | grep -q -- '_git'
 if [ $? = 0 ]; then
-	echo "	git clone ${WRAP_url} subprojects/${WRAP_directory}"
+	echo "	git clone ${GIT_FLAGS} ${WRAP_url} ${WRAP_directory}"
 else
 	echo "	echo Not supported && exit 1"
 fi
 if [ -n "$WRAP_revision" ]; then
-	echo "	cd subprojects/${WRAP_directory} && git checkout ${WRAP_revision}"
+	echo "	cd ${WRAP_directory} && git reset --hard ${WRAP_revision}"
 fi
 if [ -n "$WRAP_patch_directory" ]; then
-	echo "	cp -f subprojects/${WRAP_patch_directory}/* subprojects/${WRAP_directory}"
+	echo "	cp -f ${WRAP_patch_directory}/* ${WRAP_directory}"
 fi
 
 cat <<EOF
 
 clean:
-	rm -rf subprojects/${WRAP_directory}
+	rm -rf ${WRAP_directory}
 EOF
 
 ) < $F
