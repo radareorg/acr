@@ -56,7 +56,7 @@ else
 fi
 	echo "	cd ${WRAP_directory} && git checkout"
 if [ -n "$WRAP_patch_directory" ]; then
-	echo "	cp -f ${WRAP_patch_directory}/* ${WRAP_directory}"
+	echo "	cp -f packagefiles/${WRAP_patch_directory}/* ${WRAP_directory}"
 fi
 
 cat <<EOF
