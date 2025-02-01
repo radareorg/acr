@@ -54,7 +54,7 @@ if [ -n "$WRAP_revision" ]; then
 else
 	echo "	git clone ${GIT_FLAGS} ${WRAP_url} ${WRAP_directory}"
 fi
-	echo "	cd ${WRAP_directory} && git checkout"
+	echo "	cd ${WRAP_directory} && git checkout FETCH_HEAD"
 if [ -n "$WRAP_patch_directory" ]; then
 	echo "	cp -f packagefiles/${WRAP_patch_directory}/* ${WRAP_directory}"
 fi
