@@ -1,6 +1,6 @@
 /* package information */
 PKGNAME acr
-VERSION 2.1.4
+VERSION 2.2.0
 CONTACT pancake ; pancake@nopcode.org
 
 DESCRIPTION automatic configuration replacement tool ;
