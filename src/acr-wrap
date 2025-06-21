@@ -56,7 +56,10 @@ else
 fi
 	echo "	cd ${WRAP_directory} && git checkout FETCH_HEAD"
 if [ -n "$WRAP_patch_directory" ]; then
-	echo "	cp -f packagefiles/${WRAP_patch_directory}/* ${WRAP_directory}"
+	echo "	cp -rf packagefiles/${WRAP_patch_directory}/* ${WRAP_directory}"
+fi
+if [ -n "$WRAP_diff_files" ]; then
+	echo "	for a in $(echo "${WRAP_diff_files}" | tr "," " ") ; do echo \"patch -p1 < \$\$a\" ; patch -p1 < \$\$a ; done"
 fi
 
 cat <<EOF
