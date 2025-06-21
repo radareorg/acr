@@ -59,7 +59,7 @@ if [ -n "$WRAP_patch_directory" ]; then
 	echo "	cp -rf packagefiles/${WRAP_patch_directory}/* ${WRAP_directory}"
 fi
 if [ -n "$WRAP_diff_files" ]; then
-	echo "	for a in $(echo "${WRAP_diff_files}" | tr "," " ") ; do echo \"patch -p1 < \$\$a\" ; patch -p1 < \$\$a ; done"
+	echo "	for a in $(echo "${WRAP_diff_files}" | tr "," " ") ; do echo \"patch -d ${WRAP_directory} -p1 < \$\$a\" ; patch -d ${WRAP_directory} -p1 < \$\$a ; done"
 fi
 
 cat <<EOF
