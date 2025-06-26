@@ -49,6 +49,7 @@ if [ $? != 0 ]; then
 	echo "	echo Not supported && exit 1"
 fi
 if [ -n "$WRAP_revision" ]; then
+	echo "	if [ -d \"${WRAP_directory}\" ] && [ \"${WRAP_revision}\" == \"\$(cd \"${WRAP_directory}\" && git rev-parse HEAD)\" ]; then exit; else rm -rf \"${WRAP_directory}\"; fi"
 	echo "	git clone --no-checkout ${GIT_FLAGS} ${WRAP_url} ${WRAP_directory}"
 	echo "	cd ${WRAP_directory} && git fetch ${GIT_FLAGS} origin ${WRAP_revision}"
 else
