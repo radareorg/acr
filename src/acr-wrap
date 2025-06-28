@@ -1,6 +1,7 @@
 #!/bin/sh
 # convert meson wrap files into makefiles for compatibility reasons
 F="$1"
+S="$"
 if [ -z "$F" ]; then
 	echo "Usage: acr-wrap foo.wrap > foo.mk"
 	exit 1
@@ -34,11 +35,27 @@ WRAP_name=`echo ${WRAP_directory}|sed -e 's/-/-/g'`
 
 cat <<EOF
 
-${WRAP_name}_all: ${WRAP_directory}
-	@echo "Nothing to do"
+.PHONY: ${WRAP_directory}
 
 ${WRAP_directory}:
 EOF
+if [ -n "$WRAP_revision" ]; then
+	echo "	if [ ! -d \"${WRAP_directory}\" -o \"${WRAP_revision}\" != \"${S}(shell cd ${WRAP_directory} && git rev-parse HEAD)\" ]; then rm -rf \"${WRAP_directory}\"; ${S}{MAKE} ${WRAP_directory}_all; fi"
+else
+	echo "	${S}{MAKE} ${WRAP_directory}_all"
+fi
+
+cat <<EOF
+
+${WRAP_directory}_all:
+EOF
+if [ -n "$WRAP_revision" ]; then
+	echo "	git clone --no-checkout ${GIT_FLAGS} ${WRAP_url} ${WRAP_directory}"
+	echo "	cd ${WRAP_directory} && git fetch ${GIT_FLAGS} origin ${WRAP_revision}"
+else
+	echo "	git clone ${GIT_FLAGS} ${WRAP_url} ${WRAP_directory}"
+	echo "	${S}{MAKE} ${WRAP_directory}_all"
+fi
 
 GIT_FLAGS=""
 if [ -n "${WRAP_depth}" ]; then
@@ -47,12 +64,6 @@ fi
 echo "${NAME}" | grep -q -- '_git'
 if [ $? != 0 ]; then
 	echo "	echo Not supported && exit 1"
-fi
-if [ -n "$WRAP_revision" ]; then
-	echo "	git clone --no-checkout ${GIT_FLAGS} ${WRAP_url} ${WRAP_directory}"
-	echo "	cd ${WRAP_directory} && git fetch ${GIT_FLAGS} origin ${WRAP_revision}"
-else
-	echo "	git clone ${GIT_FLAGS} ${WRAP_url} ${WRAP_directory}"
 fi
 	echo "	cd ${WRAP_directory} && git checkout FETCH_HEAD"
 if [ -n "$WRAP_patch_directory" ]; then
