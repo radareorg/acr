@@ -49,18 +49,18 @@ cat <<EOF
 
 ${WRAP_directory}_all:
 EOF
+GIT_FLAGS=""
+if [ -n "${WRAP_depth}" ]; then
+	GIT_FLAGS="--depth=${WRAP_depth} "
+fi
 if [ -n "$WRAP_revision" ]; then
-	echo "	git clone --no-checkout ${GIT_FLAGS} ${WRAP_url} ${WRAP_directory}"
-	echo "	cd ${WRAP_directory} && git fetch ${GIT_FLAGS} origin ${WRAP_revision}"
+	echo "	git clone --no-checkout ${GIT_FLAGS}${WRAP_url} ${WRAP_directory}"
+	echo "	cd ${WRAP_directory} && git fetch ${GIT_FLAGS}origin ${WRAP_revision}"
 else
-	echo "	git clone ${GIT_FLAGS} ${WRAP_url} ${WRAP_directory}"
+	echo "	git clone ${GIT_FLAGS}${WRAP_url} ${WRAP_directory}"
 	echo "	${S}{MAKE} ${WRAP_directory}_all"
 fi
 
-GIT_FLAGS=""
-if [ -n "${WRAP_depth}" ]; then
-	GIT_FLAGS="--depth=${WRAP_depth}"
-fi
 echo "${NAME}" | grep -q -- '_git'
 if [ $? != 0 ]; then
 	echo "	echo Not supported && exit 1"
