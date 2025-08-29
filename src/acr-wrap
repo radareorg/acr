@@ -35,7 +35,7 @@ WRAP_name=`echo ${WRAP_directory}|sed -e 's/-/-/g'`
 
 cat <<EOF
 
-.PHONY: ${WRAP_directory} ${WRAP_directory}_clean ${WRAP_directory}_all
+.PHONY: ${WRAP_directory}_clean ${WRAP_directory}_all
 
 ${WRAP_directory}:
 EOF
@@ -55,7 +55,7 @@ if [ -n "${WRAP_source_url}" ]; then
 	if [ -n "${WRAP_source_hash}" ]; then
 		echo "	echo Check ${WRAP_source_hash}"
 	fi
-	echo "	tar xzvf ${WRAP_source_filename}"
+	echo "	tar xzf ${WRAP_source_filename}"
 	echo "	cd ${WRAP_directory}"
 else
 	if [ -n "${WRAP_depth}" ]; then
