@@ -35,14 +35,14 @@ WRAP_name=`echo ${WRAP_directory}|sed -e 's/-/-/g'`
 
 cat <<EOF
 
-.PHONY: ${WRAP_directory}
+.PHONY: ${WRAP_directory} ${WRAP_directory}_clean ${WRAP_directory}_all
 
 ${WRAP_directory}:
 EOF
 if [ -n "$WRAP_revision" ]; then
 	echo "	if [ ! -d \"${WRAP_directory}\" -o \"${WRAP_revision}\" != \"${S}(shell cd ${WRAP_directory} 2>/dev/null && git rev-parse HEAD)\" ]; then rm -rf \"${WRAP_directory}\"; ${S}{MAKE} ${WRAP_directory}_all; fi"
 else
-	echo "	${S}{MAKE} ${WRAP_directory}_all"
+	echo "	${S}{MAKE} ${S}{MAKE_FLAGS} ${WRAP_directory}_all"
 fi
 
 cat <<EOF
@@ -50,22 +50,31 @@ cat <<EOF
 ${WRAP_directory}_all:
 EOF
 GIT_FLAGS=""
-if [ -n "${WRAP_depth}" ]; then
-	GIT_FLAGS="--depth=${WRAP_depth} "
-fi
-if [ -n "$WRAP_revision" ]; then
-	echo "	git clone --no-checkout ${GIT_FLAGS}${WRAP_url} ${WRAP_directory}"
-	echo "	cd ${WRAP_directory} && git fetch ${GIT_FLAGS}origin ${WRAP_revision}"
+if [ -n "${WRAP_source_url}" ]; then
+	echo "	curl -Lo ${WRAP_source_filename} ${WRAP_source_url}"
+	if [ -n "${WRAP_source_hash}" ]; then
+		echo "	echo Check ${WRAP_source_hash}"
+	fi
+	echo "	tar xzvf ${WRAP_source_filename}"
+	echo "	cd ${WRAP_directory}"
 else
-	echo "	git clone ${GIT_FLAGS}${WRAP_url} ${WRAP_directory}"
-	echo "	${S}{MAKE} ${WRAP_directory}_all"
+	if [ -n "${WRAP_depth}" ]; then
+		GIT_FLAGS="--depth=${WRAP_depth} "
+	fi
+	if [ -n "$WRAP_revision" ]; then
+		echo "	git clone --no-checkout ${GIT_FLAGS}${WRAP_url} ${WRAP_directory}"
+		echo "	cd ${WRAP_directory} && git fetch ${GIT_FLAGS}origin ${WRAP_revision}"
+	else
+		echo "	git clone ${GIT_FLAGS}${WRAP_url} ${WRAP_directory}"
+		echo "	${S}{MAKE} ${WRAP_directory}_all"
+	fi
+	echo "${NAME}" | grep -q -- '_git'
+	if [ $? != 0 ]; then
+		echo "	echo Not supported && exit 1"
+	fi
+	echo "	cd ${WRAP_directory} && git checkout FETCH_HEAD"
 fi
 
-echo "${NAME}" | grep -q -- '_git'
-if [ $? != 0 ]; then
-	echo "	echo Not supported && exit 1"
-fi
-	echo "	cd ${WRAP_directory} && git checkout FETCH_HEAD"
 if [ -n "$WRAP_patch_directory" ]; then
 	echo "	cp -rf packagefiles/${WRAP_patch_directory}/* ${WRAP_directory}"
 fi
