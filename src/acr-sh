@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# Copyright (C) 2005-2024
+# Copyright (C) 2005-2025
 #       pancake <pancake@nopcode.org>
 #
 # acr is free software; you can redistribute it and/or modify
@@ -2029,7 +2029,14 @@ for A in ${S}{ENVWORDS} ; do
 	[ "${S}{A}" = VPATH ] && continue
 	[ "${S}{A}" = srcdir ] && continue
 	eval "VAR=\\${S}${S}{A}"
-	VAR="\`echo ${S}{VAR} | sed -e 's/\,/\\\\\,/g'\`"
+	case "${HOST_OS}" in
+	mingw*|cygwin*|msys*)
+		VAR="\`echo ${S}{VAR} | sed -e 's/\\\\/\\\\\\\\/g' -e 's/\,/\\\\\\,/g'\`"
+		;;
+	*)
+		VAR="\`echo ${S}{VAR} | sed -e 's/\,/\\\\\,/g'\`"
+		;;
+	esac
 	[ ${S}COUNT = 10 ] && COUNT=0 && SEDFLAGS="${S}{SEDFLAGS}' -e '"
 	COUNT=${S}((${S}COUNT+1))
 	SEDFLAGS="${S}{SEDFLAGS}s,@${S}{A}@,${S}{VAR},g;"
