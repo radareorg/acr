@@ -1,3 +1,6 @@
+---
+
+---
 # This is a basic workflow that is manually triggered
 
 name: ci
@@ -9,7 +12,7 @@ on:
     tags:
       - '[0-9]*'
 
-# Controls when the action will run. Workflow runs when manually triggered using the UI
+# Controls when the action will run.
 # or API.
 # on:
 #   workflow_dispatch:
