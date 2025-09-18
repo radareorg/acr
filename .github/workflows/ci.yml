@@ -1,10 +1,18 @@
+---
+
+---
 # This is a basic workflow that is manually triggered
 
 name: ci
 
-on: push
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - '[0-9]*'
 
-# Controls when the action will run. Workflow runs when manually triggered using the UI
+# Controls when the action will run.
 # or API.
 # on:
 #   workflow_dispatch:
@@ -27,19 +35,37 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-    - name: Clone
-      run: cd .. ; rm -rf acr ; git clone https://github.com/radare/acr ; cd acr
-    - name: Configure
-      run: ./configure --prefix=/usr
-    - name: Build and install
-      run: make ; sudo make install
-    - name: Run tests
-      run: make -C tests
-    - name: Regenerate
-      run: sh autogen.sh
-    - name: Debian
-      run: make -C dist
-    - name: Pub
-      uses: actions/upload-artifact@v4
-      with:
-        path: dist/acr/*.deb
+      - uses: actions/checkout@v4
+      - name: Configure
+        run: ./configure --prefix=/usr
+      - name: Build and install
+        run: make ; sudo make install
+      - name: Run tests
+        run: make -C tests
+      - name: Regenerate
+        run: sh autogen.sh
+      - name: Debian
+        run: make -C dist
+      - name: Pub
+        uses: actions/upload-artifact@v4
+        with:
+          name: acr-deb
+          path: dist/acr/*.deb
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/')
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: acr-deb
+          path: ./deb
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: ./deb/*.deb
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
