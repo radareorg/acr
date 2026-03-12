@@ -1,3 +1,6 @@
+2.2.5 -
+	- add PKGCFG_DO overrides for per-library libs, libs.private and cflags
+
 0.5.1 -
 	- fix a big bug in the check_library function, inminent release!
 	- make sure LIL_ENDIAN is 0 or 1

@@ -126,12 +126,12 @@ done
 : ${INSTALL_PROGRAM_STRIP:=${INSTALL} -m 755 -s}
 : ${INSTALL_MAN:=${INSTALL} -m 444}
 : ${INSTALL_LIB:=${INSTALL} -m 755 -c}
- PKGNAME='acr' ; VERSION='2.2.4' ; VERSION_MAJOR=2; VERSION_MINOR=2; VERSION_PATCH=4; VERSION_NUMBER=20204; CONTACT_MAIL="pancake@nopcode.org" ; CONTACT_NAME="pancake" ; CONTACT="pancake <pancake@nopcode.org>" ;
+ PKGNAME='acr' ; VERSION='2.2.5' ; VERSION_MAJOR=2; VERSION_MINOR=2; VERSION_PATCH=5; VERSION_NUMBER=20205; CONTACT_MAIL="pancake@nopcode.org" ; CONTACT_NAME="pancake" ; CONTACT="pancake <pancake@nopcode.org>" ;
 }
 
 show_usage() {
 cat <<EOF2
-'configure' configures acr-2.2.4 to adapt to many kinds of systems.
+'configure' configures acr-2.2.5 to adapt to many kinds of systems.
 
 Usage: ./configure [OPTION]... [VAR=VALUE]...
 
