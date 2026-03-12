@@ -235,7 +235,7 @@ Checks if pkgname (software package registered into pkg-config database) is <= v
 .It PKGCFG,PKGCONFIG[+] cflags_var ldflags_var pkg-config-name
 Use pkg-config to get the CFLAGS and LDFLAGS. If the '+' character is at the end of the command then ACR will concatenate the value of cflags_var and ldflags_var instead of overwrite the old value. This keyword exports also a variable called HAVE_PKGFG_{pkg-config-name|filtered} with 0 or 1 values.
 .It PKGCFG_DO pcfile\ libname\ requires\ ;
-Generate a pkg-config file for the given library name and make it depend on the word separated list of pkg-config requires
+Generate a pkg-config file for the given library name and make it depend on the word separated list of pkg-config requires. Optional overrides can be exported with PKGCFG_LIBS_DEFAULT, PKGCFG_LIBS_PRIVATE_DEFAULT, PKGCFG_CFLAGS_DEFAULT or the per-library PKGCFG_<LIBNAME>_{LIBS,LIBS_PRIVATE,CFLAGS} variables, where <LIBNAME> is the filtered upper-case form of libname.
 .It VALAPKG[!] pkgname
 Checks if a Vala package is available for VALAC
 .El

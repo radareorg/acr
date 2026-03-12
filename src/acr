@@ -42,6 +42,21 @@ RECOVER=0
 CONFIGURE="./configure"
 ACRFILE="configure.acr"
 TMP_FILE=""
+ACR_BIN_DIR=$(CDPATH= cd -- "$(dirname "$0")" && pwd)
+ACR_SH="${ACR_BIN_DIR}/acr-sh"
+ACR_CAT="${ACR_BIN_DIR}/acr-cat"
+ACR_VERSION="@VERSION@"
+
+if [ ! -x "${ACR_SH}" ]; then
+	ACR_SH=acr-sh
+fi
+if [ ! -x "${ACR_CAT}" ]; then
+	ACR_CAT=acr-cat
+fi
+
+if [ "${ACR_VERSION}" = "@VERSION@" ] && [ -f "${ACR_BIN_DIR}/../configure.acr" ]; then
+	ACR_VERSION=$(awk '/^VERSION[ \t]+/ {print $2; exit}' "${ACR_BIN_DIR}/../configure.acr")
+fi
 
 control_c() {
 	echo
@@ -53,7 +68,7 @@ control_c() {
 trap control_c 2
 
 show_version() {
-	echo "acr: version @VERSION@"
+	echo "acr: version ${ACR_VERSION}"
 	exit 0
 }
 
@@ -145,7 +160,7 @@ done
 #fi
 
 if [ "${RECOVER}" = 1 ]; then
-	exec acr-cat ${ACRFILE}
+	exec "${ACR_CAT}" ${ACRFILE}
 	# TODO manage output
 	exit 1
 fi
@@ -180,22 +195,22 @@ if [ "${EXEC}" = 1 ]; then
 	shift
 	TMP_FILE=`mktemp -t acr.XXXXXX`
 	chmod 700 ${TMP_FILE}
-	acr-sh "${ACRFILE}" "${CONFIGURE}" > ${TMP_FILE}
+	"${ACR_SH}" "${ACRFILE}" "${CONFIGURE}" > ${TMP_FILE}
 	sh ${TMP_FILE} $@
 	rm ${TMP_FILE}
 else
 	if [ "${MAKEFILE}" = 1 ]; then
 		env MAKEDIST=${MAKEDIST} STRIP=${STRIP} MAKEFILE=1 PBAR=${PBAR} NOPE=${NOPE} \
-		acr-sh "${ACRFILE}" "${CONFIGURE}" > /dev/null
+		"${ACR_SH}" "${ACRFILE}" "${CONFIGURE}" > /dev/null
 		RET=$?
 	elif [ "${NOPE}" = 1 ]; then
 		env MAKEDIST=${MAKEDIST} STRIP=${STRIP} NOPE=1 PBAR=${PBAR} DEBUG=${DEBUG} \
-		acr-sh "${ACRFILE}" "${CONFIGURE}" > /dev/null
+		"${ACR_SH}" "${ACRFILE}" "${CONFIGURE}" > /dev/null
 		RET=$?
 	else
 		TMP_FILE=`mktemp -t acr.XXXXXX`
 		env NOPE=0 DEBUG=${DEBUG} STRIP=${STRIP} PBAR=${PBAR} \
-		acr-sh "${ACRFILE}" "${CONFIGURE}" > ${TMP_FILE}
+		"${ACR_SH}" "${ACRFILE}" "${CONFIGURE}" > ${TMP_FILE}
 		RET=$?
 		if [ "$?" = 0 ]; then
 			mv ${TMP_FILE} "${CONFIGURE}"

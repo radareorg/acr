@@ -44,6 +44,11 @@
 #
 
 ACR_VERSION=@VERSION@
+ACR_BIN_DIR=$(CDPATH= cd -- "$(dirname "$0")" && pwd)
+
+if [ "${ACR_VERSION}" = "@VERSION@" ] && [ -f "${ACR_BIN_DIR}/../configure.acr" ]; then
+	ACR_VERSION=$(awk '/^VERSION[ \t]+/ {print $2; exit}' "${ACR_BIN_DIR}/../configure.acr")
+fi
 
 CONFIGURE="$2"
 : {CONFIGURE:=./configure}
@@ -1065,6 +1070,10 @@ pcgen() {
 	PCFILE=\"${S}{1}\" ; shift
 	PCNAME=\"${S}{1}\" ; shift
 	REQUIRES=\"${S}@\"
+	PCVAR=\"\`echo \\\"${S}{PCNAME}\\\" | sed -e 's,:,,g' | tr '[a-z]' '[A-Z]' | tr '.\\\\-+/' '____'\`\"
+	eval \"PCLIBS=\\${S}{PKGCFG_${S}{PCVAR}_LIBS-\\${S}{PKGCFG_LIBS_DEFAULT-\\${S}{DL_LIBS}}}\"
+	eval \"PCLIBS_PRIVATE=\\${S}{PKGCFG_${S}{PCVAR}_LIBS_PRIVATE-\\${S}{PKGCFG_LIBS_PRIVATE_DEFAULT-}}\"
+	eval \"PCCFLAGS=\\${S}{PKGCFG_${S}{PCVAR}_CFLAGS-\\${S}{PKGCFG_CFLAGS_DEFAULT-}}\"
 
 	echo \"generating ${S}{PCFILE}\" >&2
 	echo \"prefix=${S}{PREFIX}\" > ${S}{PCFILE}
@@ -1078,8 +1087,11 @@ pcgen() {
 	fi
 	echo \"Version: ${S}{VERSION}\" >> ${S}{PCFILE}
 	echo \"Requires: ${S}{REQUIRES}\" >> ${S}{PCFILE}
-	echo \"Cflags: -I\\${S}{includedir}/libr\" >> ${S}{PCFILE}
-	echo \"Libs: -L\\${S}{libdir} -l${S}{PCNAME} ${S}{DL_LIBS}\" >> ${S}{PCFILE}
+	echo \"Cflags: -I\\${S}{includedir}/libr ${S}{PCCFLAGS}\" >> ${S}{PCFILE}
+	echo \"Libs: -L\\${S}{libdir} -l${S}{PCNAME} ${S}{PCLIBS}\" >> ${S}{PCFILE}
+	if [ -n \"${S}{PCLIBS_PRIVATE}\" ]; then
+		echo \"Libs.private: ${S}{PCLIBS_PRIVATE}\" >> ${S}{PCFILE}
+	fi
 }
 "
 	fi
