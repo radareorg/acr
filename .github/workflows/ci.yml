@@ -1,49 +1,35 @@
----
-
----
-# This is a basic workflow that is manually triggered
-
 name: ci
 
 on:
   push:
-    branches:
-      - main
-    tags:
-      - '[0-9]*'
+  pull_request:
+  workflow_dispatch:
 
-# Controls when the action will run.
-# or API.
-# on:
-#   workflow_dispatch:
-#     # Inputs the workflow accepts.
-#     inputs:
-#       name:
-#         # Friendly description to be shown in the UI instead of 'name'
-#         description: 'Build and test'
-#         # Default value if no value is explicitly provided
-#         default: 'ACR'
-#         # Input has to be provided for the workflow to run
-#         required: true
+permissions:
+  contents: read
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   build:
-
-    # The type of runner that the job will run on
     runs-on: ubuntu-latest
-
-    # Steps represent a sequence of tasks that will be executed as part of the job
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
       - name: Configure
         run: ./configure --prefix=/usr
-      - name: Build and install
-        run: make ; sudo make install
+      - name: Build
+        run: make
+      - name: Install smoke test
+        run: make install DESTDIR="$PWD/.destdir"
       - name: Run tests
         run: make -C tests
-      - name: Regenerate
+      - name: Regenerate configure
         run: sh autogen.sh
+      - name: Verify generated files are up to date
+        run: git diff --exit-code -- configure
       - name: Debian
         run: make -C dist
       - name: Pub
@@ -51,11 +37,29 @@ jobs:
         with:
           name: acr-deb
           path: dist/acr/*.deb
+          if-no-files-found: error
+
+  release-check:
+    runs-on: ubuntu-latest
+    outputs:
+      should_release: ${{ steps.check.outputs.should_release }}
+    steps:
+      - id: check
+        run: |
+          if [[ "$GITHUB_REF_TYPE" == "tag" && "$GITHUB_REF_NAME" =~ ^[0-9] ]]; then
+            echo "should_release=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "should_release=false" >> "$GITHUB_OUTPUT"
+          fi
 
   release:
-    needs: build
+    needs:
+      - build
+      - release-check
     runs-on: ubuntu-latest
-    if: startsWith(github.ref, 'refs/tags/')
+    if: needs.release-check.outputs.should_release == 'true'
+    permissions:
+      contents: write
     steps:
       - name: Download artifact
         uses: actions/download-artifact@v4
@@ -63,9 +67,6 @@ jobs:
           name: acr-deb
           path: ./deb
       - name: Create Release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
           files: ./deb/*.deb
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
