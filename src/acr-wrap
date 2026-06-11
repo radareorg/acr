@@ -40,7 +40,7 @@ cat <<EOF
 ${WRAP_directory}:
 EOF
 if [ -n "$WRAP_revision" ]; then
-	echo "	if [ ! -d \"${WRAP_directory}\" -o \"${WRAP_revision}\" != \"${S}(shell cd ${WRAP_directory} 2>/dev/null && git rev-parse HEAD)\" ]; then rm -rf \"${WRAP_directory}\"; ${S}{MAKE} ${WRAP_directory}_all; fi"
+	echo "	if [ ! -d \"${WRAP_directory}\" ] || ! (cd \"${WRAP_directory}\" 2>/dev/null && test \"\$\$(git rev-parse HEAD 2>/dev/null)\" = \"\$\$(git rev-parse '${WRAP_revision}^{commit}' 2>/dev/null)\"); then rm -rf \"${WRAP_directory}\"; ${S}{MAKE} ${WRAP_directory}_all; fi"
 else
 	echo "	${S}{MAKE} ${S}{MAKE_FLAGS} ${WRAP_directory}_all"
 fi
