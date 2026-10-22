@@ -12,7 +12,7 @@ print_report() {
 }
 
 do_remove() {
-	rm -f `ls | egrep -v "test.sh|Makefile"`
+	rm -f `ls | egrep -v "test.sh|test-wrap.sh|Makefile"`
 }
 
 control_c() { 
@@ -59,5 +59,8 @@ for A in ${FILES} ; do
 done
 
 do_remove
+
+sh ./test-wrap.sh || ERROR=$(($ERROR+1))
+COUNT=$(($COUNT+1))
 
 print_report

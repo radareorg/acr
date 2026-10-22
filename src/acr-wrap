@@ -35,12 +35,12 @@ WRAP_name=`echo ${WRAP_directory}|sed -e 's/-/-/g'`
 
 cat <<EOF
 
-.PHONY: ${WRAP_directory}_clean ${WRAP_directory}_all
+.PHONY: ${WRAP_directory} ${WRAP_directory}_clean ${WRAP_directory}_all
 
 ${WRAP_directory}:
 EOF
 if [ -n "$WRAP_revision" ]; then
-	echo "	if [ ! -d \"${WRAP_directory}\" ] || ! (cd \"${WRAP_directory}\" 2>/dev/null && test \"\$\$(git rev-parse HEAD 2>/dev/null)\" = \"\$\$(git rev-parse '${WRAP_revision}^{commit}' 2>/dev/null)\"); then rm -rf \"${WRAP_directory}\"; ${S}{MAKE} ${WRAP_directory}_all; fi"
+	echo "	if [ ! -d \"${WRAP_directory}\" ] || ! (cd \"${WRAP_directory}\" 2>/dev/null && test \"\$\$(git rev-parse HEAD 2>/dev/null)\" = \"\$\$(git rev-parse --verify 'refs/acr-wrap/${WRAP_revision}^{commit}' 2>/dev/null || git rev-parse --verify '${WRAP_revision}^{commit}' 2>/dev/null)\"); then rm -rf \"${WRAP_directory}\"; ${S}{MAKE} ${WRAP_directory}_all; fi"
 else
 	echo "	${S}{MAKE} ${S}{MAKE_FLAGS} ${WRAP_directory}_all"
 fi
@@ -63,7 +63,7 @@ else
 	fi
 	if [ -n "$WRAP_revision" ]; then
 		echo "	git clone --no-checkout ${GIT_FLAGS}${WRAP_url} ${WRAP_directory}"
-		echo "	cd ${WRAP_directory} && git fetch ${GIT_FLAGS}origin ${WRAP_revision}"
+		echo "	cd ${WRAP_directory} && git fetch ${GIT_FLAGS}origin ${WRAP_revision}:refs/acr-wrap/${WRAP_revision}"
 	else
 		echo "	git clone ${GIT_FLAGS}${WRAP_url} ${WRAP_directory}"
 		echo "	${S}{MAKE} ${WRAP_directory}_all"
